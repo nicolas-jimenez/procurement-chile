@@ -1,0 +1,1542 @@
+% !TEX program = xelatex
+\documentclass[9pt,aspectratio=169]{beamer}
+\usetheme{metropolis}
+
+% ── Packages ──────────────────────────────────────────────
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{appendixnumberbeamer}
+
+% ── Figure paths ──────────────────────────────────────────
+\graphicspath{%
+  {../output/diagnostics/figures/}%
+  {../output/did/figures/}%
+  {../output/bids/figures/}%
+  {../notes/empirics/compra_agil_descriptives/}%
+}
+
+% ── Table path helper ─────────────────────────────────────
+% All \input{} paths are relative to this file's directory
+
+% ── Meta ──────────────────────────────────────────────────
+\title{Local Preference Policies in Public Procurement:\\
+       Efficiency, Distributional Effects, and Spillovers}
+\subtitle{Evidence from Chile's Compra Ágil Reform}
+\author{Nicolás Jiménez}
+\date{March 2026}
+\institute{Yale University}
+
+\begin{document}
+
+% ══════════════════════════════════════════════════════════
+% TITLE
+% ══════════════════════════════════════════════════════════
+\maketitle
+
+% ══════════════════════════════════════════════════════════
+% INTRODUCTION
+% ══════════════════════════════════════════════════════════
+\section{Introduction}
+
+% ── Motivation ───────────────────────────────────────────
+\begin{frame}{Motivation}
+\textbf{[PLACEHOLDER — fill with motivation slide]}
+
+\medskip
+Suggested content:
+\begin{itemize}
+  \item Public procurement is large: OECD governments spend 12--15\% of GDP
+        on procurement. Developing countries often more.
+  \item Local preference policies are widespread: Buy American, EU local content
+        rules, developing-country SME preferences.
+  \item Tension: local preferences may protect domestic firms and create local
+        jobs, but can reduce competition and raise costs for the government.
+  \item Little causal evidence on the competition and welfare effects of these
+        policies, especially in developing countries.
+  \item Chilean Compra Ágil reform (Dec 2024) provides a sharp, quasi-random
+        change in the scope of local preference.
+\end{itemize}
+\end{frame}
+
+% ── Research Questions ───────────────────────────────────
+\begin{frame}{Research Questions}
+\begin{enumerate}
+  \item[\textbf{Q1}] \textbf{Efficiency:} What are the short-run effects of local
+        preference policies on competition in public procurement?
+        \begin{itemize}
+          \item Number and composition of bidders
+          \item Government procurement costs (winning bid prices)
+          \item Heterogeneous effects by market thickness and distance
+        \end{itemize}
+
+  \vspace{0.5em}
+  \item[\textbf{Q2}] \textbf{Distributional:} Who wins?
+        \begin{itemize}
+          \item Local vs.\ non-local firms; SME vs.\ large firms
+          \item Do local entry gains offset non-local exclusion?
+        \end{itemize}
+
+  \vspace{0.5em}
+  \item[\textbf{Q3}] \textbf{Spillovers:} Do local preference policies in
+        peripheral markets affect competition in urban markets?
+        \begin{itemize}
+          \item Capacity reallocation: freed firms re-enter home markets
+          \item Cross-market effects missed by single-market analyses
+        \end{itemize}
+\end{enumerate}
+\end{frame}
+
+% ── Project Overview ─────────────────────────────────────
+\begin{frame}{This Project}
+\begin{columns}[T]
+  \column{0.5\textwidth}
+  \textbf{Part I: Empirics}
+  \begin{itemize}
+    \item Descriptive facts about local and non-local firm participation
+          in Chilean public procurement
+    \item DiD estimates of the short-run effects of the Compra Ágil reform
+          on bidder entry, bidder composition, and winning prices
+    \item Regional heterogeneity: how effects vary with pre-reform market
+          structure and geography
+    \item Cross-market spillovers: competition effects in \textit{above}-threshold
+          markets driven by firm capacity reallocation
+  \end{itemize}
+
+  \column{0.5\textwidth}
+  \textbf{Part II: Structural Model}
+  \begin{itemize}
+    \item Spatial model of firm entry and bidding for public procurement projects
+    \item Firms have home regions; face distance-based cost and entry cost
+          disadvantages; are subject to capacity constraints linking markets
+    \item Estimation using pre- and post-reform variation
+    \item \textbf{Counterfactuals:}
+    \begin{itemize}
+      \item[-] Optimal local preference threshold by region
+      \item[-] Welfare decomposition (cost vs.\ local benefit)
+      \item[-] Alternative policy designs
+    \end{itemize}
+  \end{itemize}
+\end{columns}
+\end{frame}
+
+% ── Related Literature ───────────────────────────────────
+\begin{frame}{Related Literature}
+\textbf{[PLACEHOLDER — fill with related literature]}
+
+\medskip
+Key strands:
+\begin{itemize}
+  \item \textbf{Public procurement and competition:}
+        Athey, Levin \& Seira (2011); Krasnokutskaya \& Seim (2011);
+        Decarolis (2014); Coviello \& Mariniello (2014)
+  \item \textbf{Local preference / Buy-national policies:}
+        Marion (2007); Kang \& Miller (2022); Shingal (2020)
+  \item \textbf{SME preferences in procurement:}
+        Carril, Gonzalez-Lira \& Walker (2022); Sorensen (2022)
+  \item \textbf{Procurement reform in developing countries:}
+        Bandiera et al.\ (2009); Best et al.\ (2017); Bosio et al.\ (2022)
+  \item \textbf{Cross-market spillovers and capacity constraints:}
+        Jeziorski \& Krasnokutskaya (2016); Groeger (2014)
+\end{itemize}
+
+\medskip
+\textbf{Contribution:} First quasi-experimental estimates of local preference
+effects accounting for cross-market spillovers via capacity reallocation.
+Structural model quantifies welfare trade-offs and enables counterfactuals.
+\end{frame}
+
+
+% ══════════════════════════════════════════════════════════
+% POLICY AND SETTING
+% ══════════════════════════════════════════════════════════
+\section{Setting}
+
+% ── Reform Overview ──────────────────────────────────────
+\begin{frame}{Compra Ágil Reform (Ley 21.634)}
+\begin{columns}[T]
+  \column{0.49\textwidth}
+  \textbf{Before (until Dec 11, 2024)}
+  \begin{itemize}
+    \item Compra Ágil limit: \textbf{30 UTM} ($\approx$ CLP 2M, USD 2k)
+    \item Projects 30--100 UTM went through competitive licitaciones
+    \item No explicit SME/local priority at first stage
+    \item Non-local firms competed freely in all markets
+  \end{itemize}
+  \column{0.49\textwidth}
+  \textbf{After (from Dec 12, 2024)}
+  \begin{itemize}
+    \item Compra Ágil limit: \textbf{100 UTM} ($\approx$ CLP 7M, USD 7k)
+    \item Projects 30--100 UTM now use simplified process
+    \item \textbf{SME and local firm priority} in first instance
+    \item Non-local firms effectively excluded from this band
+  \end{itemize}
+\end{columns}
+
+\bigskip
+\textbf{Timeline:} Law 21.634 published November 2024; effective December 12, 2024.
+First post-reform month with full exposure: January 2025.
+
+\bigskip
+\textbf{Scale:} The 30--100 UTM band accounts for $\approx$\,25--35\% of all
+municipal procurement tenders by volume. The reform substantially narrows the
+set of markets where non-local firms can participate.
+\end{frame}
+
+% ── Reform Impact on Procurement Mode ────────────────────
+\begin{frame}{Projects Shifted Almost Entirely to Compra Ágil}
+\centering
+\includegraphics[width=0.96\linewidth]{ca_D4_share_compra_agil_by_utm_bucket.png}
+
+\vspace{0.5em}
+\small\textbf{Takeaway:} Nearly all 30--100 UTM projects switched from
+licitaciones to Compra Ágil after the reform --- compliance is near-complete.
+\end{frame}
+
+% ── Data ─────────────────────────────────────────────────
+\begin{frame}{Data}
+\begin{columns}[T]
+  \column{0.5\textwidth}
+  \textbf{ChileCompra (Mercado Público)}
+  \begin{itemize}
+    \item Universe of public procurement contracts in Chile
+    \item Tender-level: estimated value (UTM), procurement type,
+          region, sector, date
+    \item Bid-level: firm RUT, bid amount, winner indicator
+    \item \textbf{Coverage:} Jan 2022 -- Mar 2025
+    \item \textbf{Sample:} Municipalidades sector;
+          treated band (30--100 UTM);
+          control bands (0--30, 100--200 UTM)
+  \end{itemize}
+
+  \column{0.5\textwidth}
+  \textbf{Servicio de Impuestos Internos (SII)}
+  \begin{itemize}
+    \item Chilean Internal Revenue Service administrative data
+    \item Firm-level: size classification (micro, small, medium, large),
+          sector, location, annual sales
+    \item \textbf{Use:} Classify bidders as SME (MiPYME) vs.\ large;
+          local vs.\ non-local (matched to buyer region)
+    \item \textbf{Coverage:} Annual data, matched to ChileCompra via RUT
+  \end{itemize}
+\end{columns}
+
+\bigskip
+\textbf{Final sample (Municipalidades):} $\approx$\,2,500 procuring entities;
+$\approx$\,180,000 tenders; $\approx$\,650,000 bids over the study period.
+\end{frame}
+
+% ── Summary Statistics: Procurement ──────────────────────
+\begin{frame}{Sample Overview: Pre-Reform Descriptives}
+\textbf{[PLACEHOLDER — fill with summary statistics table]}
+
+\medskip
+Suggested content:
+\begin{itemize}
+  \item Table: N tenders, N bidders (mean), SME win share, log price ratio
+        --- split by sector (Municipalidades vs.\ Obras Públicas) and UTM band
+        (0--30, 30--100, 100--200 UTM), pre-reform only.
+  \item Highlight that the treated band (30--100 UTM) had systematically
+        lower bidder counts and higher non-local shares than control bands.
+  \item Source: \texttt{did\_tender\_sample.parquet} + \texttt{did\_bid\_sample.parquet}.
+\end{itemize}
+\end{frame}
+
+% ── Summary Statistics: SII ──────────────────────────────
+\begin{frame}{Sample Overview: Bidder Characteristics (SII Data)}
+\textbf{[PLACEHOLDER — fill with SII summary statistics]}
+
+\medskip
+Suggested content:
+\begin{itemize}
+  \item Share of bids by SME vs.\ large firm, by UTM band and sector
+  \item Share of bids by local vs.\ non-local firm (home region = buyer region)
+  \item Average firm size (sales, employees) of winning vs.\ losing bidders
+  \item Geographic concentration: fraction of bidders from RM bidding in
+        other regions (``export share'')
+\end{itemize}
+\end{frame}
+
+
+% ══════════════════════════════════════════════════════════
+% EMPIRICS
+% ══════════════════════════════════════════════════════════
+\section{Empirical Strategy \& Results}
+
+% ── Facts About Local/Non-local Firms ────────────────────
+\begin{frame}{Descriptive Facts: Local vs.\ Non-Local Bidders}
+\textbf{[PLACEHOLDER --- fill with descriptive facts about local and non-local firm bids]}
+
+\medskip
+Suggested content:
+\begin{itemize}
+  \item Bar/line chart: share of bids by local vs.\ non-local firms by
+        UTM band and region, pre-reform
+  \item Map or bar chart: which regions send firms to other regions most?
+        (foreshadows the export share analysis)
+  \item Heterogeneity: non-local share is higher in remote regions,
+        lower in RM (the inverse-U pattern from the binscatter)
+\end{itemize}
+\end{frame}
+
+% ── DiD Specification ────────────────────────────────────
+\begin{frame}{Difference-in-Differences: Specification}
+\textbf{Estimating equation (TWFE):}
+\[
+  y_{it} = \alpha_i + \gamma_t + \beta\,\mathbf{1}[\text{treated}_i \times \text{post}_t] + \varepsilon_{it}
+\]
+
+\medskip
+\textbf{Treatment and control groups} (defined by estimated contract value in UTM):
+\begin{columns}[T]
+  \column{0.48\textwidth}
+  \begin{itemize}
+    \item \textbf{Treated:} 30--100 UTM \\
+          \small Tenders that switch from competitive bidding (licitación)
+          to Compra Ágil after Dec 12, 2024.
+  \end{itemize}
+  \column{0.52\textwidth}
+  \begin{itemize}
+    \item \textbf{Control 1} (low): 1--30 UTM \\
+          \small Already under Compra Ágil before the reform.
+    \item \textbf{Control 2} (high): 100--200 UTM \\
+          \small Above the new threshold; procurement process unchanged.
+  \end{itemize}
+\end{columns}
+
+\medskip
+\textbf{Fixed effects:} Procuring entity $\alpha_i$ + year-month $\gamma_t$.\\
+\textbf{Standard errors:} Clustered by procuring entity.\\
+\textbf{Sample:} Jan 2023 -- Mar 2025; Municipalidades sector.\\[4pt]
+\small Results show control group: \textit{Control 2 (100--200 UTM)}.
+\end{frame}
+
+% ── IV-DiD Specification ─────────────────────────────────
+\begin{frame}{IV-DiD: Specification}
+\textbf{Motivation:} Intent-to-treat (DiD) estimates may under-state effects if
+compliance is imperfect. We instrument actual Compra Ágil use with reform
+eligibility.
+
+\bigskip
+\textbf{First stage (within-entity, within-month):}
+\[
+  \widetilde{CA}_{it} = \pi\,\widetilde{Z}_{it} + \nu_{it},
+  \qquad
+  Z_{it} = \mathbf{1}[\text{treated}_i \times \text{post}_t]
+\]
+
+\textbf{Second stage:}
+\[
+  \tilde{y}_{it} = \beta_{\text{IV}}\,\widehat{\widetilde{CA}}_{it} + \varepsilon_{it}
+\]
+
+\begin{itemize}
+  \item \textbf{Endogenous:} $CA_{it}$ --- indicator, tender processed via Compra Ágil
+  \item \textbf{Instrument:} $Z_{it} = \text{Treated}_i \times \text{Post}_t$ --- reform eligibility
+  \item Same FE and clustering as OLS DiD; Control 2 only (100--200 UTM)
+  \item $\beta_{\text{IV}}$ is a LATE: effect of Compra Ágil \emph{use}
+\end{itemize}
+\end{frame}
+
+% ── IV First Stage ───────────────────────────────────────
+\begin{frame}{IV-DiD: First Stage (Municipalidades)}
+\small
+\medskip
+\input{../output/did/tables/did_table_first_stage_munic.tex}
+\end{frame}
+
+% ── Event Studies ─────────────────────────────────────────
+\begin{frame}{Event Studies: N Bidders and SME Share (Municipalidades)}
+\begin{columns}[c]
+  \column{0.5\textwidth}\centering
+  \includegraphics[width=\linewidth]{../output/did/figures/diag_event_study_n_bidders_munic.png}
+  \column{0.5\textwidth}\centering
+  \includegraphics[width=\linewidth]{../output/did/figures/diag_event_study_sme_share_sii_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Event Studies: SME Winners and Win Price (Municipalidades)}
+\begin{columns}[c]
+  \column{0.5\textwidth}\centering
+  \includegraphics[width=\linewidth]{../output/did/figures/diag_event_study_winner_is_sme_sii_munic.png}
+  \column{0.5\textwidth}\centering
+  \includegraphics[width=\linewidth]{../output/did/figures/diag_event_study_log_win_price_ratio_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Event Study: Bid-Level Price (Municipalidades)}
+\centering
+\includegraphics[width=0.58\linewidth]{../output/did/figures/diag_event_study_log_sub_price_ratio_munic.png}
+
+\medskip
+\small\textit{Flat pre-trends; significant post-reform increase in winning and
+submitted prices --- consistent with reduced competition (fewer non-local firms)
+not fully offset by local entry.}
+\end{frame}
+
+% ── IV-DiD Results ───────────────────────────────────────
+\begin{frame}{IV-DiD: Entry at Bidding Stage (Panel A, Municipalidades)}
+\small\medskip
+\input{../output/did/tables/did_table_compare_iv_A_munic.tex}
+\end{frame}
+
+\begin{frame}{IV-DiD: Bidder Composition (Panel B, Municipalidades)}
+\small\medskip
+\input{../output/did/tables/did_table_compare_iv_B_munic.tex}
+\end{frame}
+
+\begin{frame}{IV-DiD: Winner Characteristics (Panel C, Municipalidades)}
+\small\medskip
+\input{../output/did/tables/did_table_compare_iv_C_munic.tex}
+\end{frame}
+
+\begin{frame}{IV-DiD: Bid Outcomes (Panel D, Municipalidades)}
+\small\medskip
+\input{../output/did/tables/did_table_compare_iv_D_munic.tex}
+\end{frame}
+
+% ── Bid markups ──────────────────────────────────────────
+\begin{frame}{Bid Markups: Within-Auction Comparison}
+\centering
+\includegraphics[width=0.62\linewidth]{bids_part1_coefplot.png}
+
+\medskip
+\scriptsize
+\begin{itemize}
+  \item Conditional on \textbf{auction fixed effects}, local and non-local firms submit \textbf{very similar markups}; the local coefficient is near zero.
+  \item This is a \textbf{conditional-on-entry} comparison: among firms that actually bid in the same auction, non-local firms do not look much more expensive.
+  \item The main cross-sectional difference is by \textbf{firm size}: SMEs bid about $0.26$ log points higher relative to estimated cost.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bid Markups: Within-Firm Home-Market Advantage}
+\centering
+\includegraphics[width=0.62\linewidth]{bids_part2_coefplot.png}
+
+\medskip
+\scriptsize
+\begin{itemize}
+  \item For the \textbf{same firm}, local bids are lower: about $-0.086$ log points with bidder and month fixed effects.
+  \item With buyer-region fixed effects added, the local coefficient remains negative at about $-0.040$, so the pattern is not just region composition.
+  \item The \textbf{distance slope is estimated separately on non-local bids only}: $\log(\text{distance})$ enters without the local dummy, and its coefficient is about $-0.038$.
+  \item Interpretation: the same firm bids differently at home vs.\ away, so there is a genuine \textbf{home-market advantage / non-local friction}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bid Markups: Within-Firm Differences by Firm Size}
+\centering
+\includegraphics[width=0.68\linewidth]{bids_part2_size_split_local.png}
+
+\medskip
+\scriptsize
+\begin{itemize}
+  \item Both \textbf{SME} and \textbf{large} firms bid less on local projects when we compare the same firm across auctions.
+  \item The point estimate is \textbf{more negative for large firms} ($-0.126$ vs.\ $-0.076$ with bidder + month FE), so we do \textbf{not} see evidence that large firms have a smaller home-market wedge.
+  \item The within-firm local advantage is therefore \textbf{not only an SME phenomenon}; it appears across firm types.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bid Markups: Interpretation for the Model}
+\small
+\textbf{What the bid-markup evidence says:}
+\begin{itemize}
+  \item \textbf{Within firm:} the same supplier bids lower at home. This identifies a \textbf{local advantage} or, equivalently, a \textbf{non-local cost/information wedge}.
+  \item \textbf{Within auction:} local and non-local bidders look similar conditional on entry. Observed non-local entrants must therefore be a \textbf{positively selected} set.
+  \item The natural model combines:
+        \begin{itemize}
+          \item firm heterogeneity / efficiency,
+          \item a distance or home-market friction,
+          \item endogenous entry into non-local auctions.
+        \end{itemize}
+  \item So the reduced-form evidence is consistent with \textbf{real non-local frictions} that are partly offset in cross-section by the selection of stronger firms into away markets.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bid Markups: Reform Effect in Municipal Bids}
+\centering
+\includegraphics[width=0.62\linewidth]{bids_part3_did_coefplot.png}
+
+\medskip
+\scriptsize
+\begin{itemize}
+  \item In the treated 30--100 UTM band, bid markups rise by about \textbf{$0.40$ log points} after the reform relative to 100--200 UTM auctions.
+  \item The \textbf{local triple interaction is small and insignificant}: the markup increase is not concentrated only among local bids.
+  \item The \textbf{SME triple interaction is positive}, suggesting the reform-era markup increase may be somewhat larger among SME bidders.
+\end{itemize}
+\end{frame}
+
+% ── Validity Checks ───────────────────────────────────────
+\begin{frame}{DiD Validity Checks}
+\textbf{Three diagnostic tests (Control 2 = 100--200 UTM):}
+\begin{enumerate}
+  \item \textbf{Wald pre-trend F-test} --- joint test
+        $H_0: \beta_{-8} = \cdots = \beta_{-2} = 0$
+        using full cluster-robust covariance matrix of event-study coefficients
+  \item \textbf{Time placebo} --- DiD run on pre-reform data only
+        ($k \in [-8,-1]$), fake reform at $k = -4$; coefficient should be
+        $\approx 0$
+  \item \textbf{Pre-reform balance} --- OLS of entity-level pre-reform means
+        on Treated; tests level differences before reform
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{DiD: Pre-Trend Wald Test (Municipalidades)}
+\small\medskip
+\input{../output/did/tables/diag_pretrend_wald_munic.tex}
+\end{frame}
+
+\begin{frame}{DiD: Time Placebo Test (Municipalidades)}
+\small\medskip
+\input{../output/did/tables/diag_placebo_munic.tex}
+\end{frame}
+
+\begin{frame}{DiD: Pre-Reform Balance (Municipalidades)}
+\small\medskip
+\input{../output/did/tables/diag_balance_munic.tex}
+\end{frame}
+
+
+% ══════════════════════════════════════════════════════════
+% REGIONAL HETEROGENEITY
+% ══════════════════════════════════════════════════════════
+\section{Regional Heterogeneity}
+
+\begin{frame}{Regional Heterogeneity: Market Structure Varies by Region}
+\begin{columns}[c]
+  \column{0.52\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{binscatter_q_nonlocal_munic.png}
+  \column{0.48\textwidth}
+  \textbf{Four pre-reform moderators (Municipalidades, 30--100 UTM):}
+  \begin{itemize}
+    \item \textbf{Nonlocal share:} fraction of bids by out-of-region firms
+    \item \textbf{q\_pre:} avg.\ monthly tender count
+    \item \textbf{n\_pot\_local:} unique local suppliers
+    \item \textbf{Distance from Santiago:} geographic isolation (km)
+  \end{itemize}
+  \medskip
+  \textit{Thick markets (high q\_pre) have lower non-local penetration ---
+  market size proxies for local competitive capacity.}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Regional Heterogeneity: Specification}
+\textbf{Question:} Does the effect of Compra Ágil vary with pre-reform
+regional characteristics?
+
+\bigskip
+\textbf{Estimating equation (OLS DiD):}
+\[
+  y_{irt} = \alpha_i + \gamma_t
+    + \beta_1\,(T_i \times \text{Post}_t)
+    + \beta_2\,(T_i \times \text{Post}_t \times Z_r)
+    + \varepsilon_{irt}
+\]
+
+\medskip
+\begin{itemize}
+  \item $Z_r$ = standardised pre-reform regional moderator
+        (one specification per moderator)
+  \item $\beta_1$ = average treatment effect;
+        \quad $\beta_2$ = heterogeneity w.r.t.\ $Z_r$
+  \item Same FE and clustering as baseline DiD
+        (entity + year-month FE; SEs by PE)
+  \item \textbf{Sample:} Municipalidades sector
+\end{itemize}
+
+\medskip
+\textbf{Five moderators $Z_r$:} non-local share, tender count, tender value,
+potential local firms, distance from Santiago.
+\end{frame}
+
+\begin{frame}{Exposure-Based Design: Panel Version of High vs.\ Low Exposure}
+\small
+\textbf{Idea:} compare places that were more exposed to non-local competition
+\emph{before} the reform to places that were less exposed.
+
+\medskip
+\textbf{Why use a panel instead of post-only comparisons?}
+\begin{itemize}
+  \item Exposure is measured \textbf{pre-reform}, so it is predetermined.
+  \item Entity and month fixed effects absorb permanent level differences across places and common national shocks.
+  \item The key coefficient is the \textbf{triple interaction}:
+\[
+  \beta_2 \;:\; \text{Treated} \times \text{Post} \times \text{Exposure}_r
+\]
+  \item Interpretation: do treated-band outcomes move \textbf{more} after the reform in high-exposure places?
+\end{itemize}
+
+\medskip
+\textbf{Two exposure measures shown next:}
+\begin{itemize}
+  \item Direct measure: pre-reform non-local bidder share
+  \item Geographic proxy: distance from Santiago
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Exposure-Based DiD: Pre-Reform Non-Local Share}
+\scriptsize
+\resizebox{\textwidth}{!}{%
+\input{../output/did/tables/hetero_interacted_nonlocal_share_pre_munic.tex}}
+
+\medskip
+\small\textit{This is the table version of the exposure design. $\hat\beta_2$ is the additional reform effect in regions with higher pre-reform non-local bidder share. The clearest heterogeneity appears in bidder composition, lower single-bidder risk, and higher submitted bid markups in high-exposure regions.}
+\end{frame}
+
+\begin{frame}{Exposure-Based DiD: Distance from Santiago}
+\scriptsize
+\resizebox{\textwidth}{!}{%
+\input{../output/did/tables/hetero_interacted_dist_from_santiago_munic.tex}}
+
+\medskip
+\small\textit{Distance from Santiago is a predetermined geographic proxy for exposure to non-local competition. The interacted coefficient $\hat\beta_2$ mainly loads on bidder composition and single-bidder probability; price heterogeneity is weaker than with the direct non-local-share measure.}
+\end{frame}
+
+\begin{frame}{Heterogeneity: N Local and N Nonlocal Bidders}
+\begin{columns}[c]
+  \column{0.5\textwidth}\centering
+  \textbf{\small N Local Bidders}\\[-2pt]
+  \includegraphics[width=0.9\linewidth]{hetero_coefplot_n_local_nonlocal_share_pre_munic.png}
+  \column{0.5\textwidth}\centering
+  \textbf{\small N Non-local Bidders}\\[-2pt]
+  \includegraphics[width=0.9\linewidth]{hetero_coefplot_n_nonlocal_nonlocal_share_pre_munic.png}
+\end{columns}
+\medskip
+\small\textit{Regions with high pre-reform non-local share see the largest local
+entry gains --- consistent with the exclusion mechanism.}
+\end{frame}
+
+\begin{frame}{Heterogeneity: Total Bidders and SME Share (by Distance)}
+\begin{columns}[c]
+  \column{0.5\textwidth}\centering
+  \textbf{\small N Bidders}\\[-2pt]
+  \includegraphics[width=0.9\linewidth]{hetero_coefplot_n_bidders_dist_from_santiago_munic.png}
+  \column{0.5\textwidth}\centering
+  \textbf{\small SME Share (SII)}\\[-2pt]
+  \includegraphics[width=0.9\linewidth]{hetero_coefplot_sme_share_sii_dist_from_santiago_munic.png}
+\end{columns}
+\medskip
+\small\textit{Distance from Santiago is an exogenous geographic instrument for
+pre-reform non-local penetration.}
+\end{frame}
+
+\begin{frame}{Heterogeneity: Win Price Ratio}
+\begin{columns}[c]
+  \column{0.5\textwidth}\centering
+  \textbf{\small by Nonlocal Share}\\[-2pt]
+  \includegraphics[width=0.9\linewidth]{hetero_coefplot_log_win_price_ratio_nonlocal_share_pre_munic.png}
+  \column{0.5\textwidth}\centering
+  \textbf{\small by Distance from Santiago}\\[-2pt]
+  \includegraphics[width=0.9\linewidth]{hetero_coefplot_log_win_price_ratio_dist_from_santiago_munic.png}
+\end{columns}
+\medskip
+\small\textit{Win prices rise most in regions that had high pre-reform
+non-local competition --- local entry cannot fully replace lower-cost
+non-local incumbents.}
+\end{frame}
+
+
+% ══════════════════════════════════════════════════════════
+% CROSS-MARKET SPILLOVERS
+% ══════════════════════════════════════════════════════════
+\section{Cross-Market Spillovers}
+
+\begin{frame}{Cross-Market Spillovers: Mechanism}
+\textbf{Research question:} Did firms freed from 30--100 UTM licitaciones
+redirect capacity to \textit{above-threshold} (100--500 UTM) tenders in their
+home regions, increasing competition there?
+
+\bigskip
+\textbf{Mechanism (spatial auction model):}
+\begin{enumerate}
+  \item Reform excludes non-local firms from 30--100 UTM Compra Ágil.
+  \item Firms from ``export regions'' (e.g.\ RM) had many cross-region bids
+        in that band before the reform --- these bids are now blocked.
+  \item Freed capacity $\Rightarrow$ these firms bid more in their home
+        region's above-threshold (100--500 UTM) tenders.
+  \item Prediction: N bidders (esp.\ large firms) $\uparrow$ post-reform
+        in high-export-share regions.
+\end{enumerate}
+
+\bigskip
+\textbf{Treatment:} \textit{Export share} =
+fraction of pre-reform bids by home-region-$r$ firms placed in \textit{other}
+regions (30--100 UTM band). Time-invariant; variation is cross-regional.
+\end{frame}
+
+\begin{frame}{Export Share by Region (Pre-Reform)}
+\centering
+\includegraphics[width=0.70\linewidth]{spillover_export_share_munic.png}
+
+\medskip
+\small\textit{Región Metropolitana has the highest export share: Santiago firms
+dominated peripheral-region procurement in the treated band.
+Far south and north regions are largely self-contained.}
+\end{frame}
+
+\begin{frame}{Cross-Market Spillovers: Specification}
+\textbf{Event-study TWFE} on above-threshold (100--500 UTM) region--month panel:
+\[
+  y_{rt} = \alpha_r + \gamma_t
+    + \sum_{k \neq -1} \delta_k \,\bigl(\mathbf{1}[t{=}k] \times
+      \mathrm{ExportShare}_r\bigr) + \varepsilon_{rt}
+\]
+
+\begin{itemize}
+  \item $r$ = region (16 Chilean regions), $t$ = year-month.
+  \item $k$ = months relative to reform ($k=0$ = December 2024).
+  \item $\alpha_r$ = region FE; $\gamma_t$ = year-month FE.
+  \item Estimated for \textbf{continuous} (standardized) and
+        \textbf{binary} (top-tercile) export share.
+  \item Outcomes: N bidders, N local, N non-local, N large, N SME, Pr(single).
+  \item SE clustered at region level (16 clusters).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Spillovers: N Bidders and Pr(Single Bidder)}
+\begin{columns}[c]
+  \column{0.5\textwidth}\centering
+  \includegraphics[width=\linewidth]{spillover_event_study_n_bidders_munic.png}
+  \column{0.5\textwidth}\centering
+  \includegraphics[width=\linewidth]{spillover_event_study_single_bidder_munic.png}
+\end{columns}
+\medskip
+\small\textit{Total competition rises in high-export regions post-reform;
+single-bidder probability falls --- consistent with freed-capacity reallocation.}
+\end{frame}
+
+\begin{frame}{Spillovers: Local vs.\ Non-Local Bidders}
+\begin{columns}[c]
+  \column{0.5\textwidth}\centering
+  \includegraphics[width=\linewidth]{spillover_event_study_n_local_munic.png}
+  \column{0.5\textwidth}\centering
+  \includegraphics[width=\linewidth]{spillover_event_study_n_nonlocal_munic.png}
+\end{columns}
+\medskip
+\small\textit{Local bidder count rises in high-export regions (home firms
+re-enter above-threshold band). Non-local count adjusts as
+previously-exporting firms redirect to home markets.}
+\end{frame}
+
+\begin{frame}{Spillovers: Large Firms and Non-Local Share}
+\begin{columns}[c]
+  \column{0.5\textwidth}\centering
+  \includegraphics[width=\linewidth]{spillover_event_study_n_large_munic.png}
+  \column{0.5\textwidth}\centering
+  \includegraphics[width=\linewidth]{spillover_event_study_share_nonlocal_munic.png}
+\end{columns}
+\medskip
+\small\textit{Large-firm entry is the main driver of the spillover effect.
+Non-local share of above-threshold tenders rises in export regions as
+home-based large firms redirect bids.}
+\end{frame}
+
+\begin{frame}{Spillovers: SME Bidders}
+\centering
+\includegraphics[width=0.60\linewidth]{spillover_event_study_n_sme_munic.png}
+
+\medskip
+\small\textit{SME spillover effect is smaller --- SMEs tend to be local and
+were not the primary ``exporting'' firms. Effect concentrated among large firms.}
+\end{frame}
+
+
+% ══════════════════════════════════════════════════════════
+% STRUCTURAL MODEL
+% ══════════════════════════════════════════════════════════
+\section{Structural Model}
+
+% ── Environment ──────────────────────────────────────────
+\begin{frame}{Model: Environment and Timing}
+\begin{columns}[T]
+  \column{0.5\textwidth}
+  \textbf{Regions and firms}
+  \begin{itemize}
+    \item $R$ regions with pairwise distances $d_{rs}$
+    \item Each period, region $r$ posts $Q_r$ procurement projects
+          at reserve price $\bar{p}$
+    \item Firms $i \in \mathcal{F}$ have home region $h_i$ and
+          capacity $K_i$ (max markets per period)
+    \item $N_r^{pot}$: potential local suppliers in region $r$
+  \end{itemize}
+
+  \column{0.5\textwidth}
+  \textbf{Timing}
+  \begin{enumerate}
+    \item \textbf{Demand} $\mathbf{Q}$ realized and observed
+    \item \textbf{Entry:} firm $i$ chooses set $M_i$,
+          $|M_i| \leq K_i$; pays entry cost $\kappa_r^i$
+    \item \textbf{Cost realization:} private cost drawn
+          for each entered market
+    \item \textbf{Bidding:} sealed-bid first-price auction;
+          lowest bidder wins
+  \end{enumerate}
+\end{columns}
+\end{frame}
+
+% ── Cost Structure ───────────────────────────────────────
+\begin{frame}{Model: Cost Structure}
+\textbf{Firm $i$'s cost for a project in region $r$:}
+\[
+  c_{ir} = \underbrace{\bar{c}}_{\text{baseline}}
+         + \underbrace{\delta \cdot d_{h_i, r}}_{\text{distance cost}}
+         - \underbrace{\lambda \cdot \mathbf{1}[h_i = r]}_{\text{local advantage}}
+         + \underbrace{\epsilon_{ir}}_{\text{private shock}}
+\]
+
+\medskip
+\begin{itemize}
+  \item $\bar{c} > 0$: common baseline project cost
+  \item $\delta > 0$: per-unit-distance cost (transport, logistics,
+        remote supervision)
+  \item $\lambda > 0$: local informational and relational advantage
+        (knowledge of local regulations, subcontractor networks,
+        permitting relationships)
+  \item $\epsilon_{ir} \sim F(\cdot)$ i.i.d.: idiosyncratic private cost shock
+\end{itemize}
+
+\medskip
+\textbf{Key:} A non-local firm from region $s \neq r$ faces an expected cost
+disadvantage of $\delta \cdot d_{sr} + \lambda$ relative to a local firm.
+Distance cost and informational advantage are \emph{separately} identified.
+\end{frame}
+
+% ── Entry Costs ──────────────────────────────────────────
+\begin{frame}{Model: Entry Costs and Capacity}
+\textbf{Entry cost for firm $i$ into market $r$:}
+\[
+  \kappa_r^i = \kappa_0 + \kappa_d \cdot d_{h_i, r}
+\]
+
+\begin{itemize}
+  \item $\kappa_0 > 0$: baseline participation cost (preparing bids,
+        learning about projects) --- same for all firms
+  \item $\kappa_d > 0$: additional cost of distant operations
+  \item Local firms pay only $\kappa_0$
+\end{itemize}
+
+\bigskip
+\textbf{Capacity constraint ($K_i$):}
+
+Firm $i$ can enter at most $K_i$ markets per period. This is the key ingredient
+that \textit{links markets}: a firm bidding in peripheral regions uses up
+capacity that could be deployed at home.
+
+\medskip
+Entry set choice:
+\[
+  \max_{M_i \subseteq \{1,\dots,R\},\; |M_i| \leq K_i}
+    \sum_{r \in M_i} \pi_{ir}(n_r^e)
+\]
+\end{frame}
+
+% ── Policy Environment ───────────────────────────────────
+\begin{frame}{Model: Policy Environment}
+\textbf{Pre-reform:} All firms may enter any market.
+
+\bigskip
+\textbf{Post-reform --- three tiers by project value:}
+
+\medskip
+\begin{enumerate}
+  \item \textbf{Strong preference (Compra Ágil, $< \underline{v}$ = 100 UTM):}\\
+        Only local firms + EMT may enter. Non-local firms \textbf{fully excluded}.
+
+  \vspace{0.5em}
+  \item \textbf{Weak preference ($\underline{v}$--$\bar{v}$, 100--500 UTM):}\\
+        All firms may enter, but local firms receive bid preference $\alpha > 0$.\\
+        Non-local firm $i$ wins only if $b_i < b_j - \alpha$ for all locals $j$.
+
+  \vspace{0.5em}
+  \item \textbf{No preference ($> \bar{v}$ = 500 UTM):}\\
+        Status quo; all firms compete on equal terms.
+\end{enumerate}
+
+\bigskip
+\small\textbf{Note:} Theoretical analysis focuses on the strong-form case
+(full exclusion, 30--100 UTM band) --- this is the empirically relevant tier
+and generates the starkest predictions.
+\end{frame}
+
+% ── Equilibrium ─────────────────────────────────────────
+\begin{frame}{Model: Equilibrium}
+\textbf{Bidding stage (conditional on $n_r$ entrants):}
+\[
+  E[p_r \mid n]
+    = \underbrace{E[c_{(1:n)}]}_{\text{efficient cost}}
+    + \underbrace{\frac{1}{n} E\!\left[\frac{F(c_{(1:n)})}{f(c_{(1:n)})}\right]}_{\text{markup (decreasing in }n)}
+\]
+More entrants $\Rightarrow$ lower prices via both lower $c_{(1:n)}$ and lower markup.
+
+\bigskip
+\textbf{Entry equilibrium:} vector $(n_1^*, \dots, n_R^*)$ such that
+for each market $r$ and each entering firm $i$:
+\[
+  Q_r \cdot \Pi_{ir}^{bid}(n_r^*) \geq \kappa_r^i
+  \quad \text{(with equality for marginal entrant)}
+\]
+
+\medskip
+\textbf{Multi-market:} the capacity constraint means
+\[
+  n_r^*\!\left(\{n_s^*\}_{s \neq r}\right) \quad \forall\; r
+\]
+must be solved as a system --- markets are interdependent through firm capacity.
+\end{frame}
+
+% ── Policy Effects: Direct ───────────────────────────────
+\begin{frame}{Model: Direct Effect of the Policy}
+\textbf{Immediate effect:} bidding pool in market $r$ shrinks from
+$n_r^{pre}$ to $n_r^L$ (local entrants only).
+
+\bigskip
+Government pays more if excluded non-local firms were cost-competitive.
+How much competition recovers depends on three factors:
+
+\medskip
+\begin{enumerate}
+  \item \textbf{$N_r^{pot}$ (local firm pool):} if large relative to equilibrium
+        entry, new entry can fully replace excluded firms. If small (remote regions),
+        it cannot.
+  \vspace{0.3em}
+  \item \textbf{$Q_r$ (demand volume):} thick demand sustains more entrants.
+        Thin, lumpy demand cannot support competitive local markets.
+  \vspace{0.3em}
+  \item \textbf{$\delta \cdot d_{sr} + \lambda$ (cost gap):} if excluded firms
+        were from nearby regions, the government loses genuinely competitive bidders.
+        If from far away, they were high-cost anyway.
+\end{enumerate}
+\end{frame}
+
+% ── Cross-Market Spillover ────────────────────────────────
+\begin{frame}{Model: Cross-Market Spillovers via Capacity}
+\textbf{Mechanism:} Consider Santiago-based firm $i$ that pre-reform entered
+both Santiago and rural region $r$ (using 2 of $K$ capacity units). Post-reform:
+
+\begin{enumerate}
+  \item Firm $i$ is excluded from $r$ --- recovers one capacity unit.
+  \item If there is another market $s$ with $\pi_{is}(n_s^e) > 0$ and $i$
+        was previously capacity-constrained, firm $i$ now enters $s$.
+  \item Otherwise, firm $i$ redirects capacity to Santiago's
+        above-threshold tenders.
+\end{enumerate}
+
+\bigskip
+\textbf{Effect on Santiago (export regions):}\\
+Redirected capacity increases entrants in above-threshold markets,
+\emph{reducing} procurement costs there.
+
+\medskip
+\textbf{Effect on rural markets (import regions):}\\
+Fewer non-local bidders in the 30--100 UTM band; competition falls,
+prices rise. But local entry partially offsets this.
+
+\bigskip
+\small\textit{This cross-market linkage is the key contribution of the
+multi-market framework --- single-market analyses miss it entirely.}
+\end{frame}
+
+% ── Welfare ──────────────────────────────────────────────
+\begin{frame}{Model: Welfare}
+\textbf{Government procurement surplus:}
+\[
+  W_r^{gov} = Q_r \cdot \left(\bar{p} - E[p_r]\right)
+\]
+
+\textbf{Local economic benefit:}
+\[
+  W_r^{local} = Q_r \cdot \Pr[\text{local wins in } r] \cdot w_r
+\]
+where $w_r$ captures local employment, wages, and multiplier effects.
+
+\textbf{Total welfare:}
+\[
+  W = \sum_{r} \left[W_r^{gov} + \phi \cdot W_r^{local}\right]
+\]
+$\phi \geq 0$: social weight on local economic activity.
+
+\textbf{Change from policy:}
+\[
+  \Delta W = \sum_r Q_r
+    \left[
+      \underbrace{-(E[\tilde{p}_r] - E[p_r])}_{\text{cost effect}}
+      + \underbrace{\phi \cdot \Delta\!\Pr[\text{local wins}]_r \cdot w_r}_{\text{local benefit}}
+    \right]
+\]
+\textbf{Sign is ambiguous and varies across regions} --- the core tension.
+\end{frame}
+
+% ── Implications vs. Empirics ─────────────────────────────
+\begin{frame}{Model Implications vs.\ Current Empirical Results}
+\begin{columns}[T]
+  \column{0.5\textwidth}
+  \textbf{Matched by the data:}
+  \begin{itemize}
+    \item[\checkmark] SME bidder share $\uparrow$,
+          non-local share $\downarrow$ post-reform
+    \item[\checkmark] SME winners $\uparrow$,
+          large-firm winners $\downarrow$
+    \item[\checkmark] Win prices $\uparrow$ (cost effect $>$ competition recovery)
+    \item[\checkmark] Heterogeneity: regions with high pre-reform non-local
+          share see largest local entry gains
+    \item[\checkmark] Cross-market spillovers: above-threshold N bidders
+          $\uparrow$ in high-export regions (capacity reallocation confirmed)
+    \item[\checkmark] Large-firm spillover $>$ SME spillover
+  \end{itemize}
+
+  \column{0.5\textwidth}
+  \textbf{Unresolved / needs more work:}
+  \begin{itemize}
+    \item[\textbf{?}] Entry response timing: how quickly do new local
+          firms appear?
+    \item[\textbf{?}] $\lambda$ vs.\ $\delta$: cannot yet separate
+          distance cost from local informational advantage without
+          structural estimation
+    \item[\textbf{?}] $N_r^{pot}$ margin: limited data on potential
+          (non-entering) local firms
+    \item[\textbf{?}] Welfare weights $\phi$: distributional gains
+          require employment data (SII match)
+    \item[\textbf{?}] Bunching at thresholds: not yet tested
+  \end{itemize}
+\end{columns}
+\end{frame}
+
+
+% ══════════════════════════════════════════════════════════
+% ESTIMATION PLAN
+% ══════════════════════════════════════════════════════════
+\section{Estimation Plan}
+
+\begin{frame}{Estimation Plan: Overview}
+\textbf{Goal:} Identify $(\delta, \lambda, \kappa_0, \kappa_d, K)$ using
+variation in entry and bidding across regions, distances, and the reform.
+
+\bigskip
+\textbf{Three-step strategy:}
+\begin{enumerate}
+  \item \textbf{Reduced-form moments} (already estimated):\\
+        Event-study and DiD coefficients provide model-consistent
+        moments relating entry changes to pre-reform market structure.
+
+  \vspace{0.3em}
+  \item \textbf{Bidding stage} (first, conditional on entry):\\
+        Estimate cost distribution $F(\cdot)$ from bid data using
+        standard first-price auction methods (e.g., GPV 2000;
+        Guerre, Perrigne, Vuong). Recovers $\delta$ and $\lambda$
+        from the difference in cost distributions for local vs.\
+        non-local firms at varying distances.
+
+  \vspace{0.3em}
+  \item \textbf{Entry stage} (second, using cost estimates):\\
+        Back out entry costs $(\kappa_0, \kappa_d)$ and capacity $K$
+        from the free-entry condition, using variation in $Q_r$,
+        $N_r^{pot}$, and the reform as instruments.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Estimation Plan: Identifying Variation}
+\begin{columns}[T]
+  \column{0.5\textwidth}
+  \textbf{Identifying $\delta$ (distance cost):}
+  \begin{itemize}
+    \item Within-tender variation: same project, different bidder origins
+    \item Bid level $\sim$ distance of bidder's home region
+    \item Pre-reform data; no confound from exclusion
+    \item Controls: firm FE, tender FE, sector-region trends
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Identifying $\lambda$ (local advantage):}
+  \begin{itemize}
+    \item Discontinuity: otherwise identical firms, local vs.\ non-local
+    \item Residual cost gap after controlling for $\delta \cdot d$
+    \item Validation: should predict pre-reform win share differential
+  \end{itemize}
+
+  \column{0.5\textwidth}
+  \textbf{Identifying $\kappa_0, \kappa_d$ (entry costs):}
+  \begin{itemize}
+    \item Cross-regional variation in entry rates vs.\ market size $Q_r$
+    \item Free-entry condition pins down $\kappa_0$ given cost estimates
+    \item $\kappa_d$: how entry by distant firms varies with distance
+          (pre-reform)
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Identifying $K$ (capacity):}
+  \begin{itemize}
+    \item Post-reform spillovers: which firms enter more above-threshold
+          tenders after exclusion from 30--100 UTM?
+    \item Variation in export share $\times$ firm size
+    \item Direct measure: change in number of markets per firm
+  \end{itemize}
+\end{columns}
+\end{frame}
+
+% ══════════════════════════════════════════════════════════
+% COUNTERFACTUALS
+% ══════════════════════════════════════════════════════════
+\section{Counterfactuals}
+
+\begin{frame}{Counterfactuals}
+\textbf{[PLACEHOLDER --- describe planned counterfactuals]}
+
+\medskip
+Once structural parameters are estimated, three main counterfactuals:
+
+\begin{enumerate}
+  \item \textbf{Optimal local preference threshold by region}\\
+        For each region $r$, find the threshold $\underline{v}_r^*$ that maximizes
+        total welfare $W_r^{gov} + \phi \cdot W_r^{local}$.
+        Quantify the cost of the uniform 100 UTM policy.
+
+  \vspace{0.4em}
+  \item \textbf{Welfare decomposition}\\
+        Separate the cost effect (government pays more) from the
+        local benefit effect (local firms win more) across regions.
+        Map the spatial distribution of winners and losers from the policy.
+
+  \vspace{0.4em}
+  \item \textbf{Alternative policy designs}\\
+        Bid preference $\alpha$ (weak form) vs.\ full exclusion (strong form).
+        Which achieves more local wins at lower cost to the government?
+        Optimal $\alpha$ by market thickness.
+\end{enumerate}
+\end{frame}
+
+
+% ══════════════════════════════════════════════════════════
+% NEXT STEPS
+% ══════════════════════════════════════════════════════════
+\section{Next Steps}
+
+\begin{frame}{Next Steps}
+\begin{columns}[T]
+  \column{0.5\textwidth}
+  \textbf{Empirics (short run)}
+  \begin{itemize}
+    \item Add descriptive facts about local/non-local firm bids
+          (pre-reform patterns; geography of export activity)
+    \item Fill summary statistics tables (procurement + SII)
+    \item Extend event study window as more post-reform months arrive
+    \item Test for bunching at 100 UTM threshold post-reform
+    \item Track new local entrants (first-time bidders)
+          by region post-reform
+  \end{itemize}
+
+  \column{0.5\textwidth}
+  \textbf{Structural estimation}
+  \begin{itemize}
+    \item Match SII firm data to ChileCompra bidders (RUT linkage)
+    \item Estimate bidding-stage cost model (GPV approach);
+          recover $\delta, \lambda$ from local/non-local bid distributions
+    \item Estimate entry model; recover $\kappa_0, \kappa_d$
+          using pre-reform cross-regional variation
+    \item Use post-reform spillovers to identify capacity $K$
+    \item Validate: simulate model-predicted entry response and
+          compare to event-study estimates
+  \end{itemize}
+\end{columns}
+
+\bigskip
+\begin{itemize}
+  \item \textbf{Longer run:} obtain SII employment data for welfare
+        decomposition; compute local multipliers $w_r$ by region
+  \item \textbf{Writing:} working paper draft (target: Q3 2026)
+\end{itemize}
+\end{frame}
+
+
+% ══════════════════════════════════════════════════════════
+% APPENDIX
+% ══════════════════════════════════════════════════════════
+
+\begin{frame}
+\centering
+\textbf{APPENDIX}
+\end{frame}
+
+\appendix
+
+% ── Monthly project counts and values ────────────────────
+
+\begin{frame}{App: Monthly Project Counts by Band}
+\begin{columns}[c]
+  \column{0.49\textwidth}\centering
+  \textbf{\small 0--30 UTM}\\[2pt]
+  \includegraphics[width=\linewidth]{ca_D13_monthly_tender_counts_stacked_0_30utm.png}
+  \column{0.49\textwidth}\centering
+  \textbf{\small 30--100 UTM (Treated Band)}\\[2pt]
+  \includegraphics[width=\linewidth]{ca_D13_monthly_tender_counts_stacked_30_100utm.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{App: Monthly Project Counts --- Higher Bands}
+\begin{columns}[c]
+  \column{0.49\textwidth}\centering
+  \textbf{\small 100--500 UTM}\\[2pt]
+  \includegraphics[width=\linewidth]{ca_D13_monthly_tender_counts_stacked_100_500utm.png}
+  \column{0.49\textwidth}\centering
+  \textbf{\small 500+ UTM}\\[2pt]
+  \includegraphics[width=\linewidth]{ca_D13_monthly_tender_counts_stacked_500_plus_utm.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{App: Monthly Project Value by Band}
+\begin{columns}[c]
+  \column{0.49\textwidth}\centering
+  \textbf{\small 0--30 UTM}\\[2pt]
+  \includegraphics[width=\linewidth]{ca_D14_monthly_tender_value_stacked_0_30utm.png}
+  \column{0.49\textwidth}\centering
+  \textbf{\small 30--100 UTM (Treated Band)}\\[2pt]
+  \includegraphics[width=\linewidth]{ca_D14_monthly_tender_value_stacked_30_100utm.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{App: Monthly Project Value --- Higher Bands}
+\begin{columns}[c]
+  \column{0.49\textwidth}\centering
+  \textbf{\small 100--500 UTM}\\[2pt]
+  \includegraphics[width=\linewidth]{ca_D14_monthly_tender_value_stacked_100_500utm.png}
+  \column{0.49\textwidth}\centering
+  \textbf{\small 500+ UTM}\\[2pt]
+  \includegraphics[width=\linewidth]{ca_D14_monthly_tender_value_stacked_500_plus_utm.png}
+\end{columns}
+\end{frame}
+
+% ── Bidder types ─────────────────────────────────────────
+
+\begin{frame}{App: Bidder Composition by Band}
+\begin{columns}[c]
+  \column{0.49\textwidth}\centering
+  \textbf{\small 30--100 UTM}\\[2pt]
+  \includegraphics[width=\linewidth]{ca_D8_bidder_types_avg_count_30_100utm_month.png}
+  \column{0.49\textwidth}\centering
+  \textbf{\small 100--500 UTM}\\[2pt]
+  \includegraphics[width=\linewidth]{ca_D10_bidder_types_avg_count_100_500utm_month.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{App: Bidder Share by Band (30--100 UTM)}
+\centering
+\includegraphics[width=0.90\linewidth]{ca_D20_bidder_type_share_30_100utm_month.png}
+\end{frame}
+
+\begin{frame}{App: Winner Share by Band (30--100 UTM)}
+\centering
+\includegraphics[width=0.90\linewidth]{ca_D24_winner_type_share_30_100utm_month.png}
+\end{frame}
+
+% ── OLS DiD Results ──────────────────────────────────────
+
+\begin{frame}{App: OLS DiD --- Entry (Panel A, Municipalidades)}
+\small\medskip
+\input{../output/did/tables/did_table_compare_A_munic.tex}
+\end{frame}
+
+\begin{frame}{App: OLS DiD --- Bidder Composition (Panel B, Municipalidades)}
+\small\medskip
+\input{../output/did/tables/did_table_compare_B_munic.tex}
+\end{frame}
+
+\begin{frame}{App: OLS DiD --- Winner Characteristics (Panel C, Municipalidades)}
+\small\medskip
+\input{../output/did/tables/did_table_compare_C_munic.tex}
+\end{frame}
+
+\begin{frame}{App: OLS DiD --- Bid Outcomes (Panel D, Municipalidades)}
+\small\medskip
+\input{../output/did/tables/did_table_compare_D_munic.tex}
+\end{frame}
+
+% ── Heterogeneity details ─────────────────────────────────
+
+\begin{frame}{App: Binscatter --- Market Thickness vs.\ Non-local Share}
+\begin{center}
+\includegraphics[width=0.90\linewidth]{binscatter_q_nonlocal_munic.png}
+\end{center}
+\small\textit{Thick markets (high q\_pre) have systematically fewer non-local
+bidders --- log scale removes Santiago leverage.}
+\end{frame}
+
+\begin{frame}{App: Binscatter --- Moderator Pair Matrix}
+\begin{center}
+\includegraphics[width=0.85\linewidth]{binscatter_moderator_pairs_munic.png}
+\end{center}
+\small\textit{q\_pre and totval\_pre are highly correlated. n\_pot\_local is
+a complementary channel. Santiago ($\star$) has extreme leverage on raw scale.}
+\end{frame}
+
+\begin{frame}{App: Interacted DiD --- Non-local Bidder Share}
+\scriptsize\medskip
+\resizebox{\textwidth}{!}{%
+\input{../output/did/tables/hetero_interacted_nonlocal_share_pre_munic.tex}}
+\end{frame}
+
+\begin{frame}{App: Interacted DiD --- Potential Local Firms}
+\small\medskip
+\resizebox{\textwidth}{!}{%
+\input{../output/did/tables/hetero_interacted_n_pot_local_munic.tex}}
+\end{frame}
+
+\begin{frame}{App: Interacted DiD --- Distance from Santiago}
+\small\medskip
+\resizebox{\textwidth}{!}{%
+\input{../output/did/tables/hetero_interacted_dist_from_santiago_munic.tex}}
+\end{frame}
+
+% ── Option B robustness ───────────────────────────────────
+
+\begin{frame}{App: Robustness --- Dec 2024 Excluded (Option B)}
+\textbf{Motivation:} The reform took effect Dec 12. The $k=0$ month captures
+only partial exposure ($\approx 19/31$ days treated).
+
+\bigskip
+\textbf{Option B:} Drop $k=0$ entirely. Post-period begins at $k=1$ (Jan 2025).
+\end{frame}
+
+\begin{frame}{App: Event Studies --- Option B}
+\begin{columns}[c]
+  \column{0.5\textwidth}\centering
+  \includegraphics[width=\linewidth]{../output/did/figures/diag_event_study_n_bidders_optB.png}
+  \column{0.5\textwidth}\centering
+  \includegraphics[width=\linewidth]{../output/did/figures/diag_event_study_sme_share_sii_optB.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{App: Pre-Trend Wald Test (Option B)}
+\small\medskip
+\input{../output/did/tables/diag_pretrend_wald_optB.tex}
+\end{frame}
+
+% ── Bid markups appendix ─────────────────────────────────
+\begin{frame}{App: Bid Markups --- Residual Densities by Firm Type}
+\centering
+\includegraphics[width=0.96\linewidth]{bids_part1_resid_density_by_size.png}
+
+\medskip
+\small\textit{Within auction, local and non-local residual markups overlap heavily for SME and large firms. Non-SII bids are shown only in aggregate because locality is missing for unmatched firms.}
+\end{frame}
+
+\begin{frame}{App: Bid Markups --- Within-Firm Residual Density}
+\centering
+\includegraphics[width=0.82\linewidth]{bids_part2_resid_density_local_vs_nonlocal.png}
+
+\medskip
+\small\textit{After absorbing bidder and month effects, the residual distribution shifts left for local projects. The same firm tends to bid lower in its home region.}
+\end{frame}
+
+\begin{frame}{App: Bid Markups --- By Firm Home Region}
+\centering
+\includegraphics[width=0.92\linewidth]{bids_part2_region_split.png}
+
+\medskip
+\small\textit{Pooled origin-region interactions show that the local effect is heterogeneous across firm home regions, while the non-local distance slope is more consistently negative for larger central and southern origin regions. I read this as stronger evidence for a continuous distance friction than for one universal same-region premium.}
+\end{frame}
+
+\begin{frame}{App: Bid Markups --- Event Study}
+\centering
+\includegraphics[width=0.76\linewidth]{bids_part3_event_study.png}
+
+\medskip
+\small\textit{Post-reform bid markups jump sharply, but pre-period coefficients are not flat relative to $k=-1$. I treat this dynamic profile as descriptive rather than a clean event-study design.}
+\end{frame}
+
+\begin{frame}{App: Bid Markups --- Auction FE Specs}
+\centering
+\scriptsize
+\resizebox{\linewidth}{!}{%
+\input{../output/bids/tables/bids_part1_auction_fe.tex}
+}
+\end{frame}
+
+\begin{frame}{App: Bid Markups --- Within-Firm and Distance Specs}
+\centering
+\scriptsize
+\resizebox{\linewidth}{!}{%
+\input{../output/bids/tables/bids_part2_firm_fe.tex}
+}
+\end{frame}
+
+% ── Commune-level distance (new specs 3a–3f_com) ──────────
+\begin{frame}{App: Commune-Level Distances --- Identification Motivation}
+\begin{columns}[T]
+  \column{0.5\textwidth}
+  \textbf{Problem with region-centroid distances (specs 2d–2e):}
+  \begin{itemize}
+    \item Only 16 distinct values for non-local bids
+    \item Spec (2e) bins are non-monotonic: 800+ km coefficient
+          \emph{falls} relative to 400--800 km, likely due to strong
+          positive selection among extreme-distance bidders
+    \item $\delta$ (distance cost) and $\lambda$ (local info advantage)
+          are confounded: both are identified off the same
+          local/non-local boundary
+  \end{itemize}
+
+  \column{0.5\textwidth}
+  \textbf{Solution: municipality (commune)-level distances:}
+  \begin{itemize}
+    \item $\sim$346 distinct values from full pairwise Haversine matrix
+    \item Same-region bids have \emph{nonzero} commune distances
+          $\Rightarrow$ within-region variation identifies $\delta$
+          \emph{without} touching the local/non-local boundary
+    \item Spec (3f\_com): local dummy + log distance on \emph{all} bids
+          directly estimates the discrete local premium $\lambda$
+          conditional on the continuous distance gradient $\delta$
+    \item Near-border firms (same region, large commune distance)
+          vs.\ same-region firms close to buyer sharpen the wedge
+  \end{itemize}
+\end{columns}
+
+\medskip
+\centering\small
+\textit{New specs mirror 2a--2f but use commune centroids.
+        Finer distance bins (1--50, 50--150, 150--300, 300--600, 600+ km)
+        exploit the richer variation.}
+\end{frame}
+
+\begin{frame}{App: Commune-Level Distances --- Distance Gradient (Region vs.\ Commune)}
+\centering
+\includegraphics[width=0.86\linewidth]{bids_commune_distance_gradient.png}
+
+\medskip
+\small\textit{%
+  Left: region-centroid log-distance slope on non-local bids (spec 2d).
+  Right: commune-centroid log-distance slope on non-local bids (spec 3c\_com).
+  Consistent slopes across both levels confirm the distance-cost gradient is not
+  an artifact of the coarse regional grid.  Any attenuation in the commune-level
+  estimate would indicate positive selection at long distances was inflating the
+  region-level slope.%
+}
+\end{frame}
+
+\begin{frame}{App: Commune-Level Distances --- Distance Bins (Region vs.\ Commune)}
+\centering
+\includegraphics[width=0.88\linewidth]{bids_commune_bins_comparison.png}
+
+\medskip
+\small\textit{%
+  Left: region-centroid bins from spec (2e) --- non-monotonic at 800+ km.
+  Right: finer commune-centroid bins from spec (3d\_com), reference = 1--50 km.
+  If the 800+ km reversal disappears with finer bins, it was driven by extreme
+  positive selection among very-long-distance bidders (consistent with
+  $\delta > 0$ throughout); if it persists, it reflects a genuine structural
+  non-monotonicity requiring a richer entry model.%
+}
+\end{frame}
+
+\begin{frame}{App: Commune-Level Distances --- Regression Specs (3a--3f\_com)}
+\centering
+\scriptsize
+\resizebox{\linewidth}{!}{%
+\input{../output/bids/tables/bids_commune_distance.tex}
+}
+
+\medskip
+\footnotesize\textit{%
+  (3a\_com): local dummy + bidder \& month FE.
+  (3b\_com): log commune distance on \emph{all} bids --- identifies $\delta$
+  from within-region variation.
+  (3c\_com): log commune distance, non-local only --- direct analogue of spec (2d).
+  (3f\_com): local dummy + log commune distance on all bids --- direct joint
+  estimate of $\lambda$ and $\delta$.
+  (3d\_com): commune bins, non-local bids, ref = 1--50 km.
+  (3e\_com): commune bins, all bids, ref = 0 (same commune).
+  Clustered SE at bidder level throughout.
+  Comparing (3b\_com) slope to (3c\_com) slope tests whether within-region
+  and cross-region distance frictions are the same parameter $\delta$.%
+}
+\end{frame}
+
+\begin{frame}{App: Commune-Level Distances --- Separating $\lambda$ from $\delta$}
+\begin{columns}[T]
+  \column{0.54\textwidth}
+  \textbf{Reading specs (3a, 3b, 3c, 3f\_com) together:}
+  \begin{enumerate}
+    \item \textbf{Spec (3c\_com)} gives $\hat\delta$ from non-local bids,
+          exactly as spec (2d) but at commune resolution.
+          This is the clean cross-region benchmark.
+    \item \textbf{Spec (3b\_com)} gives $\hat\delta_{\text{all}}$ from
+          \emph{all} bids, including local within-region variation.
+          If $\hat\delta_{\text{all}} \approx \hat\delta$, the
+          distance friction is homogeneous and $\lambda$ is a
+          pure informational premium on top of $\delta$.
+    \item \textbf{Spec (3f\_com)} puts both in one regression:
+          the local coefficient is the discrete same-region premium
+          $\hat\lambda$ conditional on commune distance, while the
+          slope is the continuous distance friction $\hat\delta$.
+    \item \textbf{Comparing (3a\_com) to (3f\_com)} shows how much of the
+          raw local gap was really shorter travel distance rather than a
+          separate informational or relational premium.
+  \end{enumerate}
+
+  \column{0.46\textwidth}
+  \textbf{What each result tells us structurally:}
+
+  \smallskip
+  \textit{If $\hat\delta_{\text{all}} \approx \hat\delta_{\text{nonloc}}$:}\\
+  Distance cost is the same parameter whether we're inside or outside the
+  region.  The local dummy absorbs only the informational piece $\lambda$.
+
+  \smallskip
+  \textit{If $\hat\delta_{\text{all}} < \hat\delta_{\text{nonloc}}$:}\\
+  Local bids are less distance-sensitive even within the region $\Rightarrow$
+  $\lambda$ partly reflects lower effective distance costs for local firms
+  (e.g.\ existing supplier relationships closer to home).
+
+  \smallskip
+  \textit{If the local coefficient in (3f\_com) stays large:}\\
+  There is a true discrete same-region advantage even after controlling for
+  municipality-level distance.  If it collapses toward zero, the "local"
+  effect was mostly a coarse-distance artifact.
+
+  \smallskip
+  \textit{Spec (3e\_com) bins on all bids:}\\
+  Non-parametric check --- does the markup profile flatten inside the region
+  (bin ``0'' vs.\ ``1--50'') or is it continuous?  A flat profile near zero
+  indicates a discrete jump $\lambda$; a smooth profile indicates pure $\delta$.
+\end{columns}
+\end{frame}
+
+\begin{frame}{App: Bid Markups --- Reform Specs}
+\centering
+\scriptsize
+\resizebox{\linewidth}{!}{%
+\input{../output/bids/tables/bids_part3_did.tex}
+}
+\end{frame}
+
+% ── Model comparative statics ─────────────────────────────
+
+\begin{frame}{App: When Does the Policy Reduce Procurement Costs?}
+\begin{columns}[T]
+  \column{0.5\textwidth}
+  \textbf{Policy more likely to \emph{reduce} costs when:}
+  \begin{enumerate}
+    \item High $N_r^{pot}$ relative to $Q_r$: large local firm pool
+          replaces excluded non-locals
+    \item High $\lambda$: non-locals had local disadvantage anyway;
+          their exclusion doesn't remove the best bidders
+    \item High $\delta \cdot d_{sr}$: non-locals came from far away
+          and were high-cost
+    \item Low $K$ (tight capacity): freed capacity redirects home,
+          generating competition spillovers
+  \end{enumerate}
+
+  \column{0.5\textwidth}
+  \textbf{Policy more likely to \emph{increase} costs when:}
+  \begin{enumerate}
+    \item Low $N_r^{pot}$ relative to $Q_r$: few local firms,
+          cannot replace competition
+    \item Low $\lambda$, low $d_{sr}$: non-locals were genuinely
+          competitive nearby firms
+    \item High $K$ (ample capacity): no meaningful cross-market
+          reallocation
+    \item Lumpy demand ($Q_r$ volatile): local market too thin to
+          sustain competition
+  \end{enumerate}
+\end{columns}
+\end{frame}
+
+\end{document}

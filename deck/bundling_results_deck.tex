@@ -1,0 +1,900 @@
+% !TEX program = xelatex
+\documentclass[9pt,aspectratio=169]{beamer}
+\usetheme{metropolis}
+
+% ── Packages ──────────────────────────────────────────────
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{appendixnumberbeamer}
+
+% ── Meta ──────────────────────────────────────────────────
+\title{Bundling, Product Mix, and SME Outcomes\\in Public Procurement}
+\subtitle{Cross-Sectional Evidence from Chile's Compra Ágil}
+\author{Nicolás Jiménez}
+\date{April 2026}
+\institute{Yale University}
+
+\begin{document}
+
+% ══════════════════════════════════════════════════════════
+% TITLE
+% ══════════════════════════════════════════════════════════
+\maketitle
+
+% ══════════════════════════════════════════════════════════
+\section{Motivation \& Setup}
+% ══════════════════════════════════════════════════════════
+
+\begin{frame}{Motivation}
+After the Compra Ágil reform, municipal buyers \textbf{bundle more products} into each tender:
+\begin{itemize}
+  \item More line items per tender (+0.64)
+  \item More distinct 8-digit product codes (+0.28)
+  \item More 2-digit UNSPSC segments (+0.06)
+\end{itemize}
+
+\bigskip
+\textbf{Question:} Does this bundling help or hurt SMEs and local firms?
+
+\bigskip
+Two dimensions of bundle breadth may have opposite effects:
+\begin{itemize}
+  \item \textbf{Product variety} (N distinct product codes overall) $\to$ favors large firms with broad catalogs?
+  \item \textbf{Category breadth} (N segments across categories) $\to$ favors local generalist suppliers?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Related Literature}
+\textbf{Bundling in procurement:} fundamental tradeoff between production efficiencies and competition effects.
+\begin{itemize}
+  \item \textbf{Scale economies vs.\ entry deterrence:}
+        Bundling can reduce unit costs but weaken competition through entry barriers
+        (Estache \& Iimi 2011; Qiao et al.\ 2019; Ridderstedt \& Nilsson 2023)
+  \item \textbf{Bundling as multi-dimensional treatment:}
+        Swedish pavement studies decompose into scale, spatial spread, task heterogeneity ---
+        net effect depends on \textit{what} is bundled, not just \textit{how much}
+        (Ridderstedt \& Nilsson 2023)
+  \item \textbf{Bidder asymmetry:}
+        Bundling raises incumbent advantage and excludes entrants
+        (Suzuki 2021, electricity; Lunander \& Lundberg 2012, roads)
+  \item \textbf{Monitoring \& quality:}
+        Unbundling + inspections improve quality but delay delivery;
+        monitoring can substitute for unbundling
+        (Wolfram et al.\ 2023, Kenya electrification)
+\end{itemize}
+
+\medskip
+\textbf{Gap we fill:} Most studies treat bundling as a scalar. We decompose it into \textit{product variety} vs.\ \textit{category breadth} and separate \textit{selection} (who bids) from \textit{competitive advantage} (who wins conditional on bidding).
+\end{frame}
+
+\begin{frame}{Empirical Approach}
+\textbf{Sample:} Municipal Compra Ágil tenders, Jan 2023--Mar 2025.
+
+\bigskip
+\textbf{Specification:}
+\[
+  y_{it} = \alpha_i + \gamma_t + \beta_1 \, \text{N\_product8}_{it} + \beta_2 \, \text{N\_segment2}_{it} + \mathbf{X}_{it}'\delta + \varepsilon_{it}
+\]
+
+\begin{itemize}
+  \item $\alpha_i$: buyer fixed effects (or region FE); $\gamma_t$: year-month FE
+  \item \textbf{N\_product8}: distinct 8-digit UNSPSC commodity codes in the tender (product variety)
+  \item \textbf{N\_segment2}: distinct 2-digit UNSPSC segments in the tender (category breadth)
+  \item Controls: log(estimated cost), N bidders, top-20 segment dummies
+  \item SEs clustered by buyer
+  \item Separate estimates for pre-reform and post-reform periods
+\end{itemize}
+\end{frame}
+
+% ══════════════════════════════════════════════════════════
+\section{Who Wins? Baseline Results}
+% ══════════════════════════════════════════════════════════
+
+
+\begin{frame}{Pr(SME Wins) on Bundle Composition}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+ & Pre & Pre + Seg & Post & Post + Seg \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+N product codes (8-digit) & -0.0091$^{***}$ & -0.0015$^{**}$ & -0.0045$^{***}$ & -0.0013$^{**}$ \\
+ & (0.0010) & (0.0006) & (0.0009) & (0.0005) \\[2pt]
+N segments (2-digit) & 0.0263$^{***}$ & 0.0199$^{***}$ & 0.0178$^{***}$ & 0.0072$^{***}$ \\
+ & (0.0025) & (0.0022) & (0.0024) & (0.0017) \\[2pt]
+log(Estimated cost) & -0.0013 & 0.0032$^{**}$ & -0.0104$^{***}$ & -0.0065$^{***}$ \\
+ & (0.0022) & (0.0016) & (0.0010) & (0.0008) \\[2pt]
+N bidders & -0.0051$^{***}$ & -0.0036$^{***}$ & 0.0046$^{***}$ & 0.0043$^{***}$ \\
+ & (0.0003) & (0.0003) & (0.0003) & (0.0002) \\[2pt]
+\midrule
+Buyer + YM FE & Yes & Yes & Yes & Yes \\
+Segment dummies & No & Yes & No & Yes \\
+N & 545,518 & 545,518 & 155,434 & 155,434 \\
+Within $R^2$ & 0.005 & 0.090 & 0.014 & 0.102 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize SEs clustered by buyer. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.} \\
+\end{tabular}
+
+\medskip
+\small\textbf{Takeaway:} Product variety hurts SMEs; category breadth helps them. Segment dummies absorb much of the raw effect.
+\end{frame}
+
+\begin{frame}{Pr(Local SME Wins) on Bundle Composition}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+ & Pre & Pre + Seg & Post & Post + Seg \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+N product codes (8-digit) & -0.0011 & 0.0001 & 0.0004 & -0.0007 \\
+ & (0.0010) & (0.0007) & (0.0013) & (0.0008) \\[2pt]
+N segments (2-digit) & 0.0101$^{***}$ & 0.0605$^{***}$ & 0.0003 & 0.0594$^{***}$ \\
+ & (0.0023) & (0.0030) & (0.0032) & (0.0037) \\[2pt]
+log(Estimated cost) & 0.0034 & 0.0050$^{**}$ & -0.0049$^{**}$ & -0.0042$^{**}$ \\
+ & (0.0025) & (0.0021) & (0.0022) & (0.0019) \\[2pt]
+N bidders & -0.0165$^{***}$ & -0.0108$^{***}$ & -0.0128$^{***}$ & -0.0078$^{***}$ \\
+ & (0.0007) & (0.0005) & (0.0009) & (0.0007) \\[2pt]
+\midrule
+Buyer + YM FE & Yes & Yes & Yes & Yes \\
+Segment dummies & No & Yes & No & Yes \\
+N & 545,518 & 545,518 & 155,433 & 155,433 \\
+Within $R^2$ & 0.028 & 0.094 & 0.020 & 0.105 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize SEs clustered by buyer. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.} \\
+\end{tabular}
+
+\medskip
+\small\textbf{Takeaway:} N\_segment2 has a strong positive effect on local SME wins (+0.06$^{***}$) once segment composition is controlled.
+\end{frame}
+
+% ══════════════════════════════════════════════════════════
+\section{Selection vs.\ Competitive Advantage}
+% ══════════════════════════════════════════════════════════
+
+\begin{frame}{Is It Selection or Competitive Advantage?}
+The baseline results could reflect two channels:
+\begin{enumerate}
+  \item \textbf{Selection:} Bundle composition changes \textit{who bids} \\
+        $\to$ More product variety attracts large firms into the bidder pool
+  \item \textbf{Competitive advantage:} Bundle composition changes \textit{who wins conditional on bidding} \\
+        $\to$ Cross-category breadth gives local SMEs an edge
+\end{enumerate}
+
+\bigskip
+\textbf{Test:} Add \textbf{share of SME bidders} as a control.
+\begin{itemize}
+  \item If results survive: competitive advantage channel
+  \item If results disappear: selection channel
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Pr(SME Wins): Adding SME Share of Bidders}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+ & Pre & Pre + SME\% & Post & Post + SME\% \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+N product codes (8-digit) & -0.0015$^{**}$ & 0.0052$^{***}$ & -0.0013$^{**}$ & -0.0010$^{***}$ \\
+ & (0.0006) & (0.0005) & (0.0005) & (0.0002) \\[2pt]
+N segments (2-digit) & 0.0199$^{***}$ & 0.0008 & 0.0072$^{***}$ & 0.0043$^{***}$ \\
+ & (0.0022) & (0.0011) & (0.0017) & (0.0008) \\[2pt]
+Share SME bidders &  & 1.1571$^{***}$ &  & 1.1107$^{***}$ \\
+ &  & (0.0035) &  & (0.0052) \\[2pt]
+log(Estimated cost) & 0.0032$^{**}$ & 0.0057$^{***}$ & -0.0065$^{***}$ & 0.0003 \\
+ & (0.0016) & (0.0007) & (0.0008) & (0.0004) \\[2pt]
+N bidders & -0.0036$^{***}$ & -0.0046$^{***}$ & 0.0043$^{***}$ & -0.0004$^{***}$ \\
+ & (0.0003) & (0.0002) & (0.0002) & (0.0001) \\[2pt]
+\midrule
+Buyer + YM FE & Yes & Yes & Yes & Yes \\
+Segment dummies & Yes & Yes & Yes & Yes \\
+SME share control & No & Yes & No & Yes \\
+N & 545,518 & 545,518 & 155,434 & 155,434 \\
+Within $R^2$ & 0.090 & 0.495 & 0.102 & 0.680 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize SEs clustered by buyer. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.} \\
+\end{tabular}
+
+\medskip
+\small\textbf{Takeaway:} SME share absorbs almost all variation ($R^2$ jumps to $\sim$0.49). Product variety effect flips sign --- selection, not competitive disadvantage.
+\end{frame}
+
+\begin{frame}{Pr(Local SME Wins): Adding SME Share of Bidders}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+ & Pre & Pre + SME\% & Post & Post + SME\% \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+N product codes (8-digit) & 0.0001 & 0.0039$^{***}$ & -0.0007 & -0.0006 \\
+ & (0.0007) & (0.0007) & (0.0008) & (0.0008) \\[2pt]
+N segments (2-digit) & 0.0605$^{***}$ & 0.0496$^{***}$ & 0.0594$^{***}$ & 0.0577$^{***}$ \\
+ & (0.0030) & (0.0029) & (0.0037) & (0.0035) \\[2pt]
+Share SME bidders &  & 0.6594$^{***}$ &  & 0.6317$^{***}$ \\
+ &  & (0.0148) &  & (0.0173) \\[2pt]
+log(Estimated cost) & 0.0050$^{**}$ & 0.0065$^{***}$ & -0.0042$^{**}$ & -0.0003 \\
+ & (0.0021) & (0.0018) & (0.0019) & (0.0018) \\[2pt]
+N bidders & -0.0108$^{***}$ & -0.0113$^{***}$ & -0.0078$^{***}$ & -0.0105$^{***}$ \\
+ & (0.0005) & (0.0005) & (0.0007) & (0.0006) \\[2pt]
+\midrule
+Buyer + YM FE & Yes & Yes & Yes & Yes \\
+Segment dummies & Yes & Yes & Yes & Yes \\
+SME share control & No & Yes & No & Yes \\
+N & 545,518 & 545,518 & 155,433 & 155,433 \\
+Within $R^2$ & 0.094 & 0.187 & 0.105 & 0.151 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize SEs clustered by buyer. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.} \\
+\end{tabular}
+
+\medskip
+\small\textbf{Key result:} N\_segment2 effect \textbf{survives} at $+0.050^{***}$ (pre) and $+0.058^{***}$ (post). \\
+Cross-category breadth helps local SMEs win \textit{conditional on who bids} --- genuine competitive advantage.
+\end{frame}
+
+\begin{frame}{Pr(Large Firm Wins): Adding SME Share of Bidders}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+ & Pre & Pre + SME\% & Post & Post + SME\% \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+N product codes (8-digit) & 0.0015$^{**}$ & -0.0052$^{***}$ & 0.0013$^{**}$ & 0.0010$^{***}$ \\
+ & (0.0006) & (0.0005) & (0.0005) & (0.0002) \\[2pt]
+N segments (2-digit) & -0.0199$^{***}$ & -0.0008 & -0.0072$^{***}$ & -0.0043$^{***}$ \\
+ & (0.0022) & (0.0011) & (0.0017) & (0.0008) \\[2pt]
+Share SME bidders &  & -1.1571$^{***}$ &  & -1.1107$^{***}$ \\
+ &  & (0.0035) &  & (0.0052) \\[2pt]
+log(Estimated cost) & -0.0032$^{**}$ & -0.0057$^{***}$ & 0.0065$^{***}$ & -0.0003 \\
+ & (0.0016) & (0.0007) & (0.0008) & (0.0004) \\[2pt]
+N bidders & 0.0036$^{***}$ & 0.0046$^{***}$ & -0.0043$^{***}$ & 0.0004$^{***}$ \\
+ & (0.0003) & (0.0002) & (0.0002) & (0.0001) \\[2pt]
+\midrule
+Buyer + YM FE & Yes & Yes & Yes & Yes \\
+Segment dummies & Yes & Yes & Yes & Yes \\
+SME share control & No & Yes & No & Yes \\
+N & 545,518 & 545,518 & 155,434 & 155,434 \\
+Within $R^2$ & 0.090 & 0.495 & 0.102 & 0.680 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize SEs clustered by buyer. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.} \\
+\end{tabular}
+
+\medskip
+\small Mirror image of SME results. SME share of bidders is the dominant predictor.
+\end{frame}
+
+% ══════════════════════════════════════════════════════════
+\section{The Selection Channel: Who Bids?}
+% ══════════════════════════════════════════════════════════
+
+\begin{frame}{Bidder Composition as Outcome}
+If bundling changes \textit{who bids}, we should see it directly in the share of SME and local bidders.
+
+\bigskip
+\textbf{Outcome variables:}
+\begin{itemize}
+  \item Share of bidders that are SMEs
+  \item Share of bidders that are local SMEs
+  \item Share of bidders that are large firms
+\end{itemize}
+
+\medskip
+Same controls as before (minus N bidders, which is mechanically related), plus segment dummies.
+\end{frame}
+
+\begin{frame}{Share of SME Bidders on Bundle Composition}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+ & Pre & Pre + Seg & Post & Post + Seg \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+N product codes (8-digit) & -0.0120$^{***}$ & -0.0061$^{***}$ & -0.0026$^{***}$ & -0.0003 \\
+ & (0.0008) & (0.0005) & (0.0005) & (0.0003) \\[2pt]
+N segments (2-digit) & 0.0157$^{***}$ & 0.0195$^{***}$ & 0.0103$^{***}$ & 0.0045$^{***}$ \\
+ & (0.0017) & (0.0014) & (0.0013) & (0.0009) \\[2pt]
+log(Estimated cost) & -0.0036$^{**}$ & -0.0019$^{**}$ & -0.0059$^{***}$ & -0.0038$^{***}$ \\
+ & (0.0014) & (0.0009) & (0.0006) & (0.0005) \\[2pt]
+N bidders & -0.0024$^{***}$ & -0.0007$^{***}$ & 0.0031$^{***}$ & 0.0030$^{***}$ \\
+ & (0.0002) & (0.0001) & (0.0002) & (0.0001) \\[2pt]
+\midrule
+Buyer + YM FE & Yes & Yes & Yes & Yes \\
+Segment dummies & No & Yes & No & Yes \\
+N & 880,029 & 880,029 & 288,525 & 288,525 \\
+Within $R^2$ & 0.012 & 0.158 & 0.014 & 0.104 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize SEs clustered by buyer. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.} \\
+\end{tabular}
+
+\medskip
+\small Product variety reduces SME share of bidders ($-0.006^{***}$). Category breadth increases it ($+0.020^{***}$).
+\end{frame}
+
+\begin{frame}{Share of Local SME Bidders on Bundle Composition}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+ & Pre & Pre + Seg & Post & Post + Seg \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+N product codes (8-digit) & -0.0013$^{*}$ & -0.0019$^{***}$ & 0.0026$^{***}$ & 0.0007 \\
+ & (0.0008) & (0.0005) & (0.0009) & (0.0005) \\[2pt]
+N segments (2-digit) & 0.0046$^{***}$ & 0.0398$^{***}$ & -0.0029 & 0.0343$^{***}$ \\
+ & (0.0016) & (0.0018) & (0.0021) & (0.0022) \\[2pt]
+log(Estimated cost) & -0.0072$^{***}$ & -0.0050$^{***}$ & -0.0055$^{***}$ & -0.0038$^{***}$ \\
+ & (0.0016) & (0.0013) & (0.0014) & (0.0012) \\[2pt]
+N bidders & -0.0096$^{***}$ & -0.0051$^{***}$ & -0.0084$^{***}$ & -0.0052$^{***}$ \\
+ & (0.0004) & (0.0003) & (0.0005) & (0.0004) \\[2pt]
+\midrule
+Buyer + YM FE & Yes & Yes & Yes & Yes \\
+Segment dummies & No & Yes & No & Yes \\
+N & 880,029 & 880,029 & 288,525 & 288,525 \\
+Within $R^2$ & 0.019 & 0.110 & 0.018 & 0.109 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize SEs clustered by buyer. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.} \\
+\end{tabular}
+
+\medskip
+\small Strong positive effect of N\_segment2 on local SME share ($+0.040^{***}$ pre, $+0.034^{***}$ post). \\
+Cross-category bundling shifts the bidder pool toward local SMEs.
+\end{frame}
+
+\begin{frame}{Share of Large-Firm Bidders on Bundle Composition}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+ & Pre & Pre + Seg & Post & Post + Seg \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+N product codes (8-digit) & 0.0112$^{***}$ & 0.0057$^{***}$ & 0.0025$^{***}$ & 0.0003 \\
+ & (0.0008) & (0.0005) & (0.0005) & (0.0003) \\[2pt]
+N segments (2-digit) & -0.0157$^{***}$ & -0.0191$^{***}$ & -0.0102$^{***}$ & -0.0044$^{***}$ \\
+ & (0.0017) & (0.0014) & (0.0013) & (0.0009) \\[2pt]
+log(Estimated cost) & 0.0040$^{***}$ & 0.0019$^{**}$ & 0.0059$^{***}$ & 0.0038$^{***}$ \\
+ & (0.0014) & (0.0009) & (0.0006) & (0.0005) \\[2pt]
+N bidders & 0.0021$^{***}$ & 0.0004$^{***}$ & -0.0031$^{***}$ & -0.0030$^{***}$ \\
+ & (0.0002) & (0.0001) & (0.0002) & (0.0001) \\[2pt]
+\midrule
+Buyer + YM FE & Yes & Yes & Yes & Yes \\
+Segment dummies & No & Yes & No & Yes \\
+N & 880,029 & 880,029 & 288,525 & 288,525 \\
+Within $R^2$ & 0.011 & 0.168 & 0.015 & 0.106 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize SEs clustered by buyer. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.} \\
+\end{tabular}
+
+\medskip
+\small Mirror image: product variety attracts large firms ($+0.006^{***}$); category breadth repels them ($-0.019^{***}$).
+\end{frame}
+
+% ══════════════════════════════════════════════════════════
+\section{Extensive Margin: Number of Bidders}
+% ══════════════════════════════════════════════════════════
+
+\begin{frame}{How Does Bundling Affect Participation?}
+The share results show bundling tilts the composition of bidders. But does it also change the \textbf{total number} of bidders?
+
+\bigskip
+\textbf{Outcome variables:}
+\begin{itemize}
+  \item N total bidders
+  \item N SME bidders
+  \item N large-firm bidders
+  \item N local bidders
+\end{itemize}
+
+\medskip
+Controls: log(estimated cost), segment dummies, buyer + year-month FE. \\
+\textit{N bidders is now an outcome, not a control.}
+\end{frame}
+
+\begin{frame}{N Total Bidders on Bundle Composition}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+ & Pre & Pre + Seg & Post & Post + Seg \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+N product codes (8-digit) & 0.0014 & 0.0069 & -0.0299$^{***}$ & -0.0061 \\
+ & (0.0076) & (0.0065) & (0.0063) & (0.0060) \\[2pt]
+N segments (2-digit) & -0.0721$^{***}$ & -1.0823$^{***}$ & -0.0019 & -1.2045$^{***}$ \\
+ & (0.0168) & (0.0236) & (0.0161) & (0.0300) \\[2pt]
+log(Estimated cost) & 0.2911$^{***}$ & 0.3180$^{***}$ & 0.2251$^{***}$ & 0.2992$^{***}$ \\
+ & (0.0169) & (0.0134) & (0.0173) & (0.0151) \\[2pt]
+\midrule
+Buyer + YM FE & Yes & Yes & Yes & Yes \\
+Segment dummies & No & Yes & No & Yes \\
+N & 930,247 & 930,247 & 307,298 & 307,298 \\
+Within $R^2$ & 0.003 & 0.120 & 0.003 & 0.111 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize SEs clustered by buyer. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.} \\
+\end{tabular}
+
+\medskip
+\small With segment dummies, N\_segment2 has a \textbf{large negative} effect ($-1.08^{***}$): each additional segment \textit{reduces} total bidders by $\sim$1. Diverse tenders are harder to bid on.
+\end{frame}
+
+\begin{frame}{N SME Bidders on Bundle Composition}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+ & Pre & Pre + Seg & Post & Post + Seg \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+N product codes (8-digit) & -0.0614$^{***}$ & -0.0243$^{***}$ & -0.0405$^{***}$ & -0.0056 \\
+ & (0.0050) & (0.0044) & (0.0062) & (0.0058) \\[2pt]
+N segments (2-digit) & 0.0558$^{***}$ & -0.8513$^{***}$ & 0.0468$^{***}$ & -1.1287$^{***}$ \\
+ & (0.0116) & (0.0177) & (0.0153) & (0.0274) \\[2pt]
+log(Estimated cost) & 0.1987$^{***}$ & 0.2310$^{***}$ & 0.1896$^{***}$ & 0.2524$^{***}$ \\
+ & (0.0149) & (0.0113) & (0.0152) & (0.0130) \\[2pt]
+\midrule
+Buyer + YM FE & Yes & Yes & Yes & Yes \\
+Segment dummies & No & Yes & No & Yes \\
+N & 930,247 & 930,247 & 307,298 & 307,298 \\
+Within $R^2$ & 0.003 & 0.125 & 0.002 & 0.128 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize SEs clustered by buyer. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.} \\
+\end{tabular}
+
+\medskip
+\small Product variety reduces SME bidders ($-0.024^{***}$). Category breadth also reduces SME bidders with segment controls ($-0.85^{***}$) --- but recall it \textit{increases their share}.
+\end{frame}
+
+\begin{frame}{N Large-Firm Bidders on Bundle Composition}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+ & Pre & Pre + Seg & Post & Post + Seg \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+N product codes (8-digit) & 0.0656$^{***}$ & 0.0363$^{***}$ & 0.0116$^{***}$ & 0.0026$^{**}$ \\
+ & (0.0059) & (0.0036) & (0.0019) & (0.0010) \\[2pt]
+N segments (2-digit) & -0.1060$^{***}$ & -0.2622$^{***}$ & -0.0383$^{***}$ & -0.0416$^{***}$ \\
+ & (0.0129) & (0.0093) & (0.0046) & (0.0029) \\[2pt]
+log(Estimated cost) & 0.0840$^{***}$ & 0.0669$^{***}$ & 0.0188$^{***}$ & 0.0107$^{***}$ \\
+ & (0.0079) & (0.0043) & (0.0019) & (0.0012) \\[2pt]
+\midrule
+Buyer + YM FE & Yes & Yes & Yes & Yes \\
+Segment dummies & No & Yes & No & Yes \\
+N & 930,247 & 930,247 & 307,298 & 307,298 \\
+Within $R^2$ & 0.012 & 0.230 & 0.006 & 0.205 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize SEs clustered by buyer. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.} \\
+\end{tabular}
+
+\medskip
+\small Product variety attracts large firms ($+0.036^{***}$). Category breadth repels them ($-0.26^{***}$). \\
+The reduction in large-firm participation from cross-category bundling is proportionally larger than for SMEs.
+\end{frame}
+
+\begin{frame}{N Local Bidders on Bundle Composition}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+ & Pre & Pre + Seg & Post & Post + Seg \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+N product codes (8-digit) & -0.0154$^{***}$ & -0.0182$^{***}$ & -0.0110$^{**}$ & -0.0108$^{***}$ \\
+ & (0.0045) & (0.0038) & (0.0046) & (0.0039) \\[2pt]
+N segments (2-digit) & 0.0600$^{***}$ & -0.2420$^{***}$ & 0.0376$^{***}$ & -0.2815$^{***}$ \\
+ & (0.0085) & (0.0224) & (0.0084) & (0.0276) \\[2pt]
+log(Estimated cost) & 0.0622$^{***}$ & 0.0921$^{***}$ & 0.0369$^{***}$ & 0.0725$^{***}$ \\
+ & (0.0085) & (0.0082) & (0.0084) & (0.0085) \\[2pt]
+\midrule
+Buyer + YM FE & Yes & Yes & Yes & Yes \\
+Segment dummies & No & Yes & No & Yes \\
+N & 930,247 & 930,247 & 307,298 & 307,298 \\
+Within $R^2$ & 0.001 & 0.036 & 0.000 & 0.034 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize SEs clustered by buyer. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.} \\
+\end{tabular}
+
+\medskip
+\small Category breadth reduces local bidders too ($-0.24^{***}$), but less than total ($-1.08^{***}$). \\
+Diverse tenders shrink the pool but tilt it local --- consistent with the ``general store'' story.
+\end{frame}
+
+% ══════════════════════════════════════════════════════════
+\section{Firm Heterogeneity: Generalists vs.\ Specialists}
+% ══════════════════════════════════════════════════════════
+
+\begin{frame}{Who Are the Generalists?}
+\textbf{Firm scope} = N distinct 2-digit UNSPSC segments bid on in the pre-period (Jan 2022 -- Nov 2024). \\
+\textbf{Generalist} = scope $\geq 10$ segments (top quartile of 67K firms).
+
+\bigskip
+\begin{columns}[T]
+  \column{0.48\textwidth}
+  \textbf{SII sector (rubro):}
+  \begin{itemize}
+    \item 63\% of generalists are in \textit{Comercio al por mayor y menor} (wholesale/retail trade)
+    \item vs.\ 31\% of specialists
+    \item Modal generalist is literally a \textbf{commercial trading firm} --- a distributor or general store
+  \end{itemize}
+
+  \bigskip
+  \textbf{Firm size:}
+  \begin{itemize}
+    \item Generalists are modestly larger (mean tramo ventas 5.0 vs.\ 4.4; mean 26 vs.\ 18 workers)
+    \item But correlation is low ($\rho = 0.12$) --- scope $\neq$ size
+  \end{itemize}
+
+  \column{0.48\textwidth}
+  \textbf{Geography:}
+  \begin{itemize}
+    \item 42.6\% of generalists in Santiago vs.\ 37.1\% of specialists
+    \item Modest difference --- generalists are spread nationwide
+    \item Region HHI: 0.22 (gen) vs.\ 0.18 (spec)
+  \end{itemize}
+
+  \bigskip
+  \textbf{Takeaway:}
+  \begin{itemize}
+    \item Generalists $\approx$ local/regional \textbf{trade \& distribution firms} with broad product catalogs
+    \item Not simply ``big firms'' --- many are small
+    \item Present across Chile, not just Santiago
+  \end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Who Are the Generalists? Size Distribution}
+\centering\small
+\begin{tabular}{llrr}
+\toprule
+Tramo & Sales bracket (UF) & Specialists & Generalists \\
+\midrule
+1 & $<$ 800 & 7.3\% & 4.4\% \\
+2 & 800 -- 2,400 & 17.6\% & 11.2\% \\
+3 & 2,400 -- 5,000 & 13.6\% & 11.5\% \\
+4 & 5,000 -- 10,000 & 22.5\% & 23.3\% \\
+5 & 10,000 -- 25,000 & 11.9\% & 13.6\% \\
+6 & 25,000 -- 50,000 & 9.2\% & 10.7\% \\
+7 & 50,000 -- 100,000 & 8.4\% & 10.9\% \\
+8 & 100,000 -- 200,000 & 3.7\% & 5.5\% \\
+9 & 200,000 -- 600,000 & 2.3\% & 3.1\% \\
+10--13 & $>$ 600,000 & 3.5\% & 5.8\% \\
+\midrule
+\multicolumn{2}{l}{Mean tramo ventas} & 4.36 & 5.00 \\
+\multicolumn{2}{l}{Mean workers} & 18.0 & 25.5 \\
+\multicolumn{2}{l}{Median workers} & 0 & 1 \\
+\multicolumn{2}{l}{N firms} & 32,982 & 6,732 \\
+\bottomrule
+\end{tabular}
+
+\bigskip
+\small Generalists shift rightward but overlap heavily with specialists. \\
+Correlation of scope with tramo ventas = 0.12; with N workers = 0.01.
+\end{frame}
+
+\begin{frame}{Do Generalist Firms Benefit from Diverse Tenders?}
+\textbf{Idea:} If cross-category bundling helps local generalists, we should see it
+at the \textit{firm level} --- firms with broader pre-period scope should do better on diverse tenders.
+
+\bigskip
+\textbf{Setup:}
+\begin{itemize}
+  \item \textbf{Firm scope} = N distinct 2-digit UNSPSC segments a firm bid on in the pre-period (Jan 2022 -- Nov 2024)
+  \item \textbf{Generalist} = firm scope $\geq 10$ segments (top quartile)
+  \item Unit of observation: bid (6.6M bids across 1.2M tenders)
+  \item Within-\textit{tender} FE $\to$ identifies from variation across bidders on the \textit{same tender}
+\end{itemize}
+
+\bigskip
+\textbf{Key question:} Does the generalist penalty shrink after the reform induced more bundling?
+\end{frame}
+
+\begin{frame}{Generalist Penalty: Pre vs.\ Post Reform}
+\centering\small
+\begin{tabular}{lccc}
+\toprule
+ & Pre $\beta$ (SE) & Post $\beta$ (SE) & $\Delta$ \\
+\midrule
+\multicolumn{4}{l}{\textit{Panel A: Binary generalist ($\geq$10 segments)}} \\[3pt]
+All tenders & $-$0.163 (0.001) & $-$0.065 (0.001) & +0.098$^{***}$ \\
+1 segment tenders & $-$0.168 (0.001) & $-$0.073 (0.001) & +0.095$^{***}$ \\
+2 segment tenders & $-$0.097 (0.004) & $-$0.027 (0.002) & +0.071$^{***}$ \\
+3+ segment tenders & $-$0.090 (0.006) & $-$0.015 (0.003) & +0.075$^{***}$ \\
+\midrule
+\multicolumn{4}{l}{\textit{Panel B: Continuous log(1 + firm scope)}} \\[3pt]
+All tenders & $-$0.109 (0.000) & $-$0.023 (0.000) & +0.086$^{***}$ \\
+1 segment tenders & $-$0.109 (0.000) & $-$0.026 (0.000) & +0.083$^{***}$ \\
+2 segment tenders & $-$0.092 (0.001) & $-$0.013 (0.001) & +0.079$^{***}$ \\
+3+ segment tenders & $-$0.131 (0.002) & $-$0.009 (0.001) & +0.121$^{***}$ \\
+\bottomrule
+\multicolumn{4}{l}{\footnotesize Within-tender FE (bid-level). SEs clustered by tender.} \\
+\multicolumn{4}{l}{\footnotesize Outcome: bid wins tender (0/1). Scope measured in pre-period only.} \\
+\end{tabular}
+\end{frame}
+
+\begin{frame}{Interpretation: The General Store Advantage}
+\begin{enumerate}
+  \item \textbf{Pre-reform:} Generalist firms face a significant penalty ($-$16pp) when competing on the same tender as specialists
+  \begin{itemize}
+    \item Specialists have deeper expertise in narrow categories
+    \item Broad scope is a liability in focused tenders
+  \end{itemize}
+
+  \bigskip
+  \item \textbf{Post-reform:} The penalty shrinks by $\sim$60\% overall and nearly vanishes on diverse tenders
+  \begin{itemize}
+    \item On 3+ segment tenders: $-$9.0pp $\to$ $-$1.5pp (binary), $-$13.1pp $\to$ $-$0.9pp (continuous)
+    \item Reform-induced bundling made cross-category capability valuable
+  \end{itemize}
+
+  \bigskip
+  \item \textbf{Connects tender-level and firm-level stories:}
+  \begin{itemize}
+    \item Tender level: N\_segment2 $\uparrow$ $\to$ Pr(local SME wins) $\uparrow$
+    \item Firm level: generalists gain ground on diverse tenders post-reform
+    \item Mechanism: local generalist SMEs are the ``general stores'' that can fill cross-category orders
+  \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{SII Validation: ``Comercio'' Firms Win More on Diverse Tenders}
+\textbf{Alternative test:} Use SII \textit{rubro} classification instead of bidding scope.\\
+63\% of generalists are registered in \textit{Comercio al por mayor y menor} (wholesale/retail). \\[6pt]
+\textbf{Outcome: Pr(Comercio firm wins the tender)}
+
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+ & \multicolumn{2}{c}{Pre-reform} & \multicolumn{2}{c}{Post-reform} \\
+ & No seg & + Seg dum & No seg & + Seg dum \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+N product codes & 0.0137$^{***}$ & 0.0047$^{***}$ & 0.0147$^{***}$ & 0.0064$^{***}$ \\
+ & (0.0009) & (0.0007) & (0.0012) & (0.0010) \\[2pt]
+N segments & 0.0372$^{***}$ & $-$0.1396$^{***}$ & 0.0321$^{***}$ & $-$0.1438$^{***}$ \\
+ & (0.0025) & (0.0036) & (0.0030) & (0.0044) \\[2pt]
+log(Est.\ cost) & $-$0.0376$^{***}$ & $-$0.0290$^{***}$ & $-$0.0408$^{***}$ & $-$0.0312$^{***}$ \\
+ & (0.0022) & (0.0018) & (0.0021) & (0.0018) \\[2pt]
+N bidders & 0.0249$^{***}$ & 0.0171$^{***}$ & 0.0210$^{***}$ & 0.0141$^{***}$ \\
+ & (0.0005) & (0.0004) & (0.0005) & (0.0003) \\[2pt]
+\midrule
+Segment dummies & No & Yes & No & Yes \\
+N & 726,056 & 726,056 & 219,511 & 219,511 \\
+Within $R^2$ & 0.082 & 0.164 & 0.079 & 0.172 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize Buyer + year-month FE. SEs clustered by buyer. $^{***}p<0.01$, $^{**}p<0.05$.} \\
+\end{tabular}
+\end{frame}
+
+\begin{frame}{Comercio Wins: Adding Comercio Share Control}
+\textbf{Decomposition:} Does the segment effect operate through selection (who bids) or competitive advantage (who wins conditional on bidding)?
+
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+ & \multicolumn{2}{c}{Pre-reform} & \multicolumn{2}{c}{Post-reform} \\
+ & No seg & + Seg dum & No seg & + Seg dum \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+N product codes & 0.0016$^{***}$ & 0.0010$^{**}$ & 0.0024$^{***}$ & 0.0013$^{**}$ \\
+ & (0.0005) & (0.0005) & (0.0006) & (0.0006) \\[2pt]
+N segments & 0.0085$^{***}$ & $-$0.0145$^{***}$ & 0.0059$^{***}$ & $-$0.0158$^{***}$ \\
+ & (0.0012) & (0.0014) & (0.0016) & (0.0020) \\[2pt]
+Share comercio bidders & 1.0088$^{***}$ & 0.9940$^{***}$ & 1.0005$^{***}$ & 0.9782$^{***}$ \\
+ & (0.0012) & (0.0016) & (0.0021) & (0.0028) \\[2pt]
+\midrule
+Segment dummies & No & Yes & No & Yes \\
+N & 726,056 & 726,056 & 219,511 & 219,511 \\
+Within $R^2$ & 0.559 & 0.561 & 0.555 & 0.558 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize Buyer + YM FE. Controls: log(cost), N bidders. SEs clustered by buyer.} \\
+\end{tabular}
+
+\bigskip
+\small\textbf{Takeaway:} Comercio share of bidders is nearly a sufficient statistic ($R^2 \approx 0.56$). \\
+Residual N\_segment2 effect is small: selection (who bids) dominates for comercio firms.
+\end{frame}
+
+\begin{frame}{Selection Channel: Share of Comercio Bidders}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+ & \multicolumn{2}{c}{Pre-reform} & \multicolumn{2}{c}{Post-reform} \\
+ & No seg & + Seg dum & No seg & + Seg dum \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+N product codes & 0.0120$^{***}$ & 0.0037$^{***}$ & 0.0123$^{***}$ & 0.0052$^{***}$ \\
+ & (0.0006) & (0.0004) & (0.0009) & (0.0007) \\[2pt]
+N segments & 0.0284$^{***}$ & $-$0.1258$^{***}$ & 0.0262$^{***}$ & $-$0.1309$^{***}$ \\
+ & (0.0017) & (0.0029) & (0.0022) & (0.0037) \\[2pt]
+log(Est.\ cost) & $-$0.0290$^{***}$ & $-$0.0219$^{***}$ & $-$0.0376$^{***}$ & $-$0.0291$^{***}$ \\
+ & (0.0019) & (0.0015) & (0.0016) & (0.0014) \\[2pt]
+N bidders & 0.0211$^{***}$ & 0.0142$^{***}$ & 0.0185$^{***}$ & 0.0126$^{***}$ \\
+ & (0.0004) & (0.0003) & (0.0004) & (0.0003) \\[2pt]
+\midrule
+Segment dummies & No & Yes & No & Yes \\
+N & 726,056 & 726,056 & 219,511 & 219,511 \\
+Within $R^2$ & 0.110 & 0.237 & 0.112 & 0.248 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize Outcome: share of bidders classified as ``Comercio'' in SII.} \\
+\multicolumn{5}{l}{\footnotesize Buyer + YM FE. SEs clustered by buyer. $^{***}p<0.01$.} \\
+\end{tabular}
+
+\bigskip
+\small\textbf{Takeaway:} Without segment dummies, N\_segment2 increases the comercio share (+0.03$^{***}$). \\
+With segment dummies, the sign flips ($-$0.13$^{***}$) --- the selection into comercio is driven by \textit{which} segments, not how many.
+\end{frame}
+
+\begin{frame}{Which Categories Favor Comercio Firms?}
+\centering
+\includegraphics[width=\textwidth]{output/product_mix/figures/segment_coef_comercio.pdf}
+
+\smallskip
+\small
+Pharmaceuticals, medical supplies, and cleaning products show the largest comercio advantage. \\
+Food \& beverages and construction materials show the smallest --- dominated by specialized producers.
+\end{frame}
+
+% ══════════════════════════════════════════════════════════
+\section{Summary}
+% ══════════════════════════════════════════════════════════
+
+\begin{frame}{Putting It Together}
+\textbf{Two dimensions of bundling have different effects:}
+
+\bigskip
+\begin{columns}[T]
+  \column{0.48\textwidth}
+  \textbf{Product variety} (N\_product8) \\[4pt]
+  More distinct product codes overall
+  \begin{itemize}
+    \item Attracts large firms into the bidder pool
+    \item Repels SME bidders
+    \item Raises Pr(large firm wins)
+    \item But: effect on \textit{winning} is entirely selection \\
+          (disappears with SME share control)
+  \end{itemize}
+
+  \column{0.48\textwidth}
+  \textbf{Category breadth} (N\_segment2) \\[4pt]
+  More distinct 2-digit UNSPSC segments
+  \begin{itemize}
+    \item Shrinks total bidder pool
+    \item But tilts composition toward local SMEs
+    \item Raises Pr(local SME wins) --- even conditional on bidder composition
+    \item Genuine competitive advantage for local generalists
+  \end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Implications for the Reform}
+\begin{enumerate}
+  \item \textbf{No fundamental tension} between bundling and SME preference:
+  \begin{itemize}
+    \item The apparent negative effect of product variety on SME outcomes operates through \textit{selection} (who bids), not competitive disadvantage
+    \item Conditional on bidder composition, bundling does not hurt SMEs
+  \end{itemize}
+
+  \bigskip
+  \item \textbf{Cross-category bundling complements local preference:}
+  \begin{itemize}
+    \item Tenders spanning multiple UNSPSC segments give local SMEs a genuine competitive edge
+    \item The ``general store'' advantage: local generalists can source diverse products that distant specialists cannot
+    \item This effect is stable pre and post reform, and robust to buyer FE, region FE, and segment controls
+  \end{itemize}
+
+  \bigskip
+  \item \textbf{Policy implication:}
+  \begin{itemize}
+    \item The reform's induced bundling is not a threat to its SME goals
+    \item If anything, cross-category consolidation amplifies the local SME advantage
+  \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Contribution to the Literature}
+\begin{enumerate}
+  \item \textbf{Bundling as multi-dimensional treatment.}
+        Most empirical work treats bundling as a scalar (bundle vs.\ unbundle, or contract size).
+        Following Ridderstedt \& Nilsson (2023), we decompose into product variety and category breadth
+        --- and show they have \textit{opposite} effects on SME outcomes.
+
+  \bigskip
+  \item \textbf{Selection vs.\ competitive advantage --- a clean decomposition.}
+        The literature emphasizes entry deterrence (Estache \& Iimi 2011; Suzuki 2021)
+        but rarely separates whether bundling hurts small firms through who \textit{bids}
+        vs.\ who \textit{wins conditional on bidding}. We show the product variety channel
+        is entirely selection; the category breadth channel is genuine competitive advantage.
+
+  \bigskip
+  \item \textbf{Bundling $\times$ preferential policies.}
+        No prior work (to our knowledge) studies how procurement bundling interacts with
+        SME/local preference policies. We show the interaction is \textit{complementary},
+        not adversarial --- a policy-relevant result for the many countries combining
+        simplified procurement with domestic preference.
+
+  \bigskip
+  \item \textbf{Firm-level mechanism: generalist advantage.}
+        Bid-level within-tender FE regressions show the generalist penalty shrinks
+        by $\sim$60\% post-reform and nearly vanishes on diverse tenders ---
+        identifying the ``general store'' channel at the firm level.
+\end{enumerate}
+\end{frame}
+
+% ══════════════════════════════════════════════════════════
+\appendix
+% ══════════════════════════════════════════════════════════
+
+
+\begin{frame}[noframenumbering]{Robustness: Pr(Local SME Wins) --- Region FE}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+ & Pre (Buyer) & Pre (Region) & Post (Buyer) & Post (Region) \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+N product codes (8-digit) & 0.0039$^{***}$ & 0.0039$^{***}$ & -0.0006 & -0.0007 \\
+ & (0.0007) & (0.0007) & (0.0008) & (0.0008) \\[2pt]
+N segments (2-digit) & 0.0496$^{***}$ & 0.0507$^{***}$ & 0.0577$^{***}$ & 0.0583$^{***}$ \\
+ & (0.0029) & (0.0030) & (0.0035) & (0.0037) \\[2pt]
+Share SME bidders & 0.6594$^{***}$ & 0.6669$^{***}$ & 0.6317$^{***}$ & 0.6382$^{***}$ \\
+ & (0.0148) & (0.0147) & (0.0173) & (0.0172) \\[2pt]
+log(Estimated cost) & 0.0065$^{***}$ & 0.0058$^{***}$ & -0.0003 & -0.0006 \\
+ & (0.0018) & (0.0020) & (0.0018) & (0.0022) \\[2pt]
+N bidders & -0.0113$^{***}$ & -0.0115$^{***}$ & -0.0105$^{***}$ & -0.0107$^{***}$ \\
+ & (0.0005) & (0.0005) & (0.0006) & (0.0007) \\[2pt]
+\midrule
+Fixed Effects & Buyer + YM & Region + YM & Buyer + YM & Region + YM \\
+Segment dummies & Yes & Yes & Yes & Yes \\
+SME share control & Yes & Yes & Yes & Yes \\
+N & 545,518 & 545,518 & 155,433 & 155,433 \\
+Within $R^2$ & 0.187 & 0.199 & 0.151 & 0.162 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize SEs clustered by buyer. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.} \\
+\end{tabular}
+\end{frame}
+
+\begin{frame}[noframenumbering]{Robustness: Share Local SME Bidders --- Region FE}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+ & Pre (Buyer) & Pre (Region) & Post (Buyer) & Post (Region) \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+N product codes (8-digit) & -0.0019$^{***}$ & -0.0020$^{***}$ & 0.0007 & 0.0006 \\
+ & (0.0005) & (0.0005) & (0.0005) & (0.0006) \\[2pt]
+N segments (2-digit) & 0.0398$^{***}$ & 0.0408$^{***}$ & 0.0343$^{***}$ & 0.0347$^{***}$ \\
+ & (0.0018) & (0.0019) & (0.0022) & (0.0023) \\[2pt]
+log(Estimated cost) & -0.0050$^{***}$ & -0.0044$^{***}$ & -0.0038$^{***}$ & -0.0030$^{*}$ \\
+ & (0.0013) & (0.0015) & (0.0012) & (0.0015) \\[2pt]
+N bidders & -0.0051$^{***}$ & -0.0051$^{***}$ & -0.0052$^{***}$ & -0.0053$^{***}$ \\
+ & (0.0003) & (0.0003) & (0.0004) & (0.0004) \\[2pt]
+\midrule
+Fixed Effects & Buyer + YM & Region + YM & Buyer + YM & Region + YM \\
+Segment dummies & Yes & Yes & Yes & Yes \\
+N & 880,029 & 880,029 & 288,525 & 288,525 \\
+Within $R^2$ & 0.110 & 0.119 & 0.109 & 0.118 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize SEs clustered by buyer. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.} \\
+\end{tabular}
+\end{frame}
+
+\begin{frame}[noframenumbering]{Robustness: N Total Bidders --- Region FE}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+ & Pre (Buyer) & Pre (Region) & Post (Buyer) & Post (Region) \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+N product codes (8-digit) & 0.0069 & 0.0163$^{***}$ & -0.0061 & 0.0002 \\
+ & (0.0065) & (0.0063) & (0.0060) & (0.0061) \\[2pt]
+N segments (2-digit) & -1.0823$^{***}$ & -1.1060$^{***}$ & -1.2045$^{***}$ & -1.2233$^{***}$ \\
+ & (0.0236) & (0.0239) & (0.0300) & (0.0316) \\[2pt]
+log(Estimated cost) & 0.3180$^{***}$ & 0.3039$^{***}$ & 0.2992$^{***}$ & 0.2637$^{***}$ \\
+ & (0.0134) & (0.0149) & (0.0151) & (0.0174) \\[2pt]
+\midrule
+Fixed Effects & Buyer + YM & Region + YM & Buyer + YM & Region + YM \\
+Segment dummies & Yes & Yes & Yes & Yes \\
+N & 930,247 & 930,247 & 307,298 & 307,298 \\
+Within $R^2$ & 0.120 & 0.124 & 0.111 & 0.111 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize SEs clustered by buyer. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.} \\
+\end{tabular}
+\end{frame}
+
+\end{document}

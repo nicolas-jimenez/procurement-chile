@@ -1,0 +1,413 @@
+\documentclass[12pt]{article}
+
+% ---- Packages ----
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{tabularx}
+
+\onehalfspacing
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
+
+% ---- Custom commands ----
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\ind}{\mathbf{1}}
+
+\title{Empirical Strategy: Testing the Spatial Auction Model Predictions}
+\author{}
+\date{\today}
+
+% ==============================================================================
+\begin{document}
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ==============================================================================
+\section{Data Sources and Construction}
+
+\subsection{ChileCompra Data}
+
+The primary dataset comes from ChileCompra's public transaction records. For each procurement, we observe:
+
+\begin{itemize}[itemsep=4pt]
+    \item \textbf{Project value} (in UTM): determines which policy tier applies (below 100, 100--500, above 500).
+    \item \textbf{Purchasing agency}: identifies region of demand and agency type (regionally deconcentrated or not).
+    \item \textbf{Sector/product classification}: allows restricting to construction or other target sectors.
+    \item \textbf{Bidder identities and bids}: number of bidders $n_{ir}$, winning bid $p_i$, and ideally all submitted bids.
+    \item \textbf{Winner identity and RUT}: links to firm registry data; determines whether winner is local.
+    \item \textbf{Date}: allows constructing pre/post periods around the December 12, 2024 implementation date.
+\end{itemize}
+
+\noindent From this, we construct:
+
+\begin{itemize}[itemsep=4pt]
+    \item \textbf{Local firm indicator:} Firm $i$ is local in region $r$ if its registered \emph{domicilio principal} (from SII records or ChileCompra registry) is in region $r$.
+    \item \textbf{Pre-reform non-local share:} For each region $\times$ sector cell,
+    \begin{equation}\label{eq:nonlocal_share}
+        s_{rk}^{pre} = \frac{\text{value awarded to non-local firms}}{\text{total value awarded}}
+    \end{equation}
+    using 2--3 years of pre-reform data.
+    \item \textbf{Market thickness:} $Q_{rk}$ = number of projects per period in region $r$, sector $k$.
+    \item \textbf{Potential local suppliers:} $N_{rk}^{pot}$ = number of distinct firms registered in region $r$ that have ever bid on sector $k$ projects anywhere in Chile, or that are registered in ChileCompra in the relevant rubros.
+\end{itemize}
+
+\subsection{SII / Central Bank Employer-Employee Data}
+
+Matched employer-employee records from the Central Bank or SII (Servicio de Impuestos Internos) provide:
+
+\begin{itemize}[itemsep=4pt]
+    \item Firm-level employment by region and sector (quarterly or annual).
+    \item Worker-level wages, allowing construction of local sector employment and earnings measures.
+    \item Firm entry/exit: first and last appearance in tax records.
+\end{itemize}
+
+\subsection{MOP Data (for Construction)}
+
+If focusing on construction, the Ministerio de Obras P\'{u}blicas provides:
+
+\begin{itemize}[itemsep=4pt]
+    \item Project execution timelines (planned vs.\ actual completion).
+    \item Cost overruns (final cost vs.\ awarded contract value).
+    \item Quality assessments where available.
+\end{itemize}
+
+\subsection{Sample Construction}
+
+We restrict to a balanced panel of region $\times$ sector $\times$ period cells. Periods are defined as quarters or semesters. The pre-reform period runs from roughly 2021--2024Q3; the post-reform period begins 2024Q4 or 2025Q1 (allowing for implementation lag). We drop the quarter immediately around December 2024 if there is ambiguity about which projects fall under the new rules.
+
+% ==============================================================================
+\section{Prediction 1: Heterogeneous Competition Effects}
+
+\textbf{Prediction.} The reform reduces the number of bidders more in regions where (a) non-local firms held a larger pre-reform market share, (b) the pool of potential local firms is small, and (c) demand is thin.
+
+\subsection{Main Specification: Treatment Intensity Event Study}
+
+\begin{equation}\label{eq:es_competition}
+    n_{i,r,t} = \alpha_r + \gamma_t + \sum_{\tau \neq -1} \beta_\tau \cdot s_{rk}^{pre} \times \ind[t = \tau] + X'_{i,r,t}\delta + \varepsilon_{i,r,t}
+\end{equation}
+where:
+\begin{itemize}[itemsep=2pt]
+    \item $n_{i,r,t}$: number of bidders on project $i$ in region $r$ at time $t$.
+    \item $\alpha_r$: region fixed effects.
+    \item $\gamma_t$: time (quarter) fixed effects.
+    \item $s_{rk}^{pre}$: pre-reform non-local value share in region $r$, sector $k$ (continuous treatment intensity).
+    \item $X_{i,r,t}$: project-level controls---log project value, agency type, product category.
+    \item The omitted period $\tau = -1$ is the last pre-reform quarter.
+\end{itemize}
+
+\textbf{Interpretation of $\beta_\tau$.} The differential change in number of bidders for a region with 100\% pre-reform non-local share relative to one with 0\%, at time $\tau$ relative to the period just before the reform. We expect $\beta_\tau \approx 0$ for $\tau < 0$ (parallel pre-trends) and $\beta_\tau < 0$ for $\tau > 0$ if the policy reduces competition in high-exposure regions.
+
+\subsection{Heterogeneity by Market Characteristics}
+
+To test parts (b) and (c) of the prediction, augment with triple interactions:
+\begin{equation}\label{eq:triple_thin}
+    n_{i,r,t} = \alpha_r + \gamma_t + \beta_1 \cdot s_{rk}^{pre} \times \text{Post}_t + \beta_2 \cdot s_{rk}^{pre} \times \text{Post}_t \times \text{ThinMarket}_r + X'_{i,r,t}\delta + \varepsilon_{i,r,t}
+\end{equation}
+where $\text{ThinMarket}_r$ is an indicator (or continuous measure) for regions with below-median $Q_{rk}$ or below-median $N_{rk}^{pot}$.
+
+\textbf{Prediction:} $\beta_2 < 0$. The competition decline is steeper in thin markets.
+
+\medskip
+\noindent \textbf{Alternative continuous version:}
+\begin{equation}\label{eq:triple_continuous}
+\begin{split}
+    n_{i,r,t} = \alpha_r + \gamma_t &+ \beta_1 \cdot s_{rk}^{pre} \times \text{Post}_t + \beta_2 \cdot s_{rk}^{pre} \times \text{Post}_t \times \log Q_{rk} \\
+    &+ \beta_3 \cdot s_{rk}^{pre} \times \text{Post}_t \times \log N_{rk}^{pot} + \varepsilon_{i,r,t}
+\end{split}
+\end{equation}
+
+\textbf{Prediction:} $\beta_2 > 0$ and $\beta_3 > 0$---the competition decline is attenuated in thicker markets and in markets with more potential local entrants.
+
+\subsection{Threshold DiD (Sharpest Identification)}
+
+Restrict to projects near the 500 UTM cutoff. Below 500 UTM, the local preference applies (for deconcentrated agencies); above, it does not.
+\begin{equation}\label{eq:threshold_did}
+    n_{i,r,t} = \alpha + \beta \cdot \text{Below500}_i \times \text{Post}_t + f(\text{Value}_i) + \alpha_r + \gamma_t + \varepsilon_{i,r,t}
+\end{equation}
+where $f(\text{Value}_i)$ is a low-order polynomial or linear spline in project value, estimated separately on each side of the cutoff. Bandwidth: restrict to projects in $[300, 700]$ UTM.
+
+\textbf{Prediction:} $\beta < 0$. Projects just below 500 UTM see fewer bidders post-reform relative to projects just above.
+
+Repeat at the 100 UTM threshold for the Compra \'{A}gil strong-form exclusion. The effect should be larger at 100 UTM since exclusion is complete.
+
+% ==============================================================================
+\section{Prediction 2: Cross-Market Spillovers}
+
+\textbf{Prediction.} In regions that are net exporters of firms (e.g., Santiago), the reform increases competition in above-threshold procurements, as capacity is redirected from peripheral markets.
+
+\subsection{Measuring Firm Export Intensity}
+
+For each region $r$, construct a pre-reform ``firm export'' measure:
+\begin{equation}\label{eq:export}
+    \text{Export}_{r}^{pre} = \frac{\text{value of contracts won by region-}r\text{ firms in other regions}}{\text{total value won by region-}r\text{ firms}}
+\end{equation}
+Santiago and other major urban centers will have high $\text{Export}_r^{pre}$.
+
+\subsection{Event Study on Above-Threshold Projects}
+
+Restrict to projects \textbf{above 500 UTM} (not directly subject to local preference) and estimate:
+\begin{equation}\label{eq:es_spillover}
+    n_{i,r,t} = \alpha_r + \gamma_t + \sum_{\tau \neq -1} \beta_\tau \cdot \text{Export}_{r}^{pre} \times \ind[t = \tau] + X'_{i,r,t}\delta + \varepsilon_{i,r,t}
+\end{equation}
+
+\textbf{Prediction:} $\beta_\tau > 0$ for $\tau > 0$. Above-threshold projects in firm-exporting regions see more bidders post-reform, as firms that previously competed in peripheral below-threshold markets redirect capacity home.
+
+\textbf{Why this is useful:} This is a direct test of the capacity constraint mechanism. If firms have ample capacity ($K$ is large), redirected firms simply reduce activity rather than re-entering their home market, and $\beta_\tau \approx 0$. A positive $\beta$ is evidence that capacity constraints bind and generate the cross-market linkages that motivate the multi-market model.
+
+\subsection{Firm-Level Evidence}
+
+Track individual firms that were active in peripheral markets pre-reform:
+\begin{equation}\label{eq:firm_spillover}
+    \text{HomeBids}_{i,t} = \alpha_i + \gamma_t + \beta \cdot \text{PeripheralExposure}_i \times \text{Post}_t + \varepsilon_{i,t}
+\end{equation}
+where $\text{HomeBids}_{i,t}$ is the number of bids firm $i$ submits in its home region in period $t$, and $\text{PeripheralExposure}_i$ is the pre-reform share of firm $i$'s bids that were in below-threshold projects in non-home regions.
+
+\textbf{Prediction:} $\beta > 0$. Firms with higher peripheral exposure increase home-market bidding post-reform.
+
+% ==============================================================================
+\section{Prediction 3: Local Entry Response}
+
+\textbf{Prediction.} In regions with large pools of potential local firms, new local firms enter the procurement market post-reform.
+
+\subsection{Measuring Entry}
+
+Define a firm as a \emph{new local entrant} in region $r$ at time $t$ if it submits its first-ever bid on a below-threshold project in region $r$ at time $t$ and is domiciled in region $r$.
+
+Outcome variable: $\text{NewEntrants}_{r,t}$ = count of new local entrants per region-period.
+
+\subsection{Specification}
+
+\begin{equation}\label{eq:entry}
+    \text{NewEntrants}_{r,t} = \alpha_r + \gamma_t + \beta_1 \cdot \text{Post}_t \times \log N_{rk}^{pot} + \beta_2 \cdot \text{Post}_t \times s_{rk}^{pre} + X'_{r,t}\delta + \varepsilon_{r,t}
+\end{equation}
+
+\textbf{Predictions:}
+\begin{itemize}[itemsep=2pt]
+    \item $\beta_1 > 0$: More entry in regions with more potential local firms. These regions have the supply-side slack to respond to increased profit opportunities.
+    \item $\beta_2 > 0$: More entry in regions where excluded non-local firms left larger rents. High pre-reform non-local share means more room for profitable entry.
+\end{itemize}
+
+\subsection{Dynamics of Entry}
+
+Replace $\text{Post}_t$ with period dummies to trace out the speed of entry:
+\begin{equation}\label{eq:entry_dynamics}
+    \text{NewEntrants}_{r,t} = \alpha_r + \gamma_t + \sum_{\tau > 0} \beta_\tau^{pot} \cdot \ind[t=\tau] \times \log N_{rk}^{pot} + \sum_{\tau > 0} \beta_\tau^{s} \cdot \ind[t=\tau] \times s_{rk}^{pre} + \varepsilon_{r,t}
+\end{equation}
+
+This reveals whether entry is immediate or builds gradually, which speaks to the speed of market adjustment. If $\beta_\tau$ increases over time, entry takes time to materialize (firms need to learn about opportunities, prepare bid capabilities, etc.). If $\beta_\tau$ is large immediately and then stabilizes or declines, entry responds quickly to the profit opportunity and the market equilibrates fast.
+
+% ==============================================================================
+\section{Prediction 4: Heterogeneous Price Effects}
+
+\textbf{Prediction.} The reform increases procurement costs more in thin markets and may decrease costs in thick markets.
+
+\subsection{Main Specification}
+
+\begin{equation}\label{eq:price_main}
+\begin{split}
+    \log p_{i,r,t} = \alpha_r + \gamma_t &+ \beta_1 \cdot s_{rk}^{pre} \times \text{Post}_t \\
+    &+ \beta_2 \cdot s_{rk}^{pre} \times \text{Post}_t \times \text{Thick}_r + X'_{i,r,t}\delta + \varepsilon_{i,r,t}
+\end{split}
+\end{equation}
+where $p_{i,r,t}$ is the winning bid (or winning bid / reserve price ratio) and $\text{Thick}_r$ is a measure of market thickness.
+
+\textbf{Predictions:}
+\begin{itemize}[itemsep=2pt]
+    \item $\beta_1 > 0$: On average in high-exposure regions, prices increase (reduced competition raises markups).
+    \item $\beta_2 < 0$: The price increase is attenuated or reversed in thick markets where local entry compensates.
+\end{itemize}
+
+\subsection{Threshold DiD for Prices}
+
+Same bandwidth around 500 UTM as in equation~\eqref{eq:threshold_did}:
+\begin{equation}\label{eq:price_threshold}
+    \log p_{i,r,t} = \alpha + \beta \cdot \text{Below500}_i \times \text{Post}_t + f(\text{Value}_i) + \alpha_r + \gamma_t + \varepsilon_{i,r,t}
+\end{equation}
+
+\textbf{Prediction:} $\beta > 0$ overall, but interact with $\text{Thick}_r$ to show heterogeneity.
+
+\subsection{Decomposing the Price Effect}
+
+The model says the price effect has two components: a \emph{composition effect} (different firms win) and a \emph{markup effect} (same firms bid differently). To decompose:
+
+\medskip
+\noindent \textbf{Step 1: Composition shift.} Estimate whether the identity of winners changes:
+\begin{equation}\label{eq:local_win}
+    \text{LocalWin}_{i,r,t} = \alpha_r + \gamma_t + \beta \cdot s_{rk}^{pre} \times \text{Post}_t + \varepsilon_{i,r,t}
+\end{equation}
+If $\beta > 0$, more local firms are winning, confirming the composition shift.
+
+\medskip
+\noindent \textbf{Step 2: Markup effect.} Restrict to projects won by local firms both pre- and post-reform. Estimate the price equation on this subsample. If prices still rise, local firms are exercising increased markup (market power effect). If prices are flat, the aggregate price increase is entirely driven by composition (costlier local firms replacing cheaper non-local ones).
+
+\medskip
+\noindent \textbf{Step 3: Bid-level evidence} (if full bid data available). Compare the bid distribution of local firms in high-exposure vs.\ low-exposure regions, pre vs.\ post reform. An upward shift in local firm bids, conditional on project characteristics, is direct evidence of increased markups.
+
+% ==============================================================================
+\section{Prediction 5: Local Employment Effects}
+
+\textbf{Prediction.} Local employment in the procurement sector increases more in regions where local firms' win share rises most.
+
+\subsection{Main Specification}
+
+\begin{equation}\label{eq:employment}
+    \log L_{r,k,t} = \alpha_r + \gamma_t + \beta \cdot s_{rk}^{pre} \times \text{Post}_t + X'_{r,t}\delta + \varepsilon_{r,k,t}
+\end{equation}
+where $L_{r,k,t}$ is total employment in region $r$, sector $k$, period $t$ from the employer-employee data.
+
+\textbf{Prediction:} $\beta > 0$. Regions with higher pre-reform non-local share see larger gains in local sector employment, as local firms win more contracts and hire more workers.
+
+\subsection{Worker-Level Analysis}
+
+At the worker level, examine hiring:
+\begin{equation}\label{eq:hiring}
+    \text{Hired}_{j,r,t} = \alpha_r + \gamma_t + \beta \cdot s_{rk}^{pre} \times \text{Post}_t + X'_{j}\delta + \varepsilon_{j,r,t}
+\end{equation}
+where $\text{Hired}_{j,r,t}$ indicates whether worker $j$ in region $r$ is newly hired in sector $k$ at time $t$.
+
+\subsection{Testing Whether Employment Gains Are Real or Reshuffled}
+
+A key concern: local employment gains in high-exposure regions may come at the expense of employment losses at non-local firms that lose contracts. To assess net effects:
+
+\medskip
+\noindent \textbf{Approach A: Region-level decomposition.} Estimate the employment effect separately for:
+\begin{itemize}[itemsep=2pt]
+    \item Regions that are net ``importers'' of procurement firms (high $s_{rk}^{pre}$): expect employment gains.
+    \item Regions that are net ``exporters'' (high $\text{Export}_r^{pre}$): may see employment losses if firms lose peripheral contracts without fully redirecting capacity.
+\end{itemize}
+Sum across all regions to get the net national employment effect.
+
+\medskip
+\noindent \textbf{Approach B: Firm-level analysis.} For firms that were active in non-home markets pre-reform:
+\begin{equation}\label{eq:firm_employment}
+    \log L_{i,t} = \alpha_i + \gamma_t + \beta \cdot \text{PeripheralRevShare}_i \times \text{Post}_t + \varepsilon_{i,t}
+\end{equation}
+
+\textbf{Prediction:} $\beta < 0$ for non-local firms that lose access to peripheral markets (unless they fully redirect capacity). $\beta > 0$ for local firms in high-exposure regions.
+
+% ==============================================================================
+\section{Prediction 6: Bunching Around Thresholds}
+
+\textbf{Prediction.} Government agencies strategically size projects relative to the 100 UTM and 500 UTM thresholds.
+
+\subsection{Density Tests}
+
+For each threshold $\bar{v} \in \{100, 500\}$ UTM:
+
+\begin{enumerate}[label=\textbf{Step \arabic*:}]
+    \item Plot the density of project values in a window around $\bar{v}$, separately for pre-reform and post-reform periods.
+    \item Apply the Cattaneo--Jansson--Ma (2020) manipulation test to the post-reform density at $\bar{v}$. The null hypothesis is continuity of the density at the threshold.
+    \item Compare the CJM test statistic pre vs.\ post reform. Under the null of no strategic manipulation, both periods should show continuity. If the post-reform density shows a discontinuity but the pre-reform density does not, this is evidence of strategic project sizing.
+\end{enumerate}
+
+\subsection{Direction of Bunching}
+
+The direction of bunching is informative about agency preferences:
+\begin{itemize}[itemsep=4pt]
+    \item \textbf{Bunching below $\bar{v}$:} Agencies prefer the local preference regime. They downsize projects to qualify for the preference, revealing that they value contracting with local firms (either due to genuine preference or due to political incentives).
+    \item \textbf{Bunching above $\bar{v}$:} Agencies prefer to avoid the local preference. They upsize projects to escape the restriction, revealing that they prefer to maintain access to non-local (presumably cheaper or higher-quality) suppliers.
+\end{itemize}
+
+\subsection{Heterogeneity in Bunching}
+
+Estimate bunching separately by:
+\begin{itemize}[itemsep=4pt]
+    \item \textbf{Agency type:} Regionally deconcentrated agencies (directly subject to Art.\ 61) vs.\ central agencies. Only deconcentrated agencies should bunch.
+    \item \textbf{Region:} Regions with many local firms (low cost of local preference) vs.\ few local firms (high cost). Agencies in thin-market regions have stronger incentives to bunch above the threshold.
+    \item \textbf{Sector:} Sectors where local/non-local quality gaps are large should show more above-threshold bunching.
+\end{itemize}
+
+\subsection{Implications for Other Designs}
+
+If bunching is substantial, the composition of projects near the thresholds changes post-reform, which complicates the threshold DiD in Sections~\ref{eq:threshold_did} and~\ref{eq:price_threshold}. Two responses:
+
+\medskip
+\noindent \textbf{Donut RDD:} Exclude a narrow window around the threshold (e.g., $[480, 520]$ UTM) and compare projects in $[300, 480]$ vs.\ $[520, 700]$. This sacrifices some statistical precision but avoids the manipulation region.
+
+\medskip
+\noindent \textbf{Bunching as outcome:} Rather than treating bunching as a threat, estimate it as an outcome of interest. The magnitude of bunching quantifies agencies' willingness to pay to avoid (or obtain) local preference treatment, which is an informative moment for the structural model.
+
+% ==============================================================================
+\section{Additional Tests and Robustness}
+
+\subsection{Agency Type Placebo}
+
+Article 61 applies to ``gobiernos regionales y otros organismos p\'{u}blicos territorialmente desconcentrados.'' Central government agencies that are not regionally deconcentrated should be unaffected.
+
+\medskip
+\noindent \textbf{Test:} Estimate the main competition and price specifications using central (non-deconcentrated) agencies as a placebo group. All $\beta$ coefficients should be zero (or at least much smaller) for this group.
+\begin{equation}\label{eq:placebo}
+\begin{split}
+    n_{i,r,t} = \alpha_r + \gamma_t &+ \beta_1 \cdot s_{rk}^{pre} \times \text{Post}_t \times \text{Deconc}_a \\
+    &+ \beta_2 \cdot s_{rk}^{pre} \times \text{Post}_t \times (1 - \text{Deconc}_a) + \varepsilon_{i,r,t}
+\end{split}
+\end{equation}
+
+\textbf{Prediction:} $|\beta_1| \gg |\beta_2| \approx 0$.
+
+\subsection{Guarantee Threshold as a Separate Natural Experiment}
+
+The reform also raises the guarantee threshold: \emph{seriedad} guarantees are now required only above 5,000 UTM (previously no floor), and \emph{fiel cumplimiento} guarantees only above 1,000 UTM. This is a distinct reform that reduces barriers to entry for small firms.
+
+\medskip
+\noindent \textbf{Specification:} Around the 1,000 UTM threshold:
+\begin{equation}\label{eq:guarantee}
+    n_{i,r,t} = \alpha + \beta \cdot \text{Below1000}_i \times \text{Post}_t + f(\text{Value}_i) + \alpha_r + \gamma_t + \varepsilon_{i,r,t}
+\end{equation}
+
+\textbf{Prediction:} $\beta > 0$. Below-threshold projects see more bidders post-reform because the guarantee requirement is removed, reducing entry costs especially for small firms.
+
+This is a useful complementary analysis because (a) it identifies a different mechanism (entry cost reduction vs.\ local preference), (b) it provides an additional source of variation, and (c) the 1,000 UTM threshold is far enough from the 500 UTM local preference threshold that the two treatments do not confound each other in a narrow bandwidth design.
+
+\subsection{Pre-Trend Validation}
+
+For all event study specifications, the critical identification assumption is parallel pre-trends. Report:
+\begin{itemize}[itemsep=4pt]
+    \item Plots of $\hat{\beta}_\tau$ for $\tau < 0$ with confidence intervals.
+    \item Joint $F$-test of $\beta_\tau = 0$ for all $\tau < 0$.
+    \item If pre-trends are present, apply Rambachan and Roth (2023) sensitivity analysis to bound the treatment effect under deviations from parallel trends.
+\end{itemize}
+
+\subsection{Permutation / Randomization Inference}
+
+For the treatment intensity designs, the effective number of clusters is $R \times K$ (regions $\times$ sectors), which may be small. Standard cluster-robust inference may over-reject.
+
+\medskip
+\noindent \textbf{Remedy: Permutation inference.} Randomly reassign $s_{rk}^{pre}$ across region-sector cells (keeping the time series structure intact) and re-estimate $\beta$. Repeat 1,000+ times. The $p$-value is the share of permuted $\hat{\beta}$'s that exceed the actual $\hat{\beta}$ in absolute value.
+
+\medskip
+\noindent \textbf{Alternative:} Wild cluster bootstrap at the region level, following Cameron, Gelbach, and Miller (2008).
+
+% ==============================================================================
+\section{Summary: Mapping Predictions to Tests}
+
+\begin{table}[htbp]
+\centering
+\caption{Mapping Predictions to Empirical Tests}
+\label{tab:summary}
+\small
+\begin{tabular}{@{}p{3.2cm}p{2.5cm}p{3.2cm}p{3.8cm}p{1cm}@{}}
+\toprule
+\textbf{Prediction} & \textbf{Main Outcome} & \textbf{Key RHS Variation} & \textbf{Primary Design} & \textbf{Sec.} \\
+\midrule
+1.\ Heterogeneous competition & \# bidders & $s_{rk}^{pre} \times \text{Post}$ & Treatment intensity ES & 2 \\[4pt]
+2.\ Cross-market spillovers & \# bidders (above threshold) & $\text{Export}_r^{pre} \times \text{Post}$ & ES on untreated projects & 3 \\[4pt]
+3.\ Local entry & New entrant count & $N_{rk}^{pot} \times \text{Post}$ & Region-level panel & 4 \\[4pt]
+4.\ Heterogeneous prices & Winning bid & $s_{rk}^{pre} \times \text{Post} \times \text{Thick}$ & Treatment intensity + threshold DiD & 5 \\[4pt]
+5.\ Local employment & Sector employment & $s_{rk}^{pre} \times \text{Post}$ & Employer-employee panel & 6 \\[4pt]
+6.\ Bunching & Project value density & Post indicator & Density tests at thresholds & 7 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Each prediction has a clean reduced-form test. The results collectively discipline the structural model: if, for instance, we find no cross-market spillovers (Prediction 2), the model can be simplified by relaxing the capacity constraint. If we find large entry responses (Prediction 3), the pool of potential entrants $N_r^{pot}$ is an important parameter to estimate carefully. The reduced-form results indicate which mechanisms matter empirically and therefore which features of the model are worth estimating structurally.
+
+\end{document}

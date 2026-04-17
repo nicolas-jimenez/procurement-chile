@@ -1,0 +1,1960 @@
+% !TEX program = xelatex
+\documentclass[10pt,aspectratio=169]{beamer}
+\usetheme{metropolis}
+
+% ── Packages ──────────────────────────────────────────────
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{appendixnumberbeamer}
+
+% ── Figure path ───────────────────────────────────────────
+\graphicspath{{../../../output/diagnostics/figures/}{../../../output/did/figures/}{../../../output/bids/figures/}}
+
+% ── Meta ──────────────────────────────────────────────────
+\title{Reforma de Compra \'Agil: Evidencia Descriptiva}
+\subtitle{Evoluci\'on de composici\'on, montos y competencia}
+\author{Nicol\'as Jim\'enez}
+\date{26-02-2025}
+\institute{}
+
+\begin{document}
+
+% ══════════════════════════════════════════════════════════
+% TITLE
+% ══════════════════════════════════════════════════════════
+\maketitle
+
+% ══════════════════════════════════════════════════════════
+% REFORMA
+% ══════════════════════════════════════════════════════════
+\begin{frame}{Reforma de Compra \'Agil (Ley 21.634)}
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\textbf{Antes (hasta 11-dic-2024)}
+\begin{itemize}
+  \item Tope de Compra \'Agil: \textbf{30 UTM}.
+  \item Sobre 30 UTM predominaban licitaciones.
+  \item Sin prioridad expl\'icita para EMT/SME en primera instancia.
+\end{itemize}
+\end{column}
+\begin{column}{0.49\textwidth}
+\textbf{Despu\'es (desde 12-dic-2024)}
+\begin{itemize}
+  \item Tope de Compra \'Agil: \textbf{100 UTM}.
+  \item El tramo 30--100 UTM pasa a proceso simplificado.
+  \item Se prioriza EMT/SME en primera instancia.
+\end{itemize}
+\end{column}
+\end{columns}
+
+\medskip
+\textbf{Objetivo de esta presentaci\'on:} describir c\'omo cambia la composici\'on de compras, montos y competencia tras la reforma.
+\end{frame}
+
+% ══════════════════════════════════════════════════════════
+% SHARE BY BUCKET
+% ══════════════════════════════════════════════════════════
+\begin{frame}{Participaci\'on de Compra \'Agil por tramo de costo estimado}
+\centering
+\includegraphics[width=0.96\linewidth]{ca_D4_share_compra_agil_by_utm_bucket.png}
+
+\vspace{0.5em}
+\small\textbf{Conclusi\'on:} Casi todos los proyectos de 30--100 UTM cambian de licitaciones a Compra \'Agil.
+\end{frame}
+
+% ══════════════════════════════════════════════════════════
+% AVG VALUE OVER TIME
+% ══════════════════════════════════════════════════════════
+\begin{frame}{Valor promedio de cotizaciones en Compra \'Agil}
+\centering
+\includegraphics[width=0.96\linewidth]{ca_D15_valor_promedio_compra_agil_tiempo_es.png}
+
+\vspace{0.5em}
+\small\textbf{Conclusi\'on:} El tama\~no promedio de los proyectos de Compra \'Agil crece.
+\end{frame}
+
+% ══════════════════════════════════════════════════════════
+% STACKED COUNTS (0-30, 30-100)
+% ══════════════════════════════════════════════════════════
+\begin{frame}{N\'umero mensual de proyectos}
+\begin{columns}[c]
+\begin{column}{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{ca_D13_monthly_tender_counts_stacked_0_30utm.png}
+\end{column}
+\begin{column}{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{ca_D13_monthly_tender_counts_stacked_30_100utm.png}
+\end{column}
+\end{columns}
+
+\vspace{0.5em}
+\small\textbf{Conclusi\'on:} En 30--100 UTM hay sustituci\'on marcada de licitaciones hacia Compra \'Agil.
+\end{frame}
+
+
+
+
+% ══════════════════════════════════════════════════════════
+% STACKED VALUES (0-30, 30-100)
+% ══════════════════════════════════════════════════════════
+\begin{frame}{Valor mensual de proyectos}
+\begin{columns}[c]
+\begin{column}{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{ca_D14_monthly_tender_value_stacked_0_30utm.png}
+\end{column}
+\begin{column}{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{ca_D14_monthly_tender_value_stacked_30_100utm.png}
+\end{column}
+\end{columns}
+
+\vspace{0.5em}
+\small\textbf{Conclusi\'on:} Los proyectos de Compra \'Agil crecen en valor promedio; hay sustituci\'on hacia proyectos m\'as grandes.
+\end{frame}
+
+
+% ══════════════════════════════════════════════════════════
+% AVG BIDDERS BY BUCKET
+% ══════════════════════════════════════════════════════════
+\begin{frame}{Promedio de oferentes por licitaci\'on/cotizaci\'on y tramo UTM}
+\centering
+\includegraphics[width=0.96\linewidth]{ca_D12_avg_bidders_by_utm_bucket_month.png}
+
+\vspace{0.5em}
+\small\textbf{Conclusi\'on:} Sube el n\'umero de oferentes, sobre todo en proyectos de mayor tama\~no.
+\end{frame}
+
+% ══════════════════════════════════════════════════════════
+% BIDDER TYPES BY BUCKET 
+% ══════════════════════════════════════════════════════════
+
+\begin{frame}{Composici\'on de oferentes (mensual): proyectos 30--100 UTM}
+\centering
+\includegraphics[width=0.96\linewidth]{ca_D8_bidder_types_avg_count_30_100utm_month.png}
+\end{frame}
+
+
+
+% ══════════════════════════════════════════════════════════
+% BIDDER/WINNER SHARES BY BUCKET (MONTHLY, STACKED)
+% ══════════════════════════════════════════════════════════
+
+
+\begin{frame}{Participaci\'on de tipos de oferente (mensual): proyectos 30--100 UTM}
+\centering
+\includegraphics[width=0.96\linewidth]{ca_D20_bidder_type_share_30_100utm_month.png}
+\end{frame}
+
+
+
+\begin{frame}{Participaci\'on de tipos de ganador (mensual): proyectos 30--100 UTM}
+\centering
+\includegraphics[width=0.96\linewidth]{ca_D24_winner_type_share_30_100utm_month.png}
+\end{frame}
+
+
+% ══════════════════════════════════════════════════════════
+% SUMMARY STATISTICS (before DiD)
+% TODO: populate these frames with output tables / figures
+% ══════════════════════════════════════════════════════════
+
+\begin{frame}{Sample Overview: Pre-Reform Descriptives}
+\textbf{[PLACEHOLDER — fill with summary statistics table]}
+
+\medskip
+Suggested content:
+\begin{itemize}
+  \item Table: N tenders, N bidders (mean), SME win share, log price ratio
+        — split by sector (Municipalidades vs.\ Obras Públicas) and UTM band
+        (0–30, 30–100, 100–200 UTM), pre-reform only.
+  \item Highlight that the treated band (30–100 UTM) had systematically
+        lower bidder counts and higher non-local shares than control bands.
+  \item Source: \texttt{did\_tender\_sample.parquet} + \texttt{did\_bid\_sample.parquet}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Pre-Reform Parallel Trends (Visual Check)}
+\textbf{[PLACEHOLDER — fill with pre-reform time-series comparison]}
+
+\medskip
+Suggested content:
+\begin{itemize}
+  \item Line chart: monthly mean N bidders for treated (30–100 UTM) vs.\
+        control (100–200 UTM), January 2023 – November 2024.
+  \item Same for SME bidder share and log win price ratio.
+  \item Motivation: visual support that treated and control trends
+        are parallel before the reform.
+\end{itemize}
+\end{frame}
+
+% ══════════════════════════════════════════════════════════
+% DIF-IN-DIF OVERVIEW
+% ══════════════════════════════════════════════════════════
+
+\begin{frame}{Difference-in-Differences: Overview}
+
+  \begin{itemize}
+    \item \textbf{Question:} How did the Compra Ágil reform change competition in projects that were previously ``Licitaciones'' and are now ``Compra Ágil''?
+    \vspace{0.5cm}
+    \item \textbf{Strategy:} Use a \textbf{Difference-in-Differences} (DiD) specification, comparing bidder behavior in auctions with estimated cost 30-100 UTM with auctions worth (1) 0-30 UTM, and (2) 100-200 UTM, separately.
+    \begin{itemize}
+      \item[-] Also, use Instrumental Variable (eligibility for Compra Ágil) to instrument for Compra Ágil designation. Results are similar. 
+    \end{itemize}
+    \vspace{0.5cm}
+    \item \textbf{Outcomes:} Number and composition of bidders, share of local and non-local bidders, share of SME (MiPYME) and non-SME bidders.
+  \end{itemize}
+\end{frame}
+
+% ══════════════════════════════════════════════════════════
+% DIF-IN-DIF SPECIFICATION
+% ══════════════════════════════════════════════════════════
+
+\begin{frame}{Difference-in-Differences: Specification}
+\textbf{Estimating equation (TWFE):}
+\[
+  y_{it} = \alpha_i + \gamma_t + \beta\,\mathbf{1}[\text{treated}_i \times \text{post}_t] + \varepsilon_{it}
+\]
+
+\medskip
+\textbf{Treatment and control groups} (defined by estimated contract value in UTM):
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \item \textbf{Treated:} 30--100 UTM \\
+        \small Tenders that switch from competitive bidding (licitaci\'on) to Compra \'Agil after Dec 12, 2024.
+\end{itemize}
+\end{column}
+\begin{column}{0.52\textwidth}
+\begin{itemize}
+  \item \textbf{Control 1} (low): 1--30 UTM \\
+        \small Already under Compra \'Agil before the reform.
+  \item \textbf{Control 2} (high): 100--200 UTM \\
+        \small Above the new threshold; procurement process unchanged.
+\end{itemize}
+\end{column}
+\end{columns}
+
+\medskip
+\textbf{Fixed effects:} Procuring entity $\alpha_i$ + year-month $\gamma_t$.\\
+\textbf{Standard errors:} Clustered by procuring entity.\\
+\textbf{Sample:} Jan 2023 -- Mar 2025.\\[4pt]
+\small Tables show two columns: \textit{Control 1 (0--30 UTM)} and \textit{Control 2 (100--200 UTM)}.
+\end{frame}
+
+% ══════════════════════════════════════════════════════════
+% DIF-IN-DIF RESULTS
+% ══════════════════════════════════════════════════════════
+
+\begin{frame}{DiD: Entry at Bidding Stage (Panel A)}
+\small
+
+\medskip
+\input{../../../output/did/tables/did_table_compare_A.tex}
+\end{frame}
+
+\begin{frame}{DiD: Bidder Composition (Panel B)}
+\small
+
+\medskip
+\input{../../../output/did/tables/did_table_compare_B.tex}
+\end{frame}
+
+\begin{frame}{DiD: Winner Characteristics (Panel C)}
+\small
+
+\medskip
+\input{../../../output/did/tables/did_table_compare_C.tex}
+\end{frame}
+
+\begin{frame}{DiD: Bid Outcomes (Panel D)}
+\small
+
+\medskip
+\input{../../../output/did/tables/did_table_compare_D.tex}
+\end{frame}
+
+
+% ── DiD Validity Checks ───────────────────────────────────────────────────────
+
+\begin{frame}{DiD: Validity Checks}
+\textbf{Three diagnostic tests (control = 100--200 UTM spec):}
+\begin{enumerate}
+  \item \textbf{Wald pre-trend F-test} --- joint test $H_0: \beta_{-8} = \cdots = \beta_{-2} = 0$
+    using the full cluster-robust covariance matrix of event-study coefficients
+  \item \textbf{Time placebo} --- DiD run on pre-reform data only ($k \in [-8,-1]$),
+    fake reform at $k = -4$; coefficient should be $\approx 0$
+  \item \textbf{Pre-reform balance} --- OLS of entity-level pre-reform means on
+    Treated; tests level differences before reform
+\end{enumerate}
+\end{frame}
+
+
+\begin{frame}{DiD: Pre-Trend Wald Test}
+\small
+\medskip
+\input{../../../output/did/tables/diag_pretrend_wald.tex}
+\end{frame}
+
+
+\begin{frame}{DiD: Event Studies (Control 100--200 UTM)}
+\begin{columns}[c]
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{../../../output/did/figures/diag_event_study_n_bidders.png}
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{../../../output/did/figures/diag_event_study_sme_share_sii.png}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{DiD: Event Studies (Control 100--200 UTM)}
+\begin{columns}[c]
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{../../../output/did/figures/diag_event_study_winner_is_sme_sii.png}
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{../../../output/did/figures/diag_event_study_log_win_price_ratio.png}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{DiD: Event Study --- Bid-Level Price}
+\centering
+\includegraphics[width=0.6\linewidth]{../../../output/did/figures/diag_event_study_log_sub_price_ratio.png}
+\end{frame}
+
+
+\begin{frame}{DiD: Time Placebo Test}
+\small
+\medskip
+\input{../../../output/did/tables/diag_placebo.tex}
+\end{frame}
+
+
+\begin{frame}{DiD: Pre-Reform Balance}
+\small
+\medskip
+\input{../../../output/did/tables/diag_balance.tex}
+\end{frame}
+
+
+% ── IV-DiD Results ────────────────────────────────────────────────────────────
+
+\begin{frame}{IV-DiD: Specification}
+\textbf{Motivation:} Intent-to-treat (DiD) estimates may under-state effects if
+compliance is imperfect. We instrument actual Compra Ágil use with reform
+eligibility.
+
+\bigskip
+\textbf{First stage (within-entity, within-month):}
+\[
+  \widetilde{CA}_{it} = \pi\,\widetilde{Z}_{it} + \nu_{it},
+  \qquad
+  Z_{it} = \mathbf{1}[\text{treated}_i \times \text{post}_t]
+\]
+
+\textbf{Second stage:}
+\[
+  \tilde{y}_{it} = \beta_{\text{IV}}\,\widehat{\widetilde{CA}}_{it} + \varepsilon_{it}
+\]
+
+\begin{itemize}
+  \item \textbf{Endogenous:} $CA_{it}$ --- indicator, tender processed via Compra Ágil
+  \item \textbf{Instrument:} $Z_{it} = \text{Treated}_i \times \text{Post}_t$ --- reform eligibility
+  \item Same FE and clustering as OLS DiD (entity + year-month; SEs by PE)
+  \item $\beta_{\text{IV}}$ is a LATE: effect of Compra Ágil \emph{use} (vs.\ eligibility)
+  \item Only use as control sample Control 2, auctions with estimated cost $= 100$--$200$ UTM.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{IV-DiD: First Stage}
+\small
+
+\medskip
+\input{../../../output/did/tables/did_table_first_stage.tex}
+\end{frame}
+
+\begin{frame}{IV-DiD: Entry at Bidding Stage (Panel A)}
+\small
+
+\medskip
+\input{../../../output/did/tables/did_table_compare_iv_A.tex}
+\end{frame}
+
+
+\begin{frame}{IV-DiD: Bidder Composition (Panel B)}
+\small
+
+\medskip
+\input{../../../output/did/tables/did_table_compare_iv_B.tex}
+\end{frame}
+
+
+\begin{frame}{IV-DiD: Winner Characteristics (Panel C)}
+\small
+
+\medskip
+\input{../../../output/did/tables/did_table_compare_iv_C.tex}
+\end{frame}
+
+
+\begin{frame}{IV-DiD: Bid Outcomes (Panel D)}
+\small
+
+\medskip
+\input{../../../output/did/tables/did_table_compare_iv_D.tex}
+\end{frame}
+
+%%=============================================================
+%% Bid-Level Markups
+%%=============================================================
+
+\section{Bid-Level Markups}
+
+\begin{frame}{Bid Markups: Cross-Sectional Differences}
+\centering
+\includegraphics[width=0.66\linewidth]{bids_part1_coefplot.png}
+
+\scriptsize
+\begin{itemize}
+  \itemsep0.2em
+  \item Within auction, \textbf{local vs.\ non-local bid/cost ratios are essentially the same}.
+  \item \textbf{SMEs bid higher relative to estimated cost}: about $0.256$ log points in every auction-FE specification.
+  \item Conditional on auction FE, \textbf{distance has no additional explanatory power}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bid Markups: Within-Firm Differences}
+\centering
+\includegraphics[width=0.66\linewidth]{bids_part2_coefplot.png}
+
+\scriptsize
+\begin{itemize}
+  \itemsep0.2em
+  \item For the \textbf{same bidder}, local bids are lower: about $-0.086$ log points with bidder + month FE.
+  \item With buyer-region FE, the local estimate attenuates to $-0.040$ log points and remains significant.
+  \item In a \textbf{separate non-local-only regression}, the log-distance slope is $-0.038$, so the distance margin is estimated without the local dummy in the same equation.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bid Markups: Within-Firm Differences by Firm Size}
+\centering
+\includegraphics[width=0.70\linewidth]{bids_part2_size_split_local.png}
+
+\scriptsize
+\begin{itemize}
+  \itemsep0.2em
+  \item Both \textbf{SME} and \textbf{large} firms bid less on local projects when we compare the same firm across auctions.
+  \item The point estimate is \textbf{more negative for large firms} ($-0.126$ vs.\ $-0.076$ with bidder + month FE), so we do \textbf{not} see evidence that large firms have a smaller same-vs.\ different-region wedge.
+  \item With buyer-region FE, the SME estimate remains negative and significant ($-0.032$), while the large-firm estimate is still more negative but imprecise.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bid Markups: Within-Firm Differences by Firm Home Region}
+\centering
+\includegraphics[width=0.92\linewidth]{bids_part2_region_split.png}
+
+\scriptsize
+\begin{itemize}
+  \itemsep0.2em
+  \item This figure uses \textbf{pooled origin-region interactions}, not separate regressions: left panel is \texttt{local $\times$ origin region}; right panel is \texttt{log(distance) $\times$ origin region} on \textbf{non-local bids only}.
+  \item The \textbf{local coefficient is heterogeneous} across origins, but the \textbf{distance slope is more consistently negative} for firms based in \textbf{RM, O'Higgins, Araucan\'ia, Los R\'ios, and Los Lagos}.
+  \item Interpretation: the \textbf{continuous distance friction is more stable} than a universal same-region premium, which looks more origin-specific.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bid Markups: Residual Densities by Firm Type}
+\centering
+\includegraphics[width=0.98\linewidth]{bids_part1_resid_density_by_size.png}
+\end{frame}
+
+\begin{frame}{Bid Markups: Within-Firm Residual Density}
+\centering
+\includegraphics[width=0.88\linewidth]{bids_part2_resid_density_local_vs_nonlocal.png}
+\end{frame}
+
+\begin{frame}{Bid Markups: Reform Effects}
+\centering
+\includegraphics[width=0.66\linewidth]{bids_part3_did_coefplot.png}
+
+\scriptsize
+\begin{itemize}
+  \itemsep0.2em
+  \item In municipal bids, the treated 30--100 UTM band shows a \textbf{large post-reform increase}: about $0.40$ log points relative to 100--200 UTM.
+  \item The \textbf{local triple interaction is small and insignificant} ($-0.070$), so the reform effect does not differ much by bidder locality.
+  \item The \textbf{SME triple interaction is positive} ($0.212$, $p \approx 0.06$), suggesting a somewhat larger increase among SME bids.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bid Markups: Event Study}
+\centering
+\includegraphics[width=0.80\linewidth]{bids_part3_event_study.png}
+
+\scriptsize
+\begin{itemize}
+  \itemsep0.2em
+  \item Post-reform coefficients jump sharply, peaking near $0.9$ log points in early 2025.
+  \item Pre-period coefficients are \textbf{not flat relative to $k=-1$}; treat the dynamic profile as descriptive rather than a clean parallel-trends event study.
+\end{itemize}
+\end{frame}
+
+%%=============================================================
+%% Regional Heterogeneity — Main Presentation Slides
+%%=============================================================
+
+\section{Regional Heterogeneity}
+
+\begin{frame}{Regional Heterogeneity: Market Structure Varies by Region}
+\begin{columns}[c]
+  \column{0.52\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{binscatter_q_nonlocal_munic.png}
+  \column{0.48\textwidth}
+  \textbf{Four pre-reform moderators (Municipalidades, 30--100 UTM):}
+  \begin{itemize}
+    \item \textbf{Nonlocal share:} fraction of bids by out-of-region firms
+    \item \textbf{q\_pre:} avg.\ monthly tender count
+    \item \textbf{n\_pot\_local:} unique local suppliers
+    \item \textbf{Distance from Santiago:} geographic isolation (km)
+  \end{itemize}
+  \medskip
+  \textit{Thick markets (high q\_pre) have lower non-local penetration.}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Binscatter: Distance from Santiago vs.\ Non-local Share}
+\centering
+\includegraphics[width=0.85\linewidth]{binscatter_dist_nonlocal_munic.png}
+\end{frame}
+
+\begin{frame}{Binscatter: Distance from Santiago vs.\ Moderators}
+\centering
+\includegraphics[width=0.85\linewidth]{binscatter_dist_moderators_munic.png}
+\end{frame}
+
+\begin{frame}{Regional Heterogeneity: Specification}
+\textbf{Question:} Does the effect of Compra Ágil vary with pre-reform regional characteristics?
+
+\bigskip
+\textbf{Estimating equation (OLS DiD):}
+\[
+  y_{irt} = \alpha_i + \gamma_t
+    + \beta_1\,(T_i \times \text{Post}_t)
+    + \beta_2\,(T_i \times \text{Post}_t \times Z_r)
+    + \varepsilon_{irt}
+\]
+
+\medskip
+\begin{itemize}
+  \item $Z_r$ = standardised pre-reform regional moderator (one specification per moderator)
+  \item $\beta_1$ = average treatment effect; \quad $\beta_2$ = heterogeneity w.r.t.\ $Z_r$
+  \item Same FE and clustering as baseline DiD (entity + year-month FE; SEs by PE)
+  \item \textbf{Sample:} Municipalidades sector
+\end{itemize}
+
+\medskip
+\textbf{Five moderators $Z_r$:} non-local share, tender count, tender value,
+potential local firms, distance from Santiago.
+\end{frame}
+
+\begin{frame}{Heterogeneity: N Local Bidders and N Nonlocal Bidders}
+\begin{columns}[c]
+  \column{0.5\textwidth}\centering
+  \textbf{\small N Local Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_local_nonlocal_share_pre_munic.png}
+  \column{0.5\textwidth}\centering
+  \textbf{\small N Non-local Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_nonlocal_nonlocal_share_pre_munic.png}
+\end{columns}
+\medskip
+\textit{Regions with high pre-reform non-local share see the largest local entry
+gains — consistent with the exclusion mechanism.}
+\end{frame}
+
+\begin{frame}{Heterogeneity: Total Bidders and SME Share (by Distance)}
+\begin{columns}[c]
+  \column{0.5\textwidth}\centering
+  \textbf{\small N Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_bidders_dist_from_santiago_munic.png}
+  \column{0.5\textwidth}\centering
+  \textbf{\small SME Share (SII)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_sme_share_sii_dist_from_santiago_munic.png}
+\end{columns}
+\medskip
+\textit{Distance from Santiago is an exogenous geographic instrument for
+pre-reform non-local penetration.}
+\end{frame}
+
+\begin{frame}{Heterogeneity: Win Price Ratio (by Nonlocal Share and Distance)}
+\begin{columns}[c]
+  \column{0.5\textwidth}\centering
+  \textbf{\small Log Win Price}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_log_win_price_ratio_nonlocal_share_pre_munic.png}
+  \column{0.5\textwidth}\centering
+  \textbf{\small Log Win Price}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_log_win_price_ratio_dist_from_santiago_munic.png}
+\end{columns}
+\medskip
+\textit{Win prices rise most in regions that had high pre-reform non-local competition
+(i.e.\ where local firms replace lower-cost non-local incumbents).}
+\end{frame}
+
+
+%%=============================================================
+%% Cross-Market Spillovers — Main Presentation Slides
+%%=============================================================
+
+\section{Cross-Market Spillovers}
+
+\begin{frame}{Cross-Market Spillovers: Mechanism}
+\textbf{Research question:} Did firms freed from 30--100 UTM licitaciones
+redirect capacity to \textit{above-threshold} (100--500 UTM) tenders in their
+home regions, increasing competition there?
+
+\bigskip
+\textbf{Mechanism (spatial auction model):}
+\begin{enumerate}
+  \item Reform excludes non-local firms from 30--100 UTM Compra Ágil.
+  \item Firms from ``export regions'' (e.g.\ RM) had many cross-region bids
+        in that band before the reform --- these bids are now blocked.
+  \item Freed capacity $\Rightarrow$ these firms bid more in their home
+        region's above-threshold (100--500 UTM) tenders.
+  \item Prediction: N bidders (esp.\ large firms) $\uparrow$ post-reform
+        in high-export-share regions.
+\end{enumerate}
+
+\bigskip
+\textbf{Treatment:} \textit{Export share} =
+fraction of pre-reform bids by home-region-$r$ firms placed in \textit{other}
+regions (30--100 UTM band). Time-invariant; variation is cross-regional.
+\end{frame}
+
+\begin{frame}{Export Share by Region (Pre-Reform)}
+\centering
+\includegraphics[width=0.70\linewidth]{spillover_export_share_munic.png}
+
+\medskip
+\small\textit{Región Metropolitana has the highest export share: Santiago firms
+dominated peripheral-region procurement in the treated band.
+Far south and north regions are largely self-contained.}
+\end{frame}
+
+\begin{frame}{Cross-Market Spillovers: Specification}
+\textbf{Event-study TWFE} on above-threshold (100--500 UTM) region--month panel:
+\[
+  y_{rt} = \alpha_r + \gamma_t
+    + \sum_{k \neq -1} \delta_k \,\bigl(\mathbf{1}[t{=}k] \times
+      \mathrm{ExportShare}_r\bigr) + \varepsilon_{rt}
+\]
+
+\begin{itemize}
+  \item $r$ = region (16 Chilean regions), $t$ = year-month.
+  \item $k$ = months relative to reform ($k=0$ = December 2024).
+  \item $\alpha_r$ = region FE; $\gamma_t$ = year-month FE.
+  \item Estimated for \textbf{continuous} (standardized) and \textbf{binary}
+        (top-tercile) export share.
+  \item Outcomes: N bidders, N local, N non-local, N large, N SME, Pr(single).
+  \item SE clustered at region level (16 clusters).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Spillovers: N Bidders and Pr(Single Bidder)}
+\begin{columns}[c]
+  \column{0.5\textwidth}\centering
+  \includegraphics[width=\linewidth]{spillover_event_study_n_bidders_munic.png}
+  \column{0.5\textwidth}\centering
+  \includegraphics[width=\linewidth]{spillover_event_study_single_bidder_munic.png}
+\end{columns}
+\medskip
+\textit{Total competition rises in high-export regions post-reform; single-bidder
+probability falls --- consistent with freed-capacity reallocation.}
+\end{frame}
+
+\begin{frame}{Spillovers: Local vs.\ Non-Local Bidders}
+\begin{columns}[c]
+  \column{0.5\textwidth}\centering
+  \includegraphics[width=\linewidth]{spillover_event_study_n_local_munic.png}
+  \column{0.5\textwidth}\centering
+  \includegraphics[width=\linewidth]{spillover_event_study_n_nonlocal_munic.png}
+\end{columns}
+\medskip
+\textit{Local bidder count rises in high-export regions (home firms re-enter
+above-threshold band). Non-local count adjusts as previously-exporting firms
+redirect to home markets.}
+\end{frame}
+
+\begin{frame}{Spillovers: Large Firms and Non-Local Share}
+\begin{columns}[c]
+  \column{0.5\textwidth}\centering
+  \includegraphics[width=\linewidth]{spillover_event_study_n_large_munic.png}
+  \column{0.5\textwidth}\centering
+  \includegraphics[width=\linewidth]{spillover_event_study_share_nonlocal_munic.png}
+\end{columns}
+\medskip
+\textit{Large-firm entry is the main driver of the spillover effect.
+Non-local share of above-threshold tenders rises in export regions as
+home-based large firms redirect bids.}
+\end{frame}
+
+\begin{frame}{Spillovers: SME Bidders}
+\centering
+\includegraphics[width=0.65\linewidth]{spillover_event_study_n_sme_munic.png}
+
+\medskip
+\small\textit{SME spillover effect is smaller --- SMEs tend to be local and
+were not the primary ``exporting'' firms. Effect concentrated among large firms.}
+\end{frame}
+
+
+%%=============================================================
+%% APPENDIX divider
+%%=============================================================
+
+\begin{frame}
+\centering
+\textbf{APPENDIX}
+
+\end{frame}
+
+
+\begin{frame}{N\'umero mensual, tramos altos}
+\begin{columns}[c]
+\begin{column}{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{ca_D13_monthly_tender_counts_stacked_100_500utm.png}
+\end{column}
+\begin{column}{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{ca_D13_monthly_tender_counts_stacked_500_plus_utm.png}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Valor mensual, tramos altos}
+\begin{columns}[c]
+\begin{column}{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{ca_D14_monthly_tender_value_stacked_100_500utm.png}
+\end{column}
+\begin{column}{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{ca_D14_monthly_tender_value_stacked_500_plus_utm.png}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Composici\'on de oferentes (mensual): proyectos 0--30 UTM}
+\centering
+\includegraphics[width=0.96\linewidth]{ca_D9_bidder_types_avg_count_0_30utm_month.png}
+
+\end{frame}
+
+\begin{frame}{Composici\'on de oferentes (mensual): proyectos 100--500 UTM}
+\centering
+\includegraphics[width=0.96\linewidth]{ca_D10_bidder_types_avg_count_100_500utm_month.png}
+
+\end{frame}
+
+\begin{frame}{Composici\'on de oferentes (mensual): proyectos 500+ UTM}
+\centering
+\includegraphics[width=0.96\linewidth]{ca_D11_bidder_types_avg_count_500_plus_utm_month.png}
+
+\end{frame}
+
+
+\begin{frame}{Participaci\'on de tipos de oferente (mensual): proyectos 0--30 UTM}
+\centering
+\includegraphics[width=0.96\linewidth]{ca_D21_bidder_type_share_0_30utm_month.png}
+\end{frame}
+
+\begin{frame}{Participaci\'on de tipos de oferente (mensual): proyectos 100--500 UTM}
+\centering
+\includegraphics[width=0.96\linewidth]{ca_D22_bidder_type_share_100_500utm_month.png}
+\end{frame}
+
+\begin{frame}{Participaci\'on de tipos de oferente (mensual): proyectos 500+ UTM}
+\centering
+\includegraphics[width=0.96\linewidth]{ca_D23_bidder_type_share_500_plus_utm_month.png}
+\end{frame}
+
+
+
+
+\begin{frame}{Participaci\'on de tipos de ganador (mensual): proyectos 0--30 UTM}
+\centering
+\includegraphics[width=0.96\linewidth]{ca_D25_winner_type_share_0_30utm_month.png}
+\end{frame}
+
+\begin{frame}{Participaci\'on de tipos de ganador (mensual): proyectos 100--500 UTM}
+\centering
+\includegraphics[width=0.96\linewidth]{ca_D26_winner_type_share_100_500utm_month.png}
+\end{frame}
+
+\begin{frame}{Participaci\'on de tipos de ganador (mensual): proyectos 500+ UTM}
+\centering
+\includegraphics[width=0.96\linewidth]{ca_D27_winner_type_share_500_plus_utm_month.png}
+\end{frame}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% APPENDIX — Option B robustness: Dec 2024 (k=0) excluded as transition month
+% ══════════════════════════════════════════════════════════════════════════════
+\appendix
+
+\begin{frame}{Appendix: Option B — Dec 2024 Excluded}
+\textbf{Motivation:} The reform took effect mid-December 2024 (Dec 12).
+The $k=0$ month therefore captures \emph{partial} treatment exposure
+($\approx 19/31$ days treated), potentially attenuating the first post-period coefficient.
+
+\bigskip
+\textbf{Option B:} Drop $k=0$ (Dec 2024) entirely from the sample.
+Post-period begins at $k=1$ (Jan 2025), the first fully treated month.
+The omitted baseline remains $k=-1$ (Nov 2024).
+
+\bigskip
+\textbf{Slides below replicate the three validity checks and event studies
+under this alternative timing assumption.}
+\end{frame}
+
+
+\begin{frame}{App: Pre-Trend Wald Test (Option B)}
+\small
+\medskip
+\input{../../../output/did/tables/diag_pretrend_wald_optB.tex}
+\end{frame}
+
+
+\begin{frame}{App: Event Studies --- Option B (Control 100--200 UTM)}
+\begin{columns}[c]
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{../../../output/did/figures/diag_event_study_n_bidders_optB.png}
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{../../../output/did/figures/diag_event_study_sme_share_sii_optB.png}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{App: Event Studies --- Option B (Control 100--200 UTM)}
+\begin{columns}[c]
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{../../../output/did/figures/diag_event_study_winner_is_sme_sii_optB.png}
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{../../../output/did/figures/diag_event_study_log_win_price_ratio_optB.png}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{App: Event Study --- Bid-Level Price (Option B)}
+\centering
+\includegraphics[width=0.6\linewidth]{../../../output/did/figures/diag_event_study_log_sub_price_ratio_optB.png}
+\end{frame}
+
+
+\begin{frame}{App: Time Placebo Test (Option B)}
+\small
+\medskip
+\input{../../../output/did/tables/diag_placebo_optB.tex}
+\end{frame}
+
+
+\begin{frame}{App: Pre-Reform Balance (Option B)}
+\small
+\medskip
+\input{../../../output/did/tables/diag_balance_optB.tex}
+\end{frame}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% APPENDIX — Municipalidades subsample
+% ══════════════════════════════════════════════════════════════════════════════
+
+\begin{frame}{App: Municipalidades Subsample --- Overview}
+\textbf{Sample:} Procuring entities in the \emph{Municipalidades} sector
+(sector contains ``municipal''), $\approx$\,42--50\% of all tenders.
+
+\bigskip
+\textbf{Main results (control 100--200 UTM):}
+Compra Ágil raises N bidders by $+0.98^{***}$, shifts composition strongly
+toward SMEs ($\%$ SME $+11$\,pp$^{***}$, Pr(winner: SME) $+10.6$\,pp$^{***}$),
+and increases the winning bid ratio by $+0.78^{***}$ log points.
+
+\bigskip
+\textbf{Slides below show the three pre-trend validity checks and
+representative event studies for this subsample.}
+\end{frame}
+
+
+\begin{frame}{App: Pre-Trend Wald Test (Municipalidades)}
+\small
+\medskip
+\input{../../../output/did/tables/diag_pretrend_wald_munic.tex}
+\end{frame}
+
+
+\begin{frame}{App: Event Studies --- Municipalidades (Control 100--200 UTM)}
+\begin{columns}[c]
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{../../../output/did/figures/diag_event_study_n_bidders_munic.png}
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{../../../output/did/figures/diag_event_study_sme_share_sii_munic.png}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{App: Event Studies --- Municipalidades (Control 100--200 UTM)}
+\begin{columns}[c]
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{../../../output/did/figures/diag_event_study_winner_is_sme_sii_munic.png}
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{../../../output/did/figures/diag_event_study_log_win_price_ratio_munic.png}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{App: Event Study --- Bid-Level Price (Municipalidades)}
+\centering
+\includegraphics[width=0.6\linewidth]{../../../output/did/figures/diag_event_study_log_sub_price_ratio_munic.png}
+\end{frame}
+
+
+\begin{frame}{App: Time Placebo Test (Municipalidades)}
+\small
+\medskip
+\input{../../../output/did/tables/diag_placebo_munic.tex}
+\end{frame}
+
+
+\begin{frame}{App: Pre-Reform Balance (Municipalidades)}
+\small
+\medskip
+\input{../../../output/did/tables/diag_balance_munic.tex}
+\end{frame}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% APPENDIX — Obras Públicas subsample
+% ══════════════════════════════════════════════════════════════════════════════
+
+\begin{frame}{App: Obras Públicas Subsample --- Overview}
+\textbf{Sample:} Tenders in the \emph{Obras Públicas} sector
+(sector contains ``obras''), $\approx$\,1--4\% of tenders; small sample.
+
+\bigskip
+\textbf{Main results (control 100--200 UTM):}
+Compra Ágil raises N bidders by $+1.45^{***}$, shifts composition strongly
+toward SMEs ($\%$ SME $+17.9$\,pp$^{***}$, Pr(winner: SME) $+21.9$\,pp$^{***}$),
+and raises the winning bid ratio by $+0.43^{***}$ log points.
+Pre-reform balance passes for all outcomes except log win bid ($p=0.06$).
+
+\bigskip
+\textbf{Slides below show the three pre-trend validity checks and
+representative event studies for this subsample.}
+\end{frame}
+
+
+\begin{frame}{App: Pre-Trend Wald Test (Obras Públicas)}
+\small
+\medskip
+\input{../../../output/did/tables/diag_pretrend_wald_obras.tex}
+\end{frame}
+
+
+\begin{frame}{App: Event Studies --- Obras Públicas (Control 100--200 UTM)}
+\begin{columns}[c]
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{../../../output/did/figures/diag_event_study_n_bidders_obras.png}
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{../../../output/did/figures/diag_event_study_sme_share_sii_obras.png}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{App: Event Studies --- Obras Públicas (Control 100--200 UTM)}
+\begin{columns}[c]
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{../../../output/did/figures/diag_event_study_winner_is_sme_sii_obras.png}
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{../../../output/did/figures/diag_event_study_log_win_price_ratio_obras.png}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{App: Event Study --- Bid-Level Price (Obras Públicas)}
+\centering
+\includegraphics[width=0.6\linewidth]{../../../output/did/figures/diag_event_study_log_sub_price_ratio_obras.png}
+\end{frame}
+
+
+\begin{frame}{App: Time Placebo Test (Obras Públicas)}
+\small
+\medskip
+\input{../../../output/did/tables/diag_placebo_obras.tex}
+\end{frame}
+
+
+\begin{frame}{App: Pre-Reform Balance (Obras Públicas)}
+\small
+\medskip
+\input{../../../output/did/tables/diag_balance_obras.tex}
+\end{frame}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% APPENDIX — Municipalidades: Full DiD Panel Tables
+% ══════════════════════════════════════════════════════════════════════════════
+
+\begin{frame}{App: DiD Panel A --- Entry at Bidding Stage (Municipalidades)}
+\small
+\medskip
+\input{../../../output/did/tables/did_table_compare_A_munic.tex}
+\end{frame}
+
+
+\begin{frame}{App: DiD Panel B --- Bidder Composition (Municipalidades)}
+\small
+\medskip
+\input{../../../output/did/tables/did_table_compare_B_munic.tex}
+\end{frame}
+
+
+\begin{frame}{App: DiD Panel C --- Winner Characteristics (Municipalidades)}
+\small
+\medskip
+\input{../../../output/did/tables/did_table_compare_C_munic.tex}
+\end{frame}
+
+
+\begin{frame}{App: DiD Panel D --- Bid Outcomes (Municipalidades)}
+\small
+\medskip
+\input{../../../output/did/tables/did_table_compare_D_munic.tex}
+\end{frame}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% APPENDIX — Obras Públicas: Full DiD Panel Tables
+% ══════════════════════════════════════════════════════════════════════════════
+
+\begin{frame}{App: DiD Panel A --- Entry at Bidding Stage (Obras Públicas)}
+\small
+\medskip
+\input{../../../output/did/tables/did_table_compare_A_obras.tex}
+\end{frame}
+
+
+\begin{frame}{App: DiD Panel B --- Bidder Composition (Obras Públicas)}
+\small
+\medskip
+\input{../../../output/did/tables/did_table_compare_B_obras.tex}
+\end{frame}
+
+
+\begin{frame}{App: DiD Panel C --- Winner Characteristics (Obras Públicas)}
+\small
+\medskip
+\input{../../../output/did/tables/did_table_compare_C_obras.tex}
+\end{frame}
+
+
+\begin{frame}{App: DiD Panel D --- Bid Outcomes (Obras Públicas)}
+\small
+\medskip
+\input{../../../output/did/tables/did_table_compare_D_obras.tex}
+\end{frame}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% APPENDIX — Municipalidades: IV-DiD
+% ══════════════════════════════════════════════════════════════════════════════
+
+\begin{frame}{App: IV-DiD First Stage (Municipalidades)}
+\small
+\medskip
+\input{../../../output/did/tables/did_table_first_stage_munic.tex}
+\end{frame}
+
+
+\begin{frame}{App: IV-DiD Panel A --- Entry at Bidding Stage (Municipalidades)}
+\small
+\medskip
+\input{../../../output/did/tables/did_table_compare_iv_A_munic.tex}
+\end{frame}
+
+
+\begin{frame}{App: IV-DiD Panel B --- Bidder Composition (Municipalidades)}
+\small
+\medskip
+\input{../../../output/did/tables/did_table_compare_iv_B_munic.tex}
+\end{frame}
+
+
+\begin{frame}{App: IV-DiD Panel C --- Winner Characteristics (Municipalidades)}
+\small
+\medskip
+\input{../../../output/did/tables/did_table_compare_iv_C_munic.tex}
+\end{frame}
+
+
+\begin{frame}{App: IV-DiD Panel D --- Bid Outcomes (Municipalidades)}
+\small
+\medskip
+\input{../../../output/did/tables/did_table_compare_iv_D_munic.tex}
+\end{frame}
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+% APPENDIX — Obras Públicas: IV-DiD
+% ══════════════════════════════════════════════════════════════════════════════
+
+\begin{frame}{App: IV-DiD First Stage (Obras Públicas)}
+\small
+\medskip
+\input{../../../output/did/tables/did_table_first_stage_obras.tex}
+\end{frame}
+
+
+\begin{frame}{App: IV-DiD Panel A --- Entry at Bidding Stage (Obras Públicas)}
+\small
+\medskip
+\input{../../../output/did/tables/did_table_compare_iv_A_obras.tex}
+\end{frame}
+
+
+\begin{frame}{App: IV-DiD Panel B --- Bidder Composition (Obras Públicas)}
+\small
+\medskip
+\input{../../../output/did/tables/did_table_compare_iv_B_obras.tex}
+\end{frame}
+
+
+\begin{frame}{App: IV-DiD Panel C --- Winner Characteristics (Obras Públicas)}
+\small
+\medskip
+\input{../../../output/did/tables/did_table_compare_iv_C_obras.tex}
+\end{frame}
+
+
+\begin{frame}{App: IV-DiD Panel D --- Bid Outcomes (Obras Públicas)}
+\small
+\medskip
+\input{../../../output/did/tables/did_table_compare_iv_D_obras.tex}
+\end{frame}
+
+
+
+%%=============================================================
+%% Regional Heterogeneity: Setup Slides
+%%=============================================================
+
+\section{Regional Heterogeneity}
+
+\begin{frame}{Regional Heterogeneity: Market Descriptives by Region}
+\textbf{[PLACEHOLDER — fill with region-level descriptives table]}
+
+\medskip
+Suggested content:
+\begin{itemize}
+  \item Table (16 rows × 4 cols): Region name | q\_pre (avg monthly tenders)
+        | nonlocal\_share\_pre | n\_pot\_local | totval\_pre.
+  \item Sort by q\_pre descending; highlight Región Metropolitana as outlier.
+  \item Footnote: sample = Municipalidades, treated band (30–100 UTM),
+        Jan 2022 – Nov 2024.
+  \item Source: \texttt{07\_binscatter\_moderators.py}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Market Thickness and Non-Local Share: Binscatter}
+\begin{center}
+\includegraphics[width=0.92\linewidth]{binscatter_q_nonlocal_munic.png}
+\end{center}
+
+\medskip
+\small\textit{Key takeaway:} Thick markets (high q\_pre) have systematically fewer
+non-local bidders --- validating that q\_pre subsumes the nonlocal\_share\_pre
+effect in interacted DiD regressions.
+\end{frame}
+
+\begin{frame}{Moderator Collinearity: Pairwise Scatter Matrix}
+\begin{center}
+\includegraphics[width=0.88\linewidth]{binscatter_moderator_pairs_munic.png}
+\end{center}
+
+\medskip
+\small\textit{Note:} q\_pre and totval\_pre are highly correlated (redundant).
+n\_pot\_local is a complementary channel (supply-side capacity).
+Región Metropolitana ($\star$) has extreme leverage on raw scale; log scale
+is preferred for q\_pre in regressions.
+\end{frame}
+
+\begin{frame}{Binscatter: Distance from Santiago vs.\ Non-local Share}
+\centering
+\includegraphics[width=0.85\linewidth]{binscatter_dist_nonlocal_munic.png}
+\end{frame}
+
+\begin{frame}{Binscatter: Distance from Santiago vs.\ Moderators}
+\centering
+\includegraphics[width=0.85\linewidth]{binscatter_dist_moderators_munic.png}
+\end{frame}
+
+\begin{frame}{Regional Heterogeneity: Specification}
+\textbf{Question:} Does the effect of Compra Ágil vary with pre-reform regional characteristics?
+
+\bigskip
+\textbf{Estimating equation (OLS DiD):}
+\[
+  y_{irt} = \alpha_i + \gamma_t
+    + \beta_1\,(T_i \times \text{Post}_t)
+    + \beta_2\,(T_i \times \text{Post}_t \times Z_r)
+    + \varepsilon_{irt}
+\]
+
+\medskip
+\begin{itemize}
+  \item $Z_r$ = standardised pre-reform regional moderator (one specification per moderator)
+  \item $\beta_1$ = average treatment effect; \quad $\beta_2$ = heterogeneity w.r.t.\ $Z_r$
+  \item Same FE and clustering as baseline DiD (entity + year-month FE; SEs by PE)
+  \item \textbf{Sample:} Municipalidades sector
+\end{itemize}
+
+\medskip
+\textbf{Five moderators $Z_r$:}
+\begin{enumerate}
+  \item Pre-reform non-local bidder share
+  \item Avg.\ monthly tender count (pre-reform)
+  \item Avg.\ monthly tender value (pre-reform)
+  \item Number of potential local firms
+  \item Distance from Santiago (region centroid, km)
+\end{enumerate}
+\end{frame}
+
+
+%% ── Interacted DiD Tables ───────────────────────────────────────────────────
+
+\begin{frame}{App: Interacted DiD --- Non-local Bidder Share}
+\scriptsize \medskip
+\resizebox{\textwidth}{!}{%
+\input{../../../output/did/tables/hetero_interacted_nonlocal_share_pre_munic.tex}}
+\end{frame}
+
+\begin{frame}{App: Interacted DiD --- Avg.\ Monthly Tender Count}
+\small\medskip
+\resizebox{\textwidth}{!}{%
+\input{../../../output/did/tables/hetero_interacted_q_pre_munic.tex}}
+\end{frame}
+
+\begin{frame}{App: Interacted DiD --- Avg.\ Monthly Tender Value}
+\small\medskip
+\resizebox{\textwidth}{!}{%
+\input{../../../output/did/tables/hetero_interacted_totval_pre_munic.tex}}
+\end{frame}
+
+\begin{frame}{App: Interacted DiD --- Potential Local Firms}
+\small\medskip
+\resizebox{\textwidth}{!}{%
+\input{../../../output/did/tables/hetero_interacted_n_pot_local_munic.tex}}
+\end{frame}
+
+\begin{frame}{App: Interacted DiD --- Distance from Santiago}
+\small\medskip
+\resizebox{\textwidth}{!}{%
+\input{../../../output/did/tables/hetero_interacted_dist_from_santiago_munic.tex}}
+\end{frame}
+
+
+%% ── Region Coefficient Plots: Ordered by Non-local Share ───────────────────
+
+\begin{frame}{Region Coefs: ordered by Non-local Share (1/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small N Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_bidders_nonlocal_share_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small N Local Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_local_nonlocal_share_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Non-local Share (2/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small N Non-local Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_nonlocal_nonlocal_share_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small N SME Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_sme_bidders_nonlocal_share_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Non-local Share (3/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small N Large Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_large_bidders_nonlocal_share_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Single Bidder)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_single_bidder_nonlocal_share_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Non-local Share (4/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small SME Share (SII)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_sme_share_sii_nonlocal_share_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Share: Large}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_share_large_bidders_nonlocal_share_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Non-local Share (5/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Share: SME$\times$Local}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_share_sme_local_bidders_nonlocal_share_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Share: Large$\times$Local}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_share_large_local_bidders_nonlocal_share_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Non-local Share (6/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: SME)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_sme_sii_nonlocal_share_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: Large)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_large_nonlocal_share_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Non-local Share (7/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: SME$\times$Local)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_sme_local_nonlocal_share_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: Large$\times$Local)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_large_local_nonlocal_share_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Non-local Share (8/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Log Win Price}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_log_win_price_ratio_nonlocal_share_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Log Avg Bid}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_log_sub_price_ratio_nonlocal_share_pre_munic.png}
+\end{columns}
+\end{frame}
+
+
+%% ── Region Coefficient Plots: Ordered by Tender Count ───────────────────────
+
+\begin{frame}{Region Coefs: ordered by Tender Count (1/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small N Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_bidders_q_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small N Local Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_local_q_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Tender Count (2/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small N Non-local Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_nonlocal_q_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small N SME Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_sme_bidders_q_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Tender Count (3/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small N Large Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_large_bidders_q_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Single Bidder)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_single_bidder_q_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Tender Count (4/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small SME Share (SII)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_sme_share_sii_q_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Share: Large}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_share_large_bidders_q_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Tender Count (5/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Share: SME$\times$Local}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_share_sme_local_bidders_q_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Share: Large$\times$Local}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_share_large_local_bidders_q_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Tender Count (6/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: SME)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_sme_sii_q_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: Large)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_large_q_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Tender Count (7/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: SME$\times$Local)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_sme_local_q_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: Large$\times$Local)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_large_local_q_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Tender Count (8/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Log Win Price}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_log_win_price_ratio_q_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Log Avg Bid}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_log_sub_price_ratio_q_pre_munic.png}
+\end{columns}
+\end{frame}
+
+
+%% ── Region Coefficient Plots: Ordered by Tender Value ───────────────────────
+
+\begin{frame}{Region Coefs: ordered by Tender Value (1/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small N Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_bidders_totval_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small N Local Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_local_totval_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Tender Value (2/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small N Non-local Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_nonlocal_totval_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small N SME Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_sme_bidders_totval_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Tender Value (3/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small N Large Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_large_bidders_totval_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Single Bidder)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_single_bidder_totval_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Tender Value (4/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small SME Share (SII)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_sme_share_sii_totval_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Share: Large}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_share_large_bidders_totval_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Tender Value (5/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Share: SME$\times$Local}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_share_sme_local_bidders_totval_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Share: Large$\times$Local}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_share_large_local_bidders_totval_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Tender Value (6/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: SME)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_sme_sii_totval_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: Large)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_large_totval_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Tender Value (7/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: SME$\times$Local)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_sme_local_totval_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: Large$\times$Local)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_large_local_totval_pre_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Tender Value (8/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Log Win Price}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_log_win_price_ratio_totval_pre_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Log Avg Bid}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_log_sub_price_ratio_totval_pre_munic.png}
+\end{columns}
+\end{frame}
+
+
+%% ── Region Coefficient Plots: Ordered by Potential Local Firms ──────────────
+
+\begin{frame}{Region Coefs: ordered by Local Firms (1/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small N Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_bidders_n_pot_local_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small N Local Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_local_n_pot_local_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Local Firms (2/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small N Non-local Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_nonlocal_n_pot_local_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small N SME Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_sme_bidders_n_pot_local_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Local Firms (3/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small N Large Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_large_bidders_n_pot_local_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Single Bidder)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_single_bidder_n_pot_local_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Local Firms (4/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small SME Share (SII)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_sme_share_sii_n_pot_local_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Share: Large}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_share_large_bidders_n_pot_local_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Local Firms (5/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Share: SME$\times$Local}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_share_sme_local_bidders_n_pot_local_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Share: Large$\times$Local}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_share_large_local_bidders_n_pot_local_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Local Firms (6/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: SME)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_sme_sii_n_pot_local_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: Large)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_large_n_pot_local_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Local Firms (7/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: SME$\times$Local)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_sme_local_n_pot_local_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: Large$\times$Local)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_large_local_n_pot_local_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Local Firms (8/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Log Win Price}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_log_win_price_ratio_n_pot_local_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Log Avg Bid}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_log_sub_price_ratio_n_pot_local_munic.png}
+\end{columns}
+\end{frame}
+
+%% ── Region Coefficient Plots: Ordered by Pre-reform Outcome Mean ────────────
+
+\begin{frame}{Region Coefs: ordered by Outcome Mean (1/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small N Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_bidders_outcome_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small N Local Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_local_outcome_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Outcome Mean (2/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small N Non-local Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_nonlocal_outcome_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small N SME Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_sme_bidders_outcome_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Outcome Mean (3/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small N Large Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_large_bidders_outcome_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Single Bidder)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_single_bidder_outcome_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Outcome Mean (4/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small SME Share (SII)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_sme_share_sii_outcome_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Share: Large}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_share_large_bidders_outcome_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Outcome Mean (5/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Share: SME$\times$Local}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_share_sme_local_bidders_outcome_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Share: Large$\times$Local}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_share_large_local_bidders_outcome_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Outcome Mean (6/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: SME)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_sme_sii_outcome_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: Large)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_large_outcome_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Outcome Mean (7/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: SME$\times$Local)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_sme_local_outcome_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: Large$\times$Local)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_large_local_outcome_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Outcome Mean (8/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Log Win Price}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_log_win_price_ratio_outcome_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Log Avg Bid}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_log_sub_price_ratio_outcome_munic.png}
+\end{columns}
+\end{frame}
+
+
+
+%% ── Region Coefficient Plots: Ordered by Distance from Santiago ─────────────
+\begin{frame}{Region Coefs: ordered by Distance from Santiago (1/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small N Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_bidders_dist_from_santiago_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small N Local Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_local_dist_from_santiago_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Distance from Santiago (2/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small N Non-local Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_nonlocal_dist_from_santiago_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small N SME Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_sme_bidders_dist_from_santiago_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Distance from Santiago (3/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small N Large Bidders}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_n_large_bidders_dist_from_santiago_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Single Bidder)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_single_bidder_dist_from_santiago_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Distance from Santiago (4/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small SME Share (SII)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_sme_share_sii_dist_from_santiago_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Share: Large}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_share_large_bidders_dist_from_santiago_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Distance from Santiago (5/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Share: SME$\times$Local}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_share_sme_local_bidders_dist_from_santiago_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Share: Large$\times$Local}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_share_large_local_bidders_dist_from_santiago_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Distance from Santiago (6/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: SME)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_sme_sii_dist_from_santiago_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: Large)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_large_dist_from_santiago_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Distance from Santiago (7/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: SME$\times$Local)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_sme_local_dist_from_santiago_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Pr(Win: Large$\times$Local)}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_winner_is_large_local_dist_from_santiago_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Region Coefs: ordered by Distance from Santiago (8/8)}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\textbf{\small Log Win Price}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_log_win_price_ratio_dist_from_santiago_munic.png}
+\column{0.5\textwidth}\centering
+\textbf{\small Log Avg Bid}\\[-2pt]
+\includegraphics[width=0.9\linewidth]{hetero_coefplot_log_sub_price_ratio_dist_from_santiago_munic.png}
+\end{columns}
+\end{frame}
+
+%%=============================================================
+%% Cross-Market Spillovers
+%%=============================================================
+
+\section{Cross-Market Spillovers}
+
+\begin{frame}{Cross-Market Spillovers: Mechanism}
+\textbf{Research question:} Did firms freed from 30–100 UTM licitaciones
+redirect capacity to \textit{above-threshold} (100–500 UTM) tenders in their
+home regions, increasing competition there?
+
+\bigskip
+\textbf{Mechanism (spatial auction model):}
+\begin{enumerate}
+  \item Reform excludes non-local firms from 30–100 UTM Compra Ágil.
+  \item Firms from ``export regions'' (e.g.\ RM) had many cross-region bids
+        in that band before the reform — these bids are now blocked.
+  \item Freed capacity \(\Rightarrow\) these firms bid more in their home
+        region's above-threshold (100–500 UTM) tenders.
+  \item Prediction: N bidders (esp.\ non-local) $\uparrow$ post-reform in
+        above-threshold tenders, proportional to region's ``export share''.
+\end{enumerate}
+
+\bigskip
+\textbf{Treatment variable:} \textit{Export share} =
+fraction of pre-reform bids by home-region-$r$ firms placed in \textit{other}
+regions (in the 30–100 UTM treated band).
+\end{frame}
+
+\begin{frame}{Export Share by Region (Pre-Reform)}
+\centering
+\includegraphics[width=0.72\linewidth]{spillover_export_share_munic.png}
+
+\medskip
+\small\textit{Región Metropolitana has by far the highest export share.
+Far south and north regions are largely self-contained local markets.}
+\end{frame}
+
+\begin{frame}{Cross-Market Spillovers: Specification}
+\textbf{Event-study TWFE} on above-threshold (100–500 UTM) region--month panel:
+\[
+  y_{rt} = \alpha_r + \gamma_t
+    + \sum_{k \neq -1} \delta_k \,\bigl(\mathbf{1}[t{=}k] \times
+      \mathrm{ExportShare}_r\bigr) + \varepsilon_{rt}
+\]
+
+\begin{itemize}
+  \item $r$ = region (16 Chilean regions), $t$ = year-month.
+  \item $k$ = months relative to reform ($k=0$ = December 2024).
+  \item $\alpha_r$ = region FE; $\gamma_t$ = year-month FE.
+  \item $\mathrm{ExportShare}_r$ computed from pre-reform bids;
+        time-invariant — variation is cross-regional.
+  \item Estimated separately for \textbf{continuous} (standardized export share)
+        and \textbf{binary} (top-tercile) treatment.
+  \item Outcomes: N bidders, N local, N non-local, N SME, log win price.
+  \item SE clustered at region level (16 clusters — approximate).
+\end{itemize}
+
+\textit{Identification:} Pre-trends in $y_{rt}$ should be flat before $k=0$
+for high vs.\ low export-share regions.
+\end{frame}
+
+\begin{frame}{Spillovers: Event Study --- N Bidders}
+\centering
+\includegraphics[width=0.96\linewidth]{spillover_event_study_n_bidders_munic.png}
+
+\medskip
+\small\textit{Post-reform increase in total bidders in high-export-share regions;
+pre-trends are flat ($k < 0$).}
+\end{frame}
+
+\begin{frame}{Spillovers: Event Study --- Local vs.\ Non-Local}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\includegraphics[width=\linewidth]{spillover_event_study_n_local_munic.png}
+\column{0.5\textwidth}\centering
+\includegraphics[width=\linewidth]{spillover_event_study_n_nonlocal_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Spillovers: Event Study --- Large Firms and Single Bidder}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\includegraphics[width=\linewidth]{spillover_event_study_n_large_munic.png}
+\column{0.5\textwidth}\centering
+\includegraphics[width=\linewidth]{spillover_event_study_single_bidder_munic.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Spillovers: Event Study --- Non-Local Share and SME}
+\begin{columns}[c]
+\column{0.5\textwidth}\centering
+\includegraphics[width=\linewidth]{spillover_event_study_share_nonlocal_munic.png}
+\column{0.5\textwidth}\centering
+\includegraphics[width=\linewidth]{spillover_event_study_n_sme_munic.png}
+\end{columns}
+\medskip
+\small\textit{Non-local share of above-threshold tenders rises in export regions.
+SME spillover is smaller --- SMEs were not the ``exporting'' firms.}
+\end{frame}
+
+%%=============================================================
+%% Bid-Level Markups — Appendix Tables
+%%=============================================================
+
+\section{Bid-Level Markups}
+
+\begin{frame}{App: Bid Markups --- Auction FE Specs}
+\centering
+\scriptsize
+\resizebox{\linewidth}{!}{%
+\input{../../../output/bids/tables/bids_part1_auction_fe.tex}
+}
+\end{frame}
+
+\begin{frame}{App: Bid Markups --- Within-Firm and Distance Specs}
+\centering
+\scriptsize
+\resizebox{\linewidth}{!}{%
+\input{../../../output/bids/tables/bids_part2_firm_fe.tex}
+}
+\end{frame}
+
+\begin{frame}{App: Bid Markups --- Reform Specs}
+\centering
+\scriptsize
+\resizebox{\linewidth}{!}{%
+\input{../../../output/bids/tables/bids_part3_did.tex}
+}
+\end{frame}
+
+
+\end{document}

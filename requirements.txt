@@ -1,0 +1,10 @@
+numpy
+pandas
+pyarrow
+duckdb
+scipy
+statsmodels
+linearmodels
+pyfixest
+matplotlib
+seaborn

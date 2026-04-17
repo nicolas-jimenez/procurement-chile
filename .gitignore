@@ -2,6 +2,9 @@
 data/
 output/
 
+# Auction model (local-only)
+model/
+
 # Python env
 .venv/
 __pycache__/
@@ -29,6 +32,7 @@ __pycache__/
 *.vrb
 *.bbl
 *.blg
+*.xdv
 
 # Office lock files
 ~$*

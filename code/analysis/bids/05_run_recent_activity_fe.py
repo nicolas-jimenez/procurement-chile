@@ -29,13 +29,14 @@ import pandas as pd
 from scipy.special import ndtr
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[2]
-sys.path.insert(0, str(ROOT / "code" / "analysis" / "did"))
+sys.path.insert(0, str(HERE.parents[1]))
+from config import CODE_ROOT, OUTPUT_ROOT  # noqa: E402
+sys.path.insert(0, str(CODE_ROOT / "analysis" / "did"))
 
 from did_utils import CA_PANEL, COMBINED, LIC_PANEL, OUT_SAMPLES, _cluster_se, _twoway_demean  # noqa: E402
 
 SECTORS = ["Municipalidades", "Obras Públicas"]
-OUT_BIDS = ROOT / "output" / "bids"
+OUT_BIDS = OUTPUT_ROOT / "bids"
 
 
 def _parse_args() -> argparse.Namespace:

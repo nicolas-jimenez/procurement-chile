@@ -56,8 +56,9 @@ import pandas as pd
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[2]          # procurement-chile-local/
-sys.path.insert(0, str(ROOT / "code" / "analysis" / "did"))
+sys.path.insert(0, str(HERE.parents[1]))
+from config import CODE_ROOT, DROPBOX_ROOT as ROOT, OUTPUT_ROOT  # noqa: E402
+sys.path.insert(0, str(CODE_ROOT / "analysis" / "did"))
 
 from did_utils import (          # noqa: E402
     COMBINED,
@@ -68,7 +69,7 @@ from did_utils import (          # noqa: E402
 SAMPLE_SUFFIX = {"all": "", "municipalidades": "_munic", "obras": "_obras"}
 SAMPLE_KEYWORD = {"municipalidades": "municipal", "obras": "obras"}
 
-OUT_BIDS        = ROOT / "output" / "bids"
+OUT_BIDS        = OUTPUT_ROOT / "bids"
 OUT_BIDS_TBL    = OUT_BIDS / "tables"
 OUT_BIDS_FIG    = OUT_BIDS / "figures"
 for _d in [OUT_BIDS, OUT_BIDS_TBL, OUT_BIDS_FIG]:
@@ -224,7 +225,8 @@ def _normalise_commune_name(s: object) -> str:
     s = _re.sub(r"\s+", " ", s).strip()
     return s
 
-_CENTROIDS_CSV = ROOT / "data" / "clean" / "comunas_centroids.csv"
+from config import DATA_CLEAN as _DATA_CLEAN  # noqa: E402
+_CENTROIDS_CSV = _DATA_CLEAN / "comunas_centroids.csv"
 
 if _CENTROIDS_CSV.exists():
     _centroids_df = pd.read_csv(_CENTROIDS_CSV, dtype={"cut": int})

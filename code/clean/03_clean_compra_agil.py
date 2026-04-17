@@ -47,12 +47,8 @@ import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-ROOT    = Path(__file__).resolve().parents[2]
-# NOTE: The raw compra_agil files were moved to:
-# /Users/nicolasjimenez/Library/CloudStorage/OneDrive-YaleUniversity/procurement-spillovers-onedrive/data/raw/chilecompra/compra_agil
-# Keep this local path synced from that location.
-RAW_DIR = ROOT / "data" / "raw" / "chilecompra" / "compra_agil"
-OUT_DIR = ROOT / "data" / "clean"
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from config import DATA_RAW_COMPRA_AGIL as RAW_DIR, DATA_CLEAN as OUT_DIR  # noqa: E402
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 OUT_PARQUET = OUT_DIR / "compra_agil_panel.parquet"
 

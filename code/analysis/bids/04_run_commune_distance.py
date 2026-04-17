@@ -38,6 +38,7 @@ Outputs
 from __future__ import annotations
 
 import argparse
+import sys
 import warnings
 from pathlib import Path
 
@@ -56,9 +57,10 @@ SAMPLE_KEYWORD = {"municipalidades": "municipal", "obras": "obras"}
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[2]
+sys.path.insert(0, str(HERE.parents[1]))
+from config import OUTPUT_ROOT  # noqa: E402
 
-OUT_BIDS     = ROOT / "output" / "bids"
+OUT_BIDS     = OUTPUT_ROOT / "bids"
 OUT_BIDS_TBL = OUT_BIDS / "tables"
 OUT_BIDS_FIG = OUT_BIDS / "figures"
 for _d in [OUT_BIDS_TBL, OUT_BIDS_FIG]:

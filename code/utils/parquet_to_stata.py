@@ -53,9 +53,11 @@ import pandas as pd
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-PARQUET_PATH = PROJECT_ROOT / "data" / "clean" / "combined_sii_merged_filtered.parquet"
-OUT_DIR = PROJECT_ROOT / "data" / "clean"
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from config import DATA_CLEAN  # noqa: E402
+
+PARQUET_PATH = DATA_CLEAN / "combined_sii_merged_filtered.parquet"
+OUT_DIR = DATA_CLEAN
 
 REFORM_DATE = pd.Timestamp("2024-12-12")
 
@@ -161,16 +163,12 @@ def mode_tenders(out_path: Path, n: int, seed: int) -> None:
     }
 
     # Step 2: stream row-groups, write matching rows incrementally to a small
-    # parquet on the larger /sessions volume. Then read that small file in.
+    # scratch parquet, then read it back. Using the OS temp dir keeps this
+    # portable across machines.
     print("  step 2: streaming row-groups, writing matching rows to parquet ...", flush=True)
-    # Write the intermediate to the scratch volume (workspace volume can be near-full)
-    scratch_dir = Path("/sessions/practical-pensive-fermi")
+    import tempfile
+    scratch_dir = Path(tempfile.mkdtemp(prefix="parquet_to_stata_"))
     out_pq = scratch_dir / ".tmp_tenders_sample.parquet"
-    if out_pq.exists():
-        try:
-            out_pq.unlink()
-        except PermissionError:
-            pass
 
     pf = pq.ParquetFile(PARQUET_PATH)
     ref_schema = pf.schema_arrow  # full source schema — avoids null-type lock-in

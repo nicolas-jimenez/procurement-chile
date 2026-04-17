@@ -10,14 +10,15 @@ Output: data/clean/combined_sii_merged.parquet
 This is the step that runs after 04a and 04b (which can run in parallel).
 """
 
+import sys
 from pathlib import Path
 
 import numpy as np
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-ROOT       = Path(__file__).resolve().parents[2]
-DATA_CLEAN = ROOT / "data" / "clean"
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from config import DATA_CLEAN  # noqa: E402
 
 LIC_FILE = DATA_CLEAN / "licitaciones_sii_merged.parquet"
 CA_FILE  = DATA_CLEAN / "compra_agil_sii_merged.parquet"

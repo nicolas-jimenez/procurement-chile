@@ -30,10 +30,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 
-ROOT     = Path(__file__).resolve().parents[2]
-IN_FILE  = ROOT / "data" / "clean" / "combined_sii_merged_filtered.parquet"
-UTM_FILE = ROOT / "data" / "raw" / "other" / "utm_clp_2022_2025.csv"
-FIG_DIR  = ROOT / "data" / "diagnostics" / "figures"
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from config import DATA_CLEAN, DATA_RAW_OTHER, OUTPUT_ROOT  # noqa: E402
+
+IN_FILE  = DATA_CLEAN / "combined_sii_merged_filtered.parquet"
+UTM_FILE = DATA_RAW_OTHER / "utm_clp_2022_2025.csv"
+FIG_DIR  = OUTPUT_ROOT / "cleaning_diagnostics" / "figures"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
 
 DS_COLORS = {"licitaciones": "#1f77b4", "compra_agil": "#d62728"}

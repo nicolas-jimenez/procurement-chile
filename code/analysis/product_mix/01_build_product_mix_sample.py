@@ -21,12 +21,13 @@ from pathlib import Path
 import duckdb
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[2]
-sys.path.insert(0, str(ROOT / "code" / "analysis" / "did"))
+sys.path.insert(0, str(HERE.parents[1]))
+from config import CODE_ROOT, OUTPUT_ROOT  # noqa: E402
+sys.path.insert(0, str(CODE_ROOT / "analysis" / "did"))
 
 from did_utils import CA_PANEL, LIC_PANEL, OUT_SAMPLES  # noqa: E402
 
-OUT_DIR = ROOT / "output" / "product_mix"
+OUT_DIR = OUTPUT_ROOT / "product_mix"
 OUT_SAMPLES_DIR = OUT_DIR / "samples"
 for _d in [OUT_DIR, OUT_SAMPLES_DIR]:
     _d.mkdir(parents=True, exist_ok=True)

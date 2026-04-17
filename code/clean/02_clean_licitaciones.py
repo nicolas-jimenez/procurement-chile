@@ -49,9 +49,8 @@ parser.add_argument("--months", nargs="*", default=None,
 args = parser.parse_args()
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
-ROOT        = Path(__file__).resolve().parents[2]
-DATA_DIR    = ROOT / "data" / "raw" / "chilecompra" / "licitaciones"
-OUT_DIR     = ROOT / "data" / "clean"
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from config import DATA_RAW_LICITACIONES as DATA_DIR, DATA_CLEAN as OUT_DIR  # noqa: E402
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 OUT_PARQUET = OUT_DIR / "chilecompra_panel.parquet"
 OUT_CSV     = OUT_DIR / "chilecompra_panel.csv"

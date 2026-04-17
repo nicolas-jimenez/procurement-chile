@@ -2,6 +2,7 @@
 02_descriptives.py — memory-efficient version
 """
 from __future__ import annotations
+import sys
 from pathlib import Path
 import gc
 
@@ -13,8 +14,10 @@ import numpy as np
 import pandas as pd
 import pyarrow.parquet as pq
 
-ROOT = Path(__file__).resolve().parents[3]
-OUT  = ROOT / "output" / "simultaneousbids"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from config import OUTPUT_ROOT  # noqa: E402
+
+OUT  = OUTPUT_ROOT / "simultaneousbids"
 TBLS = OUT / "tables"
 FIGS = OUT / "figures"
 TBLS.mkdir(parents=True, exist_ok=True)

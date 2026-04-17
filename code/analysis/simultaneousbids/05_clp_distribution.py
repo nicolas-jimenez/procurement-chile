@@ -3,6 +3,7 @@
 CLP earned per month: distribution plots and summary table by firm size, pre/post reform.
 """
 
+import sys
 import pandas as pd
 import numpy as np
 import matplotlib
@@ -14,10 +15,13 @@ import warnings, gc
 warnings.filterwarnings("ignore")
 
 # ── paths ─────────────────────────────────────────────────────────────────────
-BID  = "output/simultaneousbids/bid_level_simult.parquet"
-ODIR = Path("output/simultaneousbids")
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from config import OUTPUT_ROOT  # noqa: E402
+
+ODIR = OUTPUT_ROOT / "simultaneousbids"
+BID  = str(ODIR / "bid_level_simult.parquet")
 TDIR = ODIR / "tables"; FDIR = ODIR / "figures"
-TDIR.mkdir(exist_ok=True); FDIR.mkdir(exist_ok=True)
+TDIR.mkdir(parents=True, exist_ok=True); FDIR.mkdir(parents=True, exist_ok=True)
 
 SIZE_ORDER  = ["micro", "small", "medium", "large"]
 SIZE_COLORS = {"micro": "#4daf4a", "small": "#377eb8",

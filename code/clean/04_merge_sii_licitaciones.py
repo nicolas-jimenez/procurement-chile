@@ -19,6 +19,7 @@ Flow:
   5) Write incrementally to parquet
 """
 
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -28,12 +29,12 @@ import pyarrow.parquet as pq
 
 from _region_matching import REGION_KEY_TO_CC_LABEL, region_key_series, same_region_from_series
 
-ROOT        = Path(__file__).resolve().parents[2]
-DATA_CLEAN  = ROOT / "data" / "clean"
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from config import DATA_CLEAN, DATA_RAW_SII  # noqa: E402
+
 IN_FILE     = DATA_CLEAN / "chilecompra_panel.parquet"
 OUT_FILE    = DATA_CLEAN / "licitaciones_sii_merged.parquet"
-SII_PARQUET = ROOT / "data" / "raw" / "sii" / "rutsCharacteristics.parquet"
-SII_STATA   = Path("/Users/nicolasjimenez/Dropbox/TradeFairs/data/raw/sii/rutsCharacteristics.dta")
+SII_PARQUET = DATA_RAW_SII / "rutsCharacteristics.parquet"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Raw input columns to read from chilecompra_panel

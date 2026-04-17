@@ -27,10 +27,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 
-ROOT     = Path(__file__).resolve().parents[2]
-IN_FILE  = ROOT / "data" / "clean" / "combined_sii_merged_filtered.parquet"
-FIG_DIR  = ROOT / "data" / "diagnostics" / "figures"
-DIAG_DIR = ROOT / "data" / "diagnostics"
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from config import DATA_CLEAN, OUTPUT_ROOT  # noqa: E402
+
+IN_FILE  = DATA_CLEAN / "combined_sii_merged_filtered.parquet"
+DIAG_DIR = OUTPUT_ROOT / "cleaning_diagnostics"
+FIG_DIR  = DIAG_DIR / "figures"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
 
 xtick_kw  = dict(rotation=45, ha="right", fontsize=7)

@@ -53,9 +53,10 @@ SAMPLE = ARGS.sample
 SAMPLE_SUFFIX_STR = SAMPLE_SUFFIX[SAMPLE]
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[2]
+sys.path.insert(0, str(HERE.parents[1]))
+from config import DROPBOX_ROOT as ROOT, OUTPUT_ROOT  # noqa: E402
 
-OUT_BIDS = ROOT / "output" / "bids"
+OUT_BIDS = OUTPUT_ROOT / "bids"
 OUT_BIDS_TBL = OUT_BIDS / "tables"
 OUT_BIDS_FIG = OUT_BIDS / "figures"
 

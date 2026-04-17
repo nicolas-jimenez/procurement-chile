@@ -8,11 +8,14 @@ Verify the rebuilt combined_sii_merged_filtered.parquet:
 
 Uses DuckDB so we never load the 21 GB parquet into pandas.
 """
+import sys
 from pathlib import Path
 import duckdb
 
-ROOT = Path(__file__).resolve().parents[2]
-F = ROOT / "data" / "clean" / "combined_sii_merged_filtered.parquet"
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from config import DATA_CLEAN  # noqa: E402
+
+F = DATA_CLEAN / "combined_sii_merged_filtered.parquet"
 print(f"File: {F}  ({F.stat().st_size/1e9:.2f} GB)")
 
 con = duckdb.connect()

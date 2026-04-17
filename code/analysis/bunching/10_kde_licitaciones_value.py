@@ -24,10 +24,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
 
-ROOT = Path(__file__).resolve().parents[3]
-IN_FILE = ROOT / "data" / "clean" / "combined_sii_merged_filtered.parquet"
-FIG_DIR = ROOT / "output" / "diagnostics" / "figures"
-SUM_DIR = ROOT / "output" / "summary_stats"
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from config import DATA_CLEAN, OUTPUT_ROOT  # noqa: E402
+
+IN_FILE = DATA_CLEAN / "combined_sii_merged_filtered.parquet"
+FIG_DIR = OUTPUT_ROOT / "diagnostics" / "figures"
+SUM_DIR = OUTPUT_ROOT / "summary_stats"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
 SUM_DIR.mkdir(parents=True, exist_ok=True)
 

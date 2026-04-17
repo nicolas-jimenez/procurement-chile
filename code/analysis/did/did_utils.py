@@ -15,6 +15,7 @@ Contents
 from __future__ import annotations
 
 import math
+import sys
 from pathlib import Path
 from typing import Sequence
 
@@ -27,15 +28,15 @@ from scipy.special import ndtr
 matplotlib.use("Agg")
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
-ROOT        = Path(__file__).resolve().parents[3]
-DATA_CLEAN  = ROOT / "data" / "clean"
-DATA_OTHER  = ROOT / "data" / "raw" / "other"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from config import DATA_CLEAN, DATA_RAW_OTHER as DATA_OTHER, OUTPUT_ROOT  # noqa: E402
+
 LIC_PANEL   = DATA_CLEAN / "chilecompra_panel.parquet"
 CA_PANEL    = DATA_CLEAN / "compra_agil_panel.parquet"
 COMBINED    = DATA_CLEAN / "combined_sii_merged_filtered.parquet"
 RUT_SECTOR_CROSSWALK = DATA_CLEAN / "rut_unidad_sector_crosswalk.parquet"
 
-OUT_DIR     = ROOT / "output" / "did"
+OUT_DIR     = OUTPUT_ROOT / "did"
 OUT_TABLES  = OUT_DIR / "tables"
 OUT_FIGURES = OUT_DIR / "figures"
 OUT_SAMPLES = OUT_DIR / "samples"

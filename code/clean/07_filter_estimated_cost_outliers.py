@@ -18,14 +18,15 @@ Cutoffs are estimated from the cleaned source panels:
   compra_agil  → data/clean/compra_agil_panel.parquet      (MontoTotalDisponble)
 """
 
+import sys
 from pathlib import Path
 
 import pyarrow as pa
 import pyarrow.compute as pc
 import pyarrow.parquet as pq
 
-ROOT = Path(__file__).resolve().parents[2]
-DATA_CLEAN = ROOT / "data" / "clean"
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from config import DATA_CLEAN  # noqa: E402
 
 LIC_PANEL = DATA_CLEAN / "chilecompra_panel.parquet"
 CA_PANEL = DATA_CLEAN / "compra_agil_panel.parquet"

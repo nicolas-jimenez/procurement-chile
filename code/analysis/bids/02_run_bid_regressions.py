@@ -79,12 +79,13 @@ SAMPLE_SUFFIX_STR = SAMPLE_SUFFIX[SAMPLE]
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[2]
-sys.path.insert(0, str(ROOT / "code" / "analysis" / "did"))
+sys.path.insert(0, str(HERE.parents[1]))
+from config import CODE_ROOT, DROPBOX_ROOT as ROOT, OUTPUT_ROOT  # noqa: E402
+sys.path.insert(0, str(CODE_ROOT / "analysis" / "did"))
 
 from did_utils import REFORM_PERIOD  # noqa: E402
 
-OUT_BIDS = ROOT / "output" / "bids"
+OUT_BIDS = OUTPUT_ROOT / "bids"
 OUT_BIDS_TBL = OUT_BIDS / "tables"
 OUT_BIDS_FIG = OUT_BIDS / "figures"
 

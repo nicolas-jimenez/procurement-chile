@@ -17,14 +17,16 @@ import statsmodels.formula.api as smf
 
 warnings.filterwarnings("ignore")
 
-ROOT = Path(__file__).resolve().parents[3]
-OUT  = ROOT / "output" / "simultaneousbids"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from config import DATA_RAW_OTHER, OUTPUT_ROOT  # noqa: E402
+
+OUT  = OUTPUT_ROOT / "simultaneousbids"
 TBLS = OUT / "tables"
 TBLS.mkdir(parents=True, exist_ok=True)
 
 REFORM_MONTH = "2024-12"
 
-utm_cw = pd.read_csv(ROOT / "data/raw/other/utm_clp_2022_2025.csv")
+utm_cw = pd.read_csv(DATA_RAW_OTHER / "utm_clp_2022_2025.csv")
 utm_cw["ym"] = utm_cw["year"].astype(str) + "-" + utm_cw["month_num"].astype(str).str.zfill(2)
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -170,7 +172,7 @@ def _load_bid_clean():
     BID_COLS = ["bidder_id","year_month","sector","dataset","log_sub_price_ratio",
                 "post","monto_estimado","monto_utm"]
     chunks = []
-    pf_bid = pq.ParquetFile(ROOT / "output" / "bids" / "bid_analysis_sample.parquet")
+    pf_bid = pq.ParquetFile(OUTPUT_ROOT / "bids" / "bid_analysis_sample.parquet")
     for batch in pf_bid.iter_batches(batch_size=300_000, columns=BID_COLS):
         d = batch.to_pandas()
         d = d[(d["dataset"]=="licitaciones") &

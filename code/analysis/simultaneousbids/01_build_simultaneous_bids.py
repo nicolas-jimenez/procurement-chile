@@ -14,18 +14,20 @@ Outputs
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 import duckdb
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data" / "clean"
-OUT  = ROOT / "output" / "simultaneousbids"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from config import DATA_CLEAN, OUTPUT_ROOT  # noqa: E402
+
+OUT = OUTPUT_ROOT / "simultaneousbids"
 OUT.mkdir(parents=True, exist_ok=True)
 
-PARQUET = str(DATA / "licitaciones_sii_merged.parquet")
+PARQUET = str(DATA_CLEAN / "licitaciones_sii_merged.parquet")
 REFORM_MONTH = "2024-12"
 
 # ── Region centroid lookup ────────────────────────────────────────────────────

@@ -20,14 +20,15 @@ Method:
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-ROOT = Path(__file__).resolve().parents[2]
-DATA_CLEAN = ROOT / "data" / "clean"
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from config import DATA_CLEAN  # noqa: E402
 
 LIC_PANEL = DATA_CLEAN / "chilecompra_panel.parquet"
 TARGET_FILE = DATA_CLEAN / "combined_sii_merged_filtered.parquet"

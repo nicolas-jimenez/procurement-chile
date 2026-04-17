@@ -17,10 +17,12 @@ from pathlib import Path
 warnings.filterwarnings("ignore")
 
 # ── paths ─────────────────────────────────────────────────────────────────────
-ROOT     = Path(__file__).resolve().parents[3]
-BID_SIM  = ROOT / "output" / "simultaneousbids" / "bid_level_simult.parquet"
-BID_ANAL = ROOT / "output" / "bids" / "bid_analysis_sample.parquet"
-TDIR     = ROOT / "output" / "simultaneousbids" / "tables"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from config import OUTPUT_ROOT  # noqa: E402
+
+BID_SIM  = OUTPUT_ROOT / "simultaneousbids" / "bid_level_simult.parquet"
+BID_ANAL = OUTPUT_ROOT / "bids" / "bid_analysis_sample.parquet"
+TDIR     = OUTPUT_ROOT / "simultaneousbids" / "tables"
 TDIR.mkdir(parents=True, exist_ok=True)
 
 SIZE_ORDER = ["micro", "small", "medium", "large"]

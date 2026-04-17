@@ -28,8 +28,11 @@ import pandas as pd
 import pyarrow.parquet as pq
 import statsmodels.formula.api as smf
 
-ROOT = Path(__file__).resolve().parents[3]
-OUT  = ROOT / "output" / "simultaneousbids"
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from config import OUTPUT_ROOT  # noqa: E402
+
+OUT  = OUTPUT_ROOT / "simultaneousbids"
 TBLS = OUT / "tables"
 TBLS.mkdir(parents=True, exist_ok=True)
 
@@ -161,7 +164,7 @@ BID_COLS = ["bidder_id","year_month","fecha_pub","sector","dataset",
             "log_sub_price_ratio","same_region","sme_sii","is_selected",
             "monto_estimado","monto_utm","post","is_new_entrant"]
 chunks = []
-pf_bid = pq.ParquetFile(ROOT / "output" / "bids" / "bid_analysis_sample.parquet")
+pf_bid = pq.ParquetFile(OUTPUT_ROOT / "bids" / "bid_analysis_sample.parquet")
 for batch in pf_bid.iter_batches(batch_size=300_000, columns=BID_COLS):
     d = batch.to_pandas()
     d = d[(d["dataset"] == "licitaciones") &

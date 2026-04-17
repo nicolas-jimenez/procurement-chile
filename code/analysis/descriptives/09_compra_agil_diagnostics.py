@@ -61,14 +61,17 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 
-ROOT     = Path(__file__).resolve().parents[3]
-CA_FILE  = ROOT / "data" / "clean" / "compra_agil_panel.parquet"
-LIC_FILE = ROOT / "data" / "clean" / "chilecompra_panel.parquet"
-COMBINED_FILTERED = ROOT / "data" / "clean" / "combined_sii_merged_filtered.parquet"
-UTM_FILE = ROOT / "data" / "raw" / "other" / "utm_clp_2022_2025.csv"
-DIAG_DIR = ROOT / "output" / "diagnostics"
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from config import DATA_CLEAN, DATA_RAW_OTHER, OUTPUT_ROOT  # noqa: E402
+
+CA_FILE  = DATA_CLEAN / "compra_agil_panel.parquet"
+LIC_FILE = DATA_CLEAN / "chilecompra_panel.parquet"
+COMBINED_FILTERED = DATA_CLEAN / "combined_sii_merged_filtered.parquet"
+UTM_FILE = DATA_RAW_OTHER / "utm_clp_2022_2025.csv"
+DIAG_DIR = OUTPUT_ROOT / "diagnostics"
 FIG_DIR  = DIAG_DIR / "figures"
-SUMMARY_DIR = ROOT / "output" / "summary_stats"
+SUMMARY_DIR = OUTPUT_ROOT / "summary_stats"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
 SUMMARY_DIR.mkdir(parents=True, exist_ok=True)
 

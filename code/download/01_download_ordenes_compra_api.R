@@ -57,9 +57,8 @@ find_repo_root <- function(start_path) {
     has_git <- file.exists(file.path(current, ".git"))
     has_env_example <- file.exists(file.path(current, ".env.example"))
     has_code_dir <- dir.exists(file.path(current, "code"))
-    has_data_dir <- dir.exists(file.path(current, "data"))
 
-    if ((has_git || has_env_example) && has_code_dir && has_data_dir) {
+    if ((has_git || has_env_example) && has_code_dir) {
       return(current)
     }
 

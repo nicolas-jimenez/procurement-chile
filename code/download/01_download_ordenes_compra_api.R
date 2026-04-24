@@ -764,6 +764,19 @@ main <- function() {
     }
 
     codes_df$requested_date <- as.Date(codes_df$requested_date)
+    codes_df <- codes_df[
+      !is.na(codes_df$requested_date)
+        & codes_df$requested_date >= opts$start_date
+        & codes_df$requested_date <= opts$end_date,
+      ,
+      drop = FALSE
+    ]
+    if (!nrow(codes_df)) {
+      stop(
+        "No order codes remain after applying the requested date window to order_codes.csv.",
+        call. = FALSE
+      )
+    }
     codes_df <- codes_df[order(codes_df$requested_date, codes_df$codigo), , drop = FALSE]
 
     existing_detail <- read_manifest(detail_manifest_path)

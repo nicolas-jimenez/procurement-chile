@@ -23,6 +23,8 @@
 #   sbatch code/jobs/submit_raw_chilecompra.sbatch \
 #     --datasets compra_agil --compra-agil-start-month 2020-04 --compra-agil-end-month 2026-04
 # ---------------------------------------------------------------------------
+set -euo pipefail
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 if [[ -f "${SCRIPT_DIR}/_preamble.sh" ]]; then
     source "${SCRIPT_DIR}/_preamble.sh"
@@ -36,7 +38,7 @@ fi
 module load R/4.4.2-gfbf-2024a
 
 echo "R                  : $(which Rscript) ($(Rscript --version 2>&1 | head -n 1))"
-echo "Command            : Rscript code/download/00_download_licitaciones.R $*"
+echo "Command            : Rscript code/download/00_download_licitaciones_compraagil.R $*"
 echo ""
 
-Rscript code/download/00_download_licitaciones.R "$@"
+Rscript code/download/00_download_licitaciones_compraagil.R "$@"

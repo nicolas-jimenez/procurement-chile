@@ -1,13 +1,14 @@
 #!/usr/bin/env Rscript
 
-# Download ChileCompra historical raw monthly files.
+# Download ChileCompra historical raw monthly files for licitaciones and Compra Agil.
 #
 # Data sources are the bulk-download ZIPs documented by ChileCompra:
 #   - Licitaciones: https://transparenciachc.blob.core.windows.net/lic-da/YYYY-M.zip
 #   - Compra Agil:  https://transparenciachc.blob.core.windows.net/trnspchc/COT_YYYY-MM.zip
 #
-# The script writes into PROCUREMENT_CHILE_DB/data/raw/chilecompra by default,
-# which makes it work on Bouchet via the repo .env file.
+# The script writes into PROCUREMENT_CHILE_DB/data/raw/chilecompra by default.
+# Full runs should happen on Bouchet. Non-Bouchet runs are capped at 500 source
+# ZIP files to avoid accidentally pulling the archive onto a laptop.
 
 suppressPackageStartupMessages({
   library(httr)
@@ -81,6 +82,18 @@ resolve_data_root <- function() {
 }
 
 DEFAULT_OUTPUT_ROOT <- file.path(resolve_data_root(), "data", "raw", "chilecompra")
+LOCAL_RUN_DOWNLOAD_CAP <- 500L
+
+is_bouchet_run <- function(output_root) {
+  project_root <- normalizePath(Sys.getenv("PROJECT_ROOT", unset = ""), winslash = "/", mustWork = FALSE)
+  output_root_norm <- normalizePath(output_root, winslash = "/", mustWork = FALSE)
+  repo_root_norm <- normalizePath(REPO_ROOT, winslash = "/", mustWork = FALSE)
+
+  any(startsWith(
+    c(project_root, output_root_norm, repo_root_norm),
+    "/nfs/roberts/project/pi_rp269/nj229/procurement-chile"
+  ))
+}
 
 
 # -- CLI ----------------------------------------------------------------------
@@ -88,7 +101,7 @@ print_help <- function() {
   cat(
     paste(
       "Usage:",
-      "  Rscript code/download/00_download_licitaciones.R [options]",
+      "  Rscript code/download/00_download_licitaciones_compraagil.R [options]",
       "",
       "Options:",
       "  --datasets <value>                 all | licitaciones | compra_agil. Default: all.",
@@ -100,6 +113,7 @@ print_help <- function() {
       "  --sleep-seconds <value>             Pause between months. Default: 0.25.",
       "  --timeout-seconds <value>           Request timeout. Default: 600.",
       "  --max-months <value>                Optional cap for testing.",
+      "                                      Non-Bouchet runs are also capped at 500 source ZIPs.",
       "  --keep-archives                     Keep source ZIP files under archives/.",
       "  --no-extract                        Download ZIP files but do not unzip.",
       "  --overwrite-archives                Re-download ZIPs even if present.",
@@ -592,8 +606,24 @@ main <- function() {
     specs <- head(specs, opts$max_months)
   }
 
+  on_bouchet <- is_bouchet_run(dirs$root)
+  if (!on_bouchet) {
+    cat(
+      "NOTICE: This does not look like a Bouchet/Yale-server run.\n",
+      "        Full raw ChileCompra downloads should be run on Bouchet.\n",
+      "        This local/non-Bouchet run is capped at ",
+      LOCAL_RUN_DOWNLOAD_CAP,
+      " source ZIP files.\n\n",
+      sep = ""
+    )
+    if (length(specs) > LOCAL_RUN_DOWNLOAD_CAP) {
+      specs <- head(specs, LOCAL_RUN_DOWNLOAD_CAP)
+    }
+  }
+
   cat("Repo root             :", REPO_ROOT, "\n")
   cat("Output root           :", dirs$root, "\n")
+  cat("Bouchet run           :", on_bouchet, "\n")
   cat("Datasets              :", paste(datasets, collapse = ", "), "\n")
   cat("Licitaciones months   :", format_month(opts$licitaciones_start_month), "to", format_month(opts$licitaciones_end_month), "\n")
   cat("Compra Agil months    :", format_month(opts$compra_agil_start_month), "to", format_month(opts$compra_agil_end_month), "\n")

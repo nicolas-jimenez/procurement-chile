@@ -319,10 +319,18 @@ remote_head <- function(url, timeout_seconds) {
     timeout(timeout_seconds)
   )
   hdr <- headers(resp)
+  content_length <- suppressWarnings(as.numeric(hdr[["content-length"]]))
+  if (!length(content_length) || is.na(content_length)) {
+    content_length <- NA_real_
+  }
+  last_modified <- hdr[["last-modified"]]
+  if (is.null(last_modified) || !length(last_modified)) {
+    last_modified <- NA_character_
+  }
   list(
     status_code = status_code(resp),
-    content_length = suppressWarnings(as.numeric(hdr[["content-length"]])),
-    last_modified = ifelse(is.null(hdr[["last-modified"]]), NA_character_, hdr[["last-modified"]])
+    content_length = content_length,
+    last_modified = last_modified
   )
 }
 

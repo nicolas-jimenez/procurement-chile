@@ -23,7 +23,15 @@
 #   sbatch code/jobs/submit_raw_chilecompra.sbatch \
 #     --datasets compra_agil --compra-agil-start-month 2020-04 --compra-agil-end-month 2026-04
 # ---------------------------------------------------------------------------
-source "$(dirname "${BASH_SOURCE[0]:-$0}")/_preamble.sh"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+if [[ -f "${SCRIPT_DIR}/_preamble.sh" ]]; then
+    source "${SCRIPT_DIR}/_preamble.sh"
+elif [[ -n "${SLURM_SUBMIT_DIR:-}" && -f "${SLURM_SUBMIT_DIR}/code/jobs/_preamble.sh" ]]; then
+    source "${SLURM_SUBMIT_DIR}/code/jobs/_preamble.sh"
+else
+    echo "Could not locate code/jobs/_preamble.sh" >&2
+    exit 2
+fi
 
 module load R/4.4.2-gfbf-2024a
 

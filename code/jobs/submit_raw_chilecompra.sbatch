@@ -2,10 +2,10 @@
 #SBATCH --job-name=procchile-raw
 #SBATCH --output=/nfs/roberts/project/pi_rp269/nj229/procurement-chile/logs/slurm-%j.out
 #SBATCH --error=/nfs/roberts/project/pi_rp269/nj229/procurement-chile/logs/slurm-%j.err
-#SBATCH --time=24:00:00
+#SBATCH --time=168:00:00
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=16G
-#SBATCH --partition=day
+#SBATCH --partition=week
 # ---------------------------------------------------------------------------
 # Submit the ChileCompra raw bulk downloader for licitaciones and Compra Agil.
 #

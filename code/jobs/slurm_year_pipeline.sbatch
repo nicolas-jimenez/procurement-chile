@@ -45,8 +45,5 @@ echo "R                  : $(which Rscript) ($(Rscript --version 2>&1 | head -n 
 echo "Year               : ${YEAR}  (array task ${SLURM_ARRAY_TASK_ID})"
 echo ""
 
-# ── Step 1: download detail JSONs for this year ───────────────────────────────
-bash code/jobs/downloads/run_details_by_year.sh "${YEAR}"
-
-# ── Step 2: parse JSONs → parquet ─────────────────────────────────────────────
-python code/jobs/downloads/parse_details_to_parquet.py "${YEAR}"
+# ── Download + parse for this year ────────────────────────────────────────────
+bash code/jobs/downloads/run_year_pipeline.sh "${YEAR}"

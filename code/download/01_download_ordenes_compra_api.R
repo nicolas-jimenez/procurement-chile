@@ -482,6 +482,14 @@ is_retryable_status <- function(status_code_value) {
   is.na(status_code_value) || status_code_value %in% c(408L, 409L, 425L, 429L, 500L, 502L, 503L, 504L)
 }
 
+safe_source_url <- function(query) {
+  redacted_query <- query
+  if ("ticket" %in% names(redacted_query)) {
+    redacted_query$ticket <- "REDACTED"
+  }
+  modify_url(API_BASE, query = redacted_query)
+}
+
 request_json <- function(query, timeout_seconds, opts) {
   total_wait <- 0
   last_error <- NA_character_
@@ -690,7 +698,7 @@ download_daily_batch <- function(date_value, opts, dirs) {
   if (!is.null(opts$codigo_proveedor) && nzchar(opts$codigo_proveedor)) {
     query$CodigoProveedor <- opts$codigo_proveedor
   }
-  source_url <- modify_url(API_BASE, query = query)
+  source_url <- safe_source_url(query)
 
   from_cache <- file.exists(daily_json_path) && !isTRUE(opts$overwrite_daily)
   if (from_cache) {
@@ -774,7 +782,7 @@ download_order_detail <- function(code_row, opts, dirs) {
     codigo = code,
     ticket = opts$ticket
   )
-  source_url <- modify_url(API_BASE, query = query)
+  source_url <- safe_source_url(query)
 
   from_cache <- file.exists(detail_path) && !isTRUE(opts$overwrite_detail)
   if (from_cache) {

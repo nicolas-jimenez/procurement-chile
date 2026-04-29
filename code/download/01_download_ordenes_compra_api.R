@@ -1057,25 +1057,12 @@ main <- function() {
     existing_detail <- read_manifest(detail_manifest_path)
     already_done <- character()
     if (nrow(existing_detail) && "codigo" %in% names(existing_detail) && "status" %in% names(existing_detail)) {
-      ok_mask <- existing_detail$status == "ok" & file.exists(existing_detail$detail_path)
+      ok_mask <- existing_detail$status == "ok"
       already_done <- unique(existing_detail$codigo[ok_mask])
     }
 
     if (!isTRUE(opts$overwrite_detail) && length(already_done)) {
       codes_df <- codes_df[!(codes_df$codigo %in% already_done), , drop = FALSE]
-    }
-
-    if (!isTRUE(opts$overwrite_detail) && nrow(codes_df)) {
-      expected_paths <- vapply(
-        seq_len(nrow(codes_df)),
-        function(i) detail_path_for(codes_df[i, , drop = FALSE], dirs),
-        character(1)
-      )
-      existing_file_mask <- file.exists(expected_paths)
-      if (any(existing_file_mask)) {
-        cat("  Existing detail JSONs skipped:", sum(existing_file_mask), "\n")
-        codes_df <- codes_df[!existing_file_mask, , drop = FALSE]
-      }
     }
 
     if (is.finite(opts$max_details)) {

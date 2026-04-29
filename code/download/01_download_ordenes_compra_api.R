@@ -354,8 +354,9 @@ USER_AGENT <- paste(
 
 is_quota_response <- function(text) {
   # Mercado Público returns {"Codigo":203,"Mensaje":"Ticket superó la cuota diaria asignada."}
-  # as a 2xx body when the daily ticket quota is exhausted.
-  grepl("cuota", text, ignore.case = TRUE) || grepl("Ticket", text, fixed = TRUE)
+  # as a 2xx body when the rate limit is hit. Check for "cuota" without "Listado" to
+  # avoid false positives on orders whose names happen to contain the word "cuota".
+  grepl("cuota", text, ignore.case = TRUE) && !grepl("Listado", text, fixed = TRUE)
 }
 
 request_json <- function(query, timeout_seconds) {

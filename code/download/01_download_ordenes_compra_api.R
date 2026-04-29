@@ -119,6 +119,10 @@ print_help <- function() {
       "  --sleep-seconds <value>      Pause between API calls. Default: 0.25.",
       "  --timeout-seconds <value>    Request timeout in seconds. Default: 60.",
       "  --max-details <value>        Optional cap on detail downloads (for testing).",
+      "  --quota-backoff-seconds <v>  Sleep duration (s) between quota retries. Default: 60.",
+      "  --quota-max-retries <v>      Max outer retries per code when quota hit. Default: 3.",
+      "  --quota-abort-streak <v>     Abort Stage 2 after this many consecutive quota failures. Default: 10.",
+      "  --checkpoint-every <v>       Flush manifest every N downloads. Default: 500.",
       "  --daily-only                 Only build daily listings and order-code manifest.",
       "  --details-only               Skip daily discovery and use existing order-code manifest.",
       "  --overwrite-daily            Re-download daily listing files even if present.",
@@ -156,7 +160,11 @@ parse_args <- function(args) {
     daily_only = FALSE,
     details_only = FALSE,
     overwrite_daily = FALSE,
-    overwrite_detail = FALSE
+    overwrite_detail = FALSE,
+    quota_backoff_seconds = 60,   # sleep duration when quota is hit before retrying
+    quota_max_retries = 3,        # outer retries after quota backoff (on top of httr RETRY)
+    quota_abort_streak = 10,      # stop Stage 2 early if this many consecutive codes hit quota
+    checkpoint_every = 500        # flush manifest to disk every N downloads
   )
 
   i <- 1
@@ -207,6 +215,14 @@ parse_args <- function(args) {
       opts$timeout_seconds <- as.numeric(value)
     } else if (identical(arg, "--max-details")) {
       opts$max_details <- as.numeric(value)
+    } else if (identical(arg, "--quota-backoff-seconds")) {
+      opts$quota_backoff_seconds <- as.numeric(value)
+    } else if (identical(arg, "--quota-max-retries")) {
+      opts$quota_max_retries <- as.integer(value)
+    } else if (identical(arg, "--quota-abort-streak")) {
+      opts$quota_abort_streak <- as.integer(value)
+    } else if (identical(arg, "--checkpoint-every")) {
+      opts$checkpoint_every <- as.integer(value)
     } else {
       stop("Unknown option: ", arg, call. = FALSE)
     }
@@ -360,6 +376,7 @@ is_quota_response <- function(text) {
 }
 
 request_json <- function(query, timeout_seconds) {
+  t0 <- proc.time()[["elapsed"]]
   resp <- RETRY(
     verb = "GET",
     url = API_BASE,
@@ -381,7 +398,7 @@ request_json <- function(query, timeout_seconds) {
     sc <- 429L
   }
 
-  list(status_code = sc, text = text)
+  list(status_code = sc, text = text, elapsed_sec = proc.time()[["elapsed"]] - t0)
 }
 
 parse_daily_listing <- function(json_text, requested_date, source_url) {
@@ -619,34 +636,68 @@ download_order_detail <- function(code_row, opts, dirs) {
   )
   source_url <- modify_url(API_BASE, query = query)
 
+  # ── Cache validation ───────────────────────────────────────────────────────
+  # A cached file is only usable if it parses as JSON and contains "Listado".
+  # Stale quota-message files and truncated writes are silently re-downloaded.
   from_cache <- file.exists(detail_path) && !isTRUE(opts$overwrite_detail)
   if (from_cache) {
-    json_text <- read_json_text(detail_path)
+    raw <- tryCatch(read_json_text(detail_path), error = function(e) NULL)
+    if (is.null(raw) || !grepl("Listado", raw, fixed = TRUE)) {
+      from_cache <- FALSE
+      if (!is.null(raw)) try(file.remove(detail_path), silent = TRUE)
+    }
+  }
+
+  # ── Download with quota backoff ────────────────────────────────────────────
+  http_status <- NA_integer_
+  json_text   <- NA_character_
+  elapsed_sec <- 0
+
+  if (from_cache) {
+    json_text   <- read_json_text(detail_path)
     http_status <- 200L
   } else {
-    ans <- request_json(query = query, timeout_seconds = opts$timeout_seconds)
-    http_status <- ans$status_code
-    json_text <- ans$text
+    for (attempt in seq_len(opts$quota_max_retries + 1L)) {
+      ans         <- request_json(query = query, timeout_seconds = opts$timeout_seconds)
+      http_status <- ans$status_code
+      json_text   <- ans$text
+      elapsed_sec <- ans$elapsed_sec
+
+      if (http_status != 429L) break   # success or a non-quota error → stop retrying
+
+      if (attempt <= opts$quota_max_retries) {
+        cat(sprintf(
+          "    [quota] %s — attempt %d/%d, sleeping %ds\n",
+          code, attempt, opts$quota_max_retries, opts$quota_backoff_seconds
+        ))
+        Sys.sleep(opts$quota_backoff_seconds)
+      }
+    }
+
     if (http_status %/% 100L == 2L) {
       write_text_file(json_text, detail_path)
     }
   }
 
+  # ── Error return ───────────────────────────────────────────────────────────
   if (http_status %/% 100L != 2L) {
     return(data.frame(
       codigo = code,
       requested_code = code,
-      status = "http_error",
+      status = if (http_status == 429L) "quota_exceeded" else "http_error",
       http_status = http_status,
+      elapsed_sec = elapsed_sec,
       api_reported_count = NA_integer_,
       response_created_at = NA_character_,
       api_version = NA_character_,
       detail_path = detail_path,
       source_url = source_url,
+      cached = FALSE,
       stringsAsFactors = FALSE
     ))
   }
 
+  # ── Parse ──────────────────────────────────────────────────────────────────
   parsed <- tryCatch(
     parse_detail_summary(
       json_text = json_text,
@@ -670,7 +721,8 @@ download_order_detail <- function(code_row, opts, dirs) {
     }
   )
 
-  parsed$cached <- from_cache
+  parsed$cached     <- from_cache
+  parsed$elapsed_sec <- elapsed_sec
   parsed
 }
 
@@ -807,28 +859,93 @@ main <- function() {
     }
 
     cat("Stage 2/2 — Detailed order downloads\n")
-    cat("  Codes queued:", nrow(codes_df), "\n")
+    cat("  Codes queued     :", nrow(codes_df), "\n")
+    cat("  Checkpoint every :", opts$checkpoint_every, "orders\n")
+    cat("  Quota backoff    :", opts$quota_backoff_seconds, "s x", opts$quota_max_retries, "retries\n")
+    cat("  Quota abort after:", opts$quota_abort_streak, "consecutive failures\n\n")
 
-    detail_rows <- vector("list", nrow(codes_df))
-    for (i in seq_len(nrow(codes_df))) {
-      row <- codes_df[i, , drop = FALSE]
-      cat(sprintf("  [%d/%d] %s\n", i, nrow(codes_df), row$codigo[[1]]))
-      detail_rows[[i]] <- download_order_detail(row, opts = opts, dirs = dirs)
+    n_total         <- nrow(codes_df)
+    detail_rows     <- vector("list", n_total)
+    t_start         <- proc.time()[["elapsed"]]
+    elapsed_times   <- numeric(0)   # request times for ETA
+    quota_streak    <- 0L           # consecutive quota failures
+    aborted_early   <- FALSE
+
+    flush_checkpoint <- function(up_to_i) {
+      chunk <- Filter(Negate(is.null), detail_rows[seq_len(up_to_i)])
+      if (!length(chunk)) return(invisible(NULL))
+      df <- do.call(rbind, chunk)
+      upsert_manifest(path = detail_manifest_path, new_df = df, key_cols = c("codigo"))
+      cat(sprintf(
+        "  [checkpoint] flushed %d rows (i=%d, %s)\n",
+        nrow(df), up_to_i, format(Sys.time(), "%H:%M:%S")
+      ))
+    }
+
+    for (i in seq_len(n_total)) {
+      row    <- codes_df[i, , drop = FALSE]
+      code_i <- row$codigo[[1]]
+
+      # ── Progress line with ETA ─────────────────────────────────────────────
+      if (length(elapsed_times) >= 5) {
+        rate    <- 1 / mean(tail(elapsed_times, 50))   # orders/sec (recent average)
+        eta_h   <- (n_total - i + 1) / rate / 3600
+        cat(sprintf("  [%d/%d] %s  (%.2f s/req, ETA %.1fh)\n",
+                    i, n_total, code_i, mean(tail(elapsed_times, 50)), eta_h))
+      } else {
+        cat(sprintf("  [%d/%d] %s\n", i, n_total, code_i))
+      }
+
+      result            <- download_order_detail(row, opts = opts, dirs = dirs)
+      detail_rows[[i]]  <- result
+      req_time          <- if (is.null(result$elapsed_sec) || is.na(result$elapsed_sec)) opts$sleep_seconds else result$elapsed_sec
+      elapsed_times     <- c(elapsed_times, req_time + opts$sleep_seconds)
+
+      # ── Quota abort check ──────────────────────────────────────────────────
+      if (isTRUE(result$status == "quota_exceeded")) {
+        quota_streak <- quota_streak + 1L
+        if (quota_streak >= opts$quota_abort_streak) {
+          cat(sprintf(
+            "\n  [abort] %d consecutive quota failures — stopping early at i=%d.\n",
+            quota_streak, i
+          ))
+          flush_checkpoint(i)
+          aborted_early <- TRUE
+          break
+        }
+      } else {
+        quota_streak <- 0L
+      }
+
+      # ── Periodic checkpoint ────────────────────────────────────────────────
+      if (i %% opts$checkpoint_every == 0L) {
+        flush_checkpoint(i)
+      }
+
       Sys.sleep(opts$sleep_seconds)
     }
 
-    if (length(detail_rows)) {
-      detail_df <- do.call(rbind, detail_rows)
-      upsert_manifest(
-        path = detail_manifest_path,
-        new_df = detail_df,
-        key_cols = c("codigo")
-      )
+    # Final flush
+    last_i <- if (aborted_early) i else n_total
+    if (last_i %% opts$checkpoint_every != 0L || aborted_early) {
+      flush_checkpoint(last_i)
+    }
 
-      ok_n <- sum(detail_df$status == "ok", na.rm = TRUE)
-      err_n <- sum(detail_df$status != "ok", na.rm = TRUE)
-      cat("\n  Detailed downloads written:", ok_n, "\n")
-      cat("  Errors / non-ok rows      :", err_n, "\n")
+    # Summary
+    all_results <- Filter(Negate(is.null), detail_rows[seq_len(last_i)])
+    if (length(all_results)) {
+      detail_df <- do.call(rbind, all_results)
+      ok_n      <- sum(detail_df$status == "ok",             na.rm = TRUE)
+      empty_n   <- sum(detail_df$status == "empty",          na.rm = TRUE)
+      quota_n   <- sum(detail_df$status == "quota_exceeded", na.rm = TRUE)
+      err_n     <- sum(!detail_df$status %in% c("ok", "empty", "quota_exceeded"), na.rm = TRUE)
+      wall_h    <- (proc.time()[["elapsed"]] - t_start) / 3600
+      cat(sprintf("\n  Downloaded OK      : %d\n",  ok_n))
+      cat(sprintf("  Empty Listado      : %d\n",  empty_n))
+      cat(sprintf("  Quota exceeded     : %d\n",  quota_n))
+      cat(sprintf("  Other errors       : %d\n",  err_n))
+      cat(sprintf("  Wall time          : %.2f h\n", wall_h))
+      if (aborted_early) cat("  ** Aborted early due to quota streak. Resubmit to resume.\n")
     }
   }
 

@@ -55,7 +55,7 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PARQUET="$PROCUREMENT_CHILE_DB/data/clean/ordenes_compra_${YEAR}.parquet"
 # On Bouchet PROJECT_ROOT is set by the sbatch; locally fall back to sandbox/logs
-LOG_DIR="${PROJECT_ROOT:-${PROCUREMENT_CHILE_DB}/sandbox}/logs"
+LOG_DIR="${PROJECT_ROOT:-${PROCUREMENT_CHILE_DB}}/logs"
 mkdir -p "$LOG_DIR"
 
 echo "============================================================"
@@ -84,7 +84,7 @@ if [ -f "$PARQUET" ] && [ -z "$MAX_DETAILS_FLAG" ]; then
 else
     echo "▶ Step 2/2 — Parsing JSONs → parquet ..."
     # shellcheck disable=SC2086
-    python3 "$SCRIPT_DIR/parse_details_to_parquet.py" "$YEAR" $EVICT_FLAG
+    python "$SCRIPT_DIR/parse_details_to_parquet.py" "$YEAR" $EVICT_FLAG
     echo "✓ Step 2 complete — $(date '+%H:%M:%S')"
 fi
 
@@ -92,7 +92,7 @@ echo ""
 echo "============================================================"
 echo "  PIPELINE DONE: $YEAR — $(date '+%Y-%m-%d %H:%M:%S')"
 if [ -f "$PARQUET" ]; then
-    SIZE=$(python3 -c "import os; s=os.path.getsize('$PARQUET'); print(f'{s/1e6:.0f} MB')")
+    SIZE=$(python -c "import os; s=os.path.getsize('$PARQUET'); print(f'{s/1e6:.0f} MB')")
     echo "  Parquet : $PARQUET  ($SIZE)"
 fi
 echo "============================================================"

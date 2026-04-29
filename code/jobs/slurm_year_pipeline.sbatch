@@ -43,8 +43,9 @@ YEAR="${YEARS[$SLURM_ARRAY_TASK_ID]}"
 # ── API ticket ────────────────────────────────────────────────────────────────
 export MERCADO_PUBLICO_TICKET="${MERCADO_PUBLICO_TICKET:-C9C6EB55-72C8-41BC-BB3E-CA11AA8698B8}"
 
-# Slightly longer sleep on cluster (avoids overwhelming the API from fast nodes)
-export SLEEP_SECONDS="${SLEEP_SECONDS:-0.5}"
+# 0.25s sleep → ~240 req/min → ~6.4 days per year of 2.2M orders (fits week partition).
+# Increase if you still see quota responses; decrease only if the API allows it.
+export SLEEP_SECONDS="${SLEEP_SECONDS:-0.25}"
 export TIMEOUT_SECONDS="${TIMEOUT_SECONDS:-120}"
 
 # ── Load Bouchet modules + activate venv ─────────────────────────────────────

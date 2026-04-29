@@ -46,7 +46,7 @@ echo "Year               : ${YEAR}  (array task ${SLURM_ARRAY_TASK_ID})"
 echo ""
 
 # ── Step 1: download detail JSONs for this year ───────────────────────────────
-bash code/jobs/run_details_by_year.sh "${YEAR}"
+bash code/jobs/downloads/run_details_by_year.sh "${YEAR}"
 
 # ── Step 2: parse JSONs → parquet ─────────────────────────────────────────────
-python code/jobs/parse_details_to_parquet.py "${YEAR}"
+python code/jobs/downloads/parse_details_to_parquet.py "${YEAR}"

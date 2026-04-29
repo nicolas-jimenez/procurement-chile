@@ -31,7 +31,9 @@
 #     or passed at submit time:
 #       sbatch --export=ALL,MERCADO_PUBLICO_TICKET=... code/jobs/submit_ordenes_compra.sbatch ...
 # ─────────────────────────────────────────────────────────────────────────────
-source "$(dirname "${BASH_SOURCE[0]:-$0}")/_preamble.sh"
+PROJECT_ROOT="${PROJECT_ROOT:-/nfs/roberts/project/pi_rp269/nj229/procurement-chile}"
+REPO_ROOT="${REPO_ROOT:-${PROJECT_ROOT}/procurement-chile}"
+source "${REPO_ROOT}/code/jobs/_preamble.sh"
 
 module load R/4.4.2-gfbf-2024a
 

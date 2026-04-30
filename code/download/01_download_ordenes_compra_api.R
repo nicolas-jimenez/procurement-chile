@@ -678,6 +678,10 @@ parse_detail_summary <- function(json_text, requested_code, source_url, detail_p
   )
 }
 
+is_daily_quota_response <- function(http_status, json_text) {
+  isTRUE(http_status == 203L) && grepl("cuota diaria", json_text, ignore.case = TRUE)
+}
+
 
 # ── Download logic ───────────────────────────────────────────────────────────
 download_daily_batch <- function(date_value, opts, dirs) {
@@ -798,10 +802,15 @@ download_order_detail <- function(code_row, opts, dirs) {
   }
 
   if (!isTRUE(http_status == 200L)) {
+    status_label <- if (is_daily_quota_response(http_status, json_text)) {
+      "quota_exceeded"
+    } else {
+      "http_error"
+    }
     return(data.frame(
       codigo = code,
       requested_code = code,
-      status = "http_error",
+      status = status_label,
       http_status = http_status,
       api_reported_count = NA_integer_,
       response_created_at = NA_character_,
@@ -1130,6 +1139,19 @@ main <- function() {
 
       if (!isTRUE(detail_row$cached[[1]])) {
         Sys.sleep(throttle_state$current_sleep)
+      }
+
+      if (identical(detail_row$status[[1]], "quota_exceeded")) {
+        detail_df <- rbind_fill(detail_rows)
+        upsert_manifest(
+          path = detail_manifest_path,
+          new_df = detail_df,
+          key_cols = c("codigo")
+        )
+        stop(
+          "API daily quota exceeded. Progress has been flushed; resubmit after the quota resets.",
+          call. = FALSE
+        )
       }
     }
 

@@ -26,7 +26,7 @@
 #     --details-only --start-date 2015-01-01 --end-date 2026-04-22
 #
 # Requires:
-#   - code/download/01_download_ordenes_compra_api.R in the repo
+#   - code/jobs/downloads/01_download_ordenes_compra_api.R in the repo
 #   - API ticket in $MERCADO_PUBLICO_TICKET or $CHILECOMPRA_API_TICKET,
 #     or passed at submit time:
 #       sbatch --export=ALL,MERCADO_PUBLICO_TICKET=... code/jobs/submit_ordenes_compra.sbatch ...
@@ -50,10 +50,10 @@ for arg in "$@"; do
     [[ "$arg" == "--daily-only" ]] && HAS_DAILY_ONLY=true
 done
 
-echo "Command            : Rscript code/download/01_download_ordenes_compra_api.R $*"
+echo "Command            : Rscript code/jobs/downloads/01_download_ordenes_compra_api.R $*"
 echo ""
 
-Rscript code/download/01_download_ordenes_compra_api.R "$@"
+Rscript code/jobs/downloads/01_download_ordenes_compra_api.R "$@"
 
 # If phase 1 ran with --daily-only, automatically submit phase 2 as a
 # dependency so it starts as soon as this job finishes successfully.

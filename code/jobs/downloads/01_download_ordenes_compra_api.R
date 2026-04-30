@@ -117,16 +117,12 @@ print_help <- function() {
       "  --codigo-organismo <value>   Optional official buyer code filter.",
       "  --codigo-proveedor <value>   Optional official supplier code filter.",
       "  --sleep-seconds <value>      Pause between API calls. Default: 0.25.",
-      "  --max-sleep-seconds <value>  Adaptive throttle ceiling. Default: 30.",
       "  --timeout-seconds <value>    Request timeout in seconds. Default: 60.",
-      "  --max-retries <value>        Per-request retry cap for 429/5xx/network errors. Default: 8.",
-      "  --retry-base-seconds <value> Initial retry wait when Retry-After is absent. Default: 2.",
-      "  --retry-cap-seconds <value>  Maximum retry wait when Retry-After is absent. Default: 120.",
       "  --max-details <value>        Optional cap on detail downloads (for testing).",
-      "  --manifest-flush-every <n>   Upsert detail_downloads.csv every n rows. Default: 1000.",
-      "  --run-id <value>             Optional identifier recorded in trace manifests.",
-      "  --reverse-details            Download detailed orders newest-to-oldest.",
-      "  --no-adaptive-throttle       Disable adaptive sleep increases after 429 retries.",
+      "  --quota-backoff-seconds <v>  Sleep duration (s) between quota retries. Default: 60.",
+      "  --quota-max-retries <v>      Max outer retries per code when quota hit. Default: 3.",
+      "  --quota-abort-streak <v>     Abort Stage 2 after this many consecutive quota failures. Default: 10.",
+      "  --checkpoint-every <v>       Flush manifest every N downloads. Default: 500.",
       "  --daily-only                 Only build daily listings and order-code manifest.",
       "  --details-only               Skip daily discovery and use existing order-code manifest.",
       "  --overwrite-daily            Re-download daily listing files even if present.",
@@ -140,8 +136,6 @@ print_help <- function() {
       "  <output-root>/manifests/daily_batches.csv",
       "  <output-root>/manifests/order_codes.csv",
       "  <output-root>/manifests/detail_downloads.csv",
-      "  <output-root>/manifests/detail_attempts.csv",
-      "  <output-root>/manifests/detail_runs.csv",
       sep = "\n"
     )
   )
@@ -161,20 +155,16 @@ parse_args <- function(args) {
     codigo_organismo = NULL,
     codigo_proveedor = NULL,
     sleep_seconds = 0.25,
-    max_sleep_seconds = 30,
     timeout_seconds = 60,
-    max_retries = 8,
-    retry_base_seconds = 2,
-    retry_cap_seconds = 120,
     max_details = Inf,
-    manifest_flush_every = 1000,
-    run_id = "",
-    reverse_details = FALSE,
-    adaptive_throttle = TRUE,
     daily_only = FALSE,
     details_only = FALSE,
     overwrite_daily = FALSE,
-    overwrite_detail = FALSE
+    overwrite_detail = FALSE,
+    quota_backoff_seconds = 60,   # sleep duration when quota is hit before retrying
+    quota_max_retries = 3,        # outer retries after quota backoff (on top of httr RETRY)
+    quota_abort_streak = 10,      # stop Stage 2 early if this many consecutive codes hit quota
+    checkpoint_every = 500        # flush manifest to disk every N downloads
   )
 
   i <- 1
@@ -200,14 +190,6 @@ parse_args <- function(args) {
       opts$overwrite_detail <- TRUE
       i <- i + 1
       next
-    } else if (identical(arg, "--reverse-details")) {
-      opts$reverse_details <- TRUE
-      i <- i + 1
-      next
-    } else if (identical(arg, "--no-adaptive-throttle")) {
-      opts$adaptive_throttle <- FALSE
-      i <- i + 1
-      next
     }
 
     if (i == length(args)) {
@@ -229,22 +211,18 @@ parse_args <- function(args) {
       opts$codigo_proveedor <- value
     } else if (identical(arg, "--sleep-seconds")) {
       opts$sleep_seconds <- as.numeric(value)
-    } else if (identical(arg, "--max-sleep-seconds")) {
-      opts$max_sleep_seconds <- as.numeric(value)
     } else if (identical(arg, "--timeout-seconds")) {
       opts$timeout_seconds <- as.numeric(value)
-    } else if (identical(arg, "--max-retries")) {
-      opts$max_retries <- as.integer(value)
-    } else if (identical(arg, "--retry-base-seconds")) {
-      opts$retry_base_seconds <- as.numeric(value)
-    } else if (identical(arg, "--retry-cap-seconds")) {
-      opts$retry_cap_seconds <- as.numeric(value)
     } else if (identical(arg, "--max-details")) {
       opts$max_details <- as.numeric(value)
-    } else if (identical(arg, "--manifest-flush-every")) {
-      opts$manifest_flush_every <- as.integer(value)
-    } else if (identical(arg, "--run-id")) {
-      opts$run_id <- value
+    } else if (identical(arg, "--quota-backoff-seconds")) {
+      opts$quota_backoff_seconds <- as.numeric(value)
+    } else if (identical(arg, "--quota-max-retries")) {
+      opts$quota_max_retries <- as.integer(value)
+    } else if (identical(arg, "--quota-abort-streak")) {
+      opts$quota_abort_streak <- as.integer(value)
+    } else if (identical(arg, "--checkpoint-every")) {
+      opts$checkpoint_every <- as.integer(value)
     } else {
       stop("Unknown option: ", arg, call. = FALSE)
     }
@@ -273,29 +251,11 @@ parse_args <- function(args) {
   if (!is.finite(opts$sleep_seconds) || opts$sleep_seconds < 0) {
     stop("--sleep-seconds must be a non-negative number.", call. = FALSE)
   }
-  if (!is.finite(opts$max_sleep_seconds) || opts$max_sleep_seconds < opts$sleep_seconds) {
-    stop("--max-sleep-seconds must be >= --sleep-seconds.", call. = FALSE)
-  }
   if (!is.finite(opts$timeout_seconds) || opts$timeout_seconds <= 0) {
     stop("--timeout-seconds must be a positive number.", call. = FALSE)
   }
-  if (!is.finite(opts$max_retries) || opts$max_retries < 0) {
-    stop("--max-retries must be a non-negative integer.", call. = FALSE)
-  }
-  if (!is.finite(opts$retry_base_seconds) || opts$retry_base_seconds <= 0) {
-    stop("--retry-base-seconds must be a positive number.", call. = FALSE)
-  }
-  if (!is.finite(opts$retry_cap_seconds) || opts$retry_cap_seconds < opts$retry_base_seconds) {
-    stop("--retry-cap-seconds must be >= --retry-base-seconds.", call. = FALSE)
-  }
   if (!is.finite(opts$max_details) || opts$max_details <= 0) {
     opts$max_details <- Inf
-  }
-  if (!is.finite(opts$manifest_flush_every) || opts$manifest_flush_every < 0) {
-    stop("--manifest-flush-every must be a non-negative integer.", call. = FALSE)
-  }
-  if (!nzchar(opts$run_id)) {
-    opts$run_id <- paste0("oc_", format(Sys.time(), "%Y%m%dT%H%M%SZ", tz = "UTC"))
   }
 
   opts$output_root <- normalizePath(opts$output_root, winslash = "/", mustWork = FALSE)
@@ -396,57 +356,8 @@ upsert_manifest <- function(path, new_df, key_cols) {
   out
 }
 
-append_manifest_rows <- function(path, new_df) {
-  if (!nrow(new_df)) {
-    return(invisible(NULL))
-  }
-  dir.create(dirname(path), showWarnings = FALSE, recursive = TRUE)
-  write_header <- !file.exists(path) || file.info(path)$size == 0
-  write.table(
-    new_df,
-    file = path,
-    append = !write_header,
-    sep = ",",
-    row.names = FALSE,
-    col.names = write_header,
-    na = "",
-    qmethod = "double",
-    fileEncoding = "UTF-8"
-  )
-  invisible(NULL)
-}
-
-rbind_fill <- function(rows) {
-  rows <- Filter(function(x) !is.null(x) && nrow(x), rows)
-  if (!length(rows)) {
-    return(data.frame(stringsAsFactors = FALSE))
-  }
-  all_cols <- Reduce(union, lapply(rows, names))
-  normalized <- lapply(rows, function(x) {
-    for (col in setdiff(all_cols, names(x))) {
-      x[[col]] <- NA
-    }
-    x[all_cols]
-  })
-  do.call(rbind, normalized)
-}
-
 safe_code_path <- function(code) {
   gsub("[^A-Za-z0-9._-]", "_", code)
-}
-
-now_utc <- function() {
-  format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
-}
-
-detail_path_for <- function(code_row, dirs) {
-  requested_date <- as.Date(code_row[["requested_date"]])
-  file.path(
-    dirs$detail_json,
-    format(requested_date, "%Y"),
-    format(requested_date, "%m"),
-    paste0(safe_code_path(code_row[["codigo"]]), ".json")
-  )
 }
 
 
@@ -457,29 +368,11 @@ USER_AGENT <- paste(
   "(research script; contact: api@chilecompra.cl if needed)"
 )
 
-parse_retry_after <- function(resp) {
-  value <- headers(resp)[["retry-after"]]
-  if (is.null(value) || !nzchar(value)) {
-    return(NA_real_)
-  }
-
-  numeric_value <- suppressWarnings(as.numeric(value))
-  if (is.finite(numeric_value)) {
-    return(max(0, numeric_value))
-  }
-
-  date_value <- suppressWarnings(
-    as.POSIXct(value, format = "%a, %d %b %Y %H:%M:%S", tz = "GMT")
-  )
-  if (!is.na(date_value)) {
-    return(max(0, as.numeric(difftime(date_value, Sys.time(), units = "secs"))))
-  }
-
-  NA_real_
-}
-
-is_retryable_status <- function(status_code_value) {
-  is.na(status_code_value) || status_code_value %in% c(408L, 409L, 425L, 429L, 500L, 502L, 503L, 504L)
+is_quota_response <- function(text) {
+  # Mercado Público returns {"Codigo":203,"Mensaje":"Ticket superó la cuota diaria asignada."}
+  # as a 2xx body when the rate limit is hit. Check for "cuota" without "Listado" to
+  # avoid false positives on orders whose names happen to contain the word "cuota".
+  grepl("cuota", text, ignore.case = TRUE) && !grepl("Listado", text, fixed = TRUE)
 }
 
 safe_source_url <- function(query) {
@@ -490,71 +383,30 @@ safe_source_url <- function(query) {
   modify_url(API_BASE, query = redacted_query)
 }
 
-request_json <- function(query, timeout_seconds, opts) {
-  total_wait <- 0
-  last_error <- NA_character_
-  last_status <- NA_integer_
-  last_text <- ""
-  attempts <- opts$max_retries + 1L
+request_json <- function(query, timeout_seconds) {
+  t0 <- proc.time()[["elapsed"]]
+  resp <- RETRY(
+    verb = "GET",
+    url = API_BASE,
+    query = query,
+    times = 3,
+    pause_base = 1,
+    pause_cap = 8,
+    terminate_on = c(400, 401, 403, 404),
+    user_agent(USER_AGENT),
+    timeout(timeout_seconds)
+  )
 
-  for (attempt in seq_len(attempts)) {
-    resp <- tryCatch(
-      GET(
-        url = API_BASE,
-        query = query,
-        user_agent(USER_AGENT),
-        timeout(timeout_seconds)
-      ),
-      error = function(e) e
-    )
+  text <- content(resp, as = "text", encoding = "UTF-8")
+  sc   <- status_code(resp)
 
-    if (inherits(resp, "error")) {
-      last_status <- NA_integer_
-      last_text <- ""
-      last_error <- conditionMessage(resp)
-      retryable <- TRUE
-      retry_after <- NA_real_
-    } else {
-      last_status <- status_code(resp)
-      last_text <- content(resp, as = "text", encoding = "UTF-8")
-      last_error <- NA_character_
-      retryable <- is_retryable_status(last_status)
-      retry_after <- if (last_status == 429L) parse_retry_after(resp) else NA_real_
-    }
-
-    if (!retryable || last_status == 200L || attempt >= attempts) {
-      return(list(
-        status_code = last_status,
-        text = last_text,
-        attempt_count = attempt,
-        retry_count = attempt - 1L,
-        retry_wait_seconds = total_wait,
-        last_error = last_error
-      ))
-    }
-
-    fallback_wait <- min(
-      opts$retry_cap_seconds,
-      opts$retry_base_seconds * (2 ^ (attempt - 1L))
-    )
-    wait_seconds <- if (is.finite(retry_after)) retry_after else fallback_wait
-    wait_seconds <- min(opts$retry_cap_seconds, max(opts$retry_base_seconds, wait_seconds))
-    wait_seconds <- wait_seconds + runif(1, min = 0, max = min(1, wait_seconds * 0.1))
-
-    status_label <- ifelse(is.na(last_status), "network_error", as.character(last_status))
-    message(sprintf("Request failed [%s]. Retrying in %.1f seconds...", status_label, wait_seconds))
-    Sys.sleep(wait_seconds)
-    total_wait <- total_wait + wait_seconds
+  # Treat quota-exceeded responses as a distinct non-2xx status so callers
+  # know not to write the file and can stop early.
+  if (sc %/% 100L == 2L && is_quota_response(text)) {
+    sc <- 429L
   }
 
-  list(
-    status_code = last_status,
-    text = last_text,
-    attempt_count = attempts,
-    retry_count = attempts - 1L,
-    retry_wait_seconds = total_wait,
-    last_error = last_error
-  )
+  list(status_code = sc, text = text, elapsed_sec = proc.time()[["elapsed"]] - t0)
 }
 
 parse_daily_listing <- function(json_text, requested_date, source_url) {
@@ -678,11 +530,6 @@ parse_detail_summary <- function(json_text, requested_code, source_url, detail_p
   )
 }
 
-is_daily_quota_response <- function(http_status, json_text) {
-  isTRUE(http_status == 203L) && grepl("cuota diaria", json_text, ignore.case = TRUE)
-}
-
-
 # ── Download logic ───────────────────────────────────────────────────────────
 download_daily_batch <- function(date_value, opts, dirs) {
   date_iso <- as.character(date_value)
@@ -709,15 +556,15 @@ download_daily_batch <- function(date_value, opts, dirs) {
     json_text <- read_json_text(daily_json_path)
     http_status <- 200L
   } else {
-    ans <- request_json(query = query, timeout_seconds = opts$timeout_seconds, opts = opts)
+    ans <- request_json(query = query, timeout_seconds = opts$timeout_seconds)
     http_status <- ans$status_code
     json_text <- ans$text
-    if (isTRUE(http_status == 200L)) {
+    if (http_status %/% 100L == 2L) {
       write_text_file(json_text, daily_json_path)
     }
   }
 
-  if (!isTRUE(http_status == 200L)) {
+  if (http_status %/% 100L != 2L) {
     return(list(
       rows = data.frame(stringsAsFactors = FALSE),
       summary = data.frame(
@@ -780,7 +627,15 @@ download_daily_batch <- function(date_value, opts, dirs) {
 download_order_detail <- function(code_row, opts, dirs) {
   code <- code_row[["codigo"]]
   requested_date <- as.Date(code_row[["requested_date"]])
-  detail_path <- detail_path_for(code_row, dirs)
+  year_str <- format(requested_date, "%Y")
+  month_str <- format(requested_date, "%m")
+
+  detail_path <- file.path(
+    dirs$detail_json,
+    year_str,
+    month_str,
+    paste0(safe_code_path(code), ".json")
+  )
 
   query <- list(
     codigo = code,
@@ -788,46 +643,68 @@ download_order_detail <- function(code_row, opts, dirs) {
   )
   source_url <- safe_source_url(query)
 
+  # ── Cache validation ───────────────────────────────────────────────────────
+  # A cached file is only usable if it parses as JSON and contains "Listado".
+  # Stale quota-message files and truncated writes are silently re-downloaded.
   from_cache <- file.exists(detail_path) && !isTRUE(opts$overwrite_detail)
   if (from_cache) {
-    json_text <- read_json_text(detail_path)
+    raw <- tryCatch(read_json_text(detail_path), error = function(e) NULL)
+    if (is.null(raw) || !grepl("Listado", raw, fixed = TRUE)) {
+      from_cache <- FALSE
+      if (!is.null(raw)) try(file.remove(detail_path), silent = TRUE)
+    }
+  }
+
+  # ── Download with quota backoff ────────────────────────────────────────────
+  http_status <- NA_integer_
+  json_text   <- NA_character_
+  elapsed_sec <- 0
+
+  if (from_cache) {
+    json_text   <- read_json_text(detail_path)
     http_status <- 200L
   } else {
-    ans <- request_json(query = query, timeout_seconds = opts$timeout_seconds, opts = opts)
-    http_status <- ans$status_code
-    json_text <- ans$text
-    if (isTRUE(http_status == 200L)) {
+    for (attempt in seq_len(opts$quota_max_retries + 1L)) {
+      ans         <- request_json(query = query, timeout_seconds = opts$timeout_seconds)
+      http_status <- ans$status_code
+      json_text   <- ans$text
+      elapsed_sec <- ans$elapsed_sec
+
+      if (http_status != 429L) break   # success or a non-quota error → stop retrying
+
+      if (attempt <= opts$quota_max_retries) {
+        cat(sprintf(
+          "    [quota] %s — attempt %d/%d, sleeping %ds\n",
+          code, attempt, opts$quota_max_retries, opts$quota_backoff_seconds
+        ))
+        Sys.sleep(opts$quota_backoff_seconds)
+      }
+    }
+
+    if (http_status %/% 100L == 2L) {
       write_text_file(json_text, detail_path)
     }
   }
 
-  if (!isTRUE(http_status == 200L)) {
-    status_label <- if (is_daily_quota_response(http_status, json_text)) {
-      "quota_exceeded"
-    } else {
-      "http_error"
-    }
+  # ── Error return ───────────────────────────────────────────────────────────
+  if (http_status %/% 100L != 2L) {
     return(data.frame(
       codigo = code,
       requested_code = code,
-      status = status_label,
+      status = if (http_status == 429L) "quota_exceeded" else "http_error",
       http_status = http_status,
+      elapsed_sec = elapsed_sec,
       api_reported_count = NA_integer_,
       response_created_at = NA_character_,
       api_version = NA_character_,
       detail_path = detail_path,
       source_url = source_url,
-      cached = from_cache,
-      requested_date = as.character(requested_date),
-      attempted_at_utc = now_utc(),
-      attempt_count = ans$attempt_count,
-      retry_count = ans$retry_count,
-      retry_wait_seconds = ans$retry_wait_seconds,
-      last_error = ans$last_error,
+      cached = FALSE,
       stringsAsFactors = FALSE
     ))
   }
 
+  # ── Parse ──────────────────────────────────────────────────────────────────
   parsed <- tryCatch(
     parse_detail_summary(
       json_text = json_text,
@@ -846,81 +723,14 @@ download_order_detail <- function(code_row, opts, dirs) {
         api_version = NA_character_,
         detail_path = detail_path,
         source_url = source_url,
-        requested_date = as.character(requested_date),
-        attempted_at_utc = now_utc(),
-        attempt_count = if (exists("ans")) ans$attempt_count else 0L,
-        retry_count = if (exists("ans")) ans$retry_count else 0L,
-        retry_wait_seconds = if (exists("ans")) ans$retry_wait_seconds else 0,
-        last_error = conditionMessage(e),
         stringsAsFactors = FALSE
       )
     }
   )
 
-  parsed$cached <- from_cache
-  parsed$requested_date <- as.character(requested_date)
-  parsed$attempted_at_utc <- now_utc()
-  parsed$attempt_count <- if (from_cache) 0L else ans$attempt_count
-  parsed$retry_count <- if (from_cache) 0L else ans$retry_count
-  parsed$retry_wait_seconds <- if (from_cache) 0 else ans$retry_wait_seconds
-  parsed$last_error <- if (from_cache) NA_character_ else ans$last_error
+  parsed$cached     <- from_cache
+  parsed$elapsed_sec <- elapsed_sec
   parsed
-}
-
-new_throttle_state <- function(opts) {
-  state <- new.env(parent = emptyenv())
-  state$base_sleep <- opts$sleep_seconds
-  state$current_sleep <- opts$sleep_seconds
-  state$max_sleep <- opts$max_sleep_seconds
-  state$success_streak <- 0L
-  state
-}
-
-update_throttle_state <- function(state, detail_row, opts) {
-  if (!isTRUE(opts$adaptive_throttle) || isTRUE(detail_row$cached[[1]])) {
-    return(invisible(state))
-  }
-
-  retries <- suppressWarnings(as.integer(detail_row$retry_count[[1]]))
-  status <- suppressWarnings(as.integer(detail_row$http_status[[1]]))
-  if (is.na(retries)) retries <- 0L
-
-  if (retries > 0L || identical(status, 429L)) {
-    state$current_sleep <- min(
-      state$max_sleep,
-      max(state$current_sleep + 1, state$current_sleep * 1.5)
-    )
-    state$success_streak <- 0L
-  } else {
-    state$success_streak <- state$success_streak + 1L
-    if (state$success_streak >= 50L && state$current_sleep > state$base_sleep) {
-      state$current_sleep <- max(state$base_sleep, state$current_sleep * 0.9)
-      state$success_streak <- 0L
-    }
-  }
-
-  invisible(state)
-}
-
-detail_attempt_trace <- function(detail_row, code_row, opts, throttle_state) {
-  data.frame(
-    run_id = opts$run_id,
-    attempted_at_utc = safe_chr(detail_row$attempted_at_utc),
-    requested_date = as.character(as.Date(code_row[["requested_date"]])),
-    codigo = safe_chr(code_row[["codigo"]]),
-    result_codigo = safe_chr(detail_row$codigo),
-    status = safe_chr(detail_row$status),
-    http_status = safe_int(detail_row$http_status),
-    cached = as.logical(detail_row$cached[[1]]),
-    attempt_count = safe_int(detail_row$attempt_count),
-    retry_count = safe_int(detail_row$retry_count),
-    retry_wait_seconds = safe_num(detail_row$retry_wait_seconds),
-    throttle_sleep_seconds = throttle_state$current_sleep,
-    detail_path = safe_chr(detail_row$detail_path),
-    source_url = safe_chr(detail_row$source_url),
-    last_error = safe_chr(detail_row$last_error),
-    stringsAsFactors = FALSE
-  )
 }
 
 
@@ -942,46 +752,16 @@ main <- function() {
   daily_manifest_path <- file.path(dirs$manifests, "daily_batches.csv")
   codes_manifest_path <- file.path(dirs$manifests, "order_codes.csv")
   detail_manifest_path <- file.path(dirs$manifests, "detail_downloads.csv")
-  detail_attempts_path <- file.path(dirs$manifests, "detail_attempts.csv")
-  detail_runs_path <- file.path(dirs$manifests, "detail_runs.csv")
 
   cat("Repo root        :", REPO_ROOT, "\n")
   cat("Output root      :", dirs$root, "\n")
-  cat("Run ID           :", opts$run_id, "\n")
   cat("Date range       :", as.character(opts$start_date), "to", as.character(opts$end_date), "\n")
   cat("Buyer filter     :", ifelse(is.null(opts$codigo_organismo), "<none>", opts$codigo_organismo), "\n")
   cat("Supplier filter  :", ifelse(is.null(opts$codigo_proveedor), "<none>", opts$codigo_proveedor), "\n")
-  cat("Sleep seconds    :", opts$sleep_seconds, "\n")
-  cat("Adaptive throttle:", opts$adaptive_throttle, "\n")
-  cat("Max sleep seconds:", opts$max_sleep_seconds, "\n")
-  cat("Max retries      :", opts$max_retries, "\n")
-  cat("Reverse details  :", opts$reverse_details, "\n")
   cat("Daily only       :", opts$daily_only, "\n")
   cat("Details only     :", opts$details_only, "\n")
   cat("Overwrite daily  :", opts$overwrite_daily, "\n")
   cat("Overwrite detail :", opts$overwrite_detail, "\n\n")
-
-  append_manifest_rows(
-    detail_runs_path,
-    data.frame(
-      run_id = opts$run_id,
-      started_at_utc = now_utc(),
-      start_date = as.character(opts$start_date),
-      end_date = as.character(opts$end_date),
-      daily_only = opts$daily_only,
-      details_only = opts$details_only,
-      reverse_details = opts$reverse_details,
-      sleep_seconds = opts$sleep_seconds,
-      adaptive_throttle = opts$adaptive_throttle,
-      max_sleep_seconds = opts$max_sleep_seconds,
-      max_retries = opts$max_retries,
-      retry_base_seconds = opts$retry_base_seconds,
-      retry_cap_seconds = opts$retry_cap_seconds,
-      manifest_flush_every = opts$manifest_flush_every,
-      output_root = dirs$root,
-      stringsAsFactors = FALSE
-    )
-  )
 
   if (!isTRUE(opts$details_only)) {
     dates <- seq.Date(opts$start_date, opts$end_date, by = "day")
@@ -1068,13 +848,12 @@ main <- function() {
         call. = FALSE
       )
     }
-    order_index <- order(codes_df$requested_date, codes_df$codigo, decreasing = isTRUE(opts$reverse_details))
-    codes_df <- codes_df[order_index, , drop = FALSE]
+    codes_df <- codes_df[order(codes_df$requested_date, codes_df$codigo), , drop = FALSE]
 
     existing_detail <- read_manifest(detail_manifest_path)
     already_done <- character()
     if (nrow(existing_detail) && "codigo" %in% names(existing_detail) && "status" %in% names(existing_detail)) {
-      ok_mask <- existing_detail$status == "ok"
+      ok_mask <- existing_detail$status == "ok" & file.exists(existing_detail$detail_path)
       already_done <- unique(existing_detail$codigo[ok_mask])
     }
 
@@ -1087,96 +866,100 @@ main <- function() {
     }
 
     cat("Stage 2/2 — Detailed order downloads\n")
-    cat("  Codes queued:", nrow(codes_df), "\n")
+    cat("  Codes queued     :", nrow(codes_df), "\n")
+    cat("  Checkpoint every :", opts$checkpoint_every, "orders\n")
+    cat("  Quota backoff    :", opts$quota_backoff_seconds, "s x", opts$quota_max_retries, "retries\n")
+    cat("  Quota abort after:", opts$quota_abort_streak, "consecutive failures\n\n")
 
-    detail_rows <- list()
-    throttle_state <- new_throttle_state(opts)
-    ok_n <- 0L
-    err_n <- 0L
-    retry_n <- 0L
-    cached_n <- 0L
-    flushed_n <- 0L
+    n_total         <- nrow(codes_df)
+    detail_rows     <- vector("list", n_total)
+    t_start         <- proc.time()[["elapsed"]]
+    elapsed_times   <- numeric(0)   # request times for ETA
+    quota_streak    <- 0L           # consecutive quota failures
+    aborted_early   <- FALSE
 
-    for (i in seq_len(nrow(codes_df))) {
-      row <- codes_df[i, , drop = FALSE]
+    flush_checkpoint <- function(up_to_i) {
+      chunk <- Filter(Negate(is.null), detail_rows[seq_len(up_to_i)])
+      if (!length(chunk)) return(invisible(NULL))
+      df <- do.call(rbind, chunk)
+      upsert_manifest(path = detail_manifest_path, new_df = df, key_cols = c("codigo"))
       cat(sprintf(
-        "  [%d/%d] %s (sleep %.1fs)\n",
-        i,
-        nrow(codes_df),
-        row$codigo[[1]],
-        throttle_state$current_sleep
+        "  [checkpoint] flushed %d rows (i=%d, %s)\n",
+        nrow(df), up_to_i, format(Sys.time(), "%H:%M:%S")
       ))
-
-      detail_row <- download_order_detail(row, opts = opts, dirs = dirs)
-      update_throttle_state(throttle_state, detail_row, opts)
-      append_manifest_rows(
-        detail_attempts_path,
-        detail_attempt_trace(detail_row, row, opts, throttle_state)
-      )
-
-      detail_rows[[length(detail_rows) + 1L]] <- detail_row
-      ok_n <- ok_n + as.integer(detail_row$status[[1]] == "ok")
-      err_n <- err_n + as.integer(detail_row$status[[1]] != "ok")
-      retry_value <- safe_int(detail_row$retry_count)
-      if (is.na(retry_value)) retry_value <- 0L
-      retry_n <- retry_n + retry_value
-      cached_n <- cached_n + as.integer(isTRUE(detail_row$cached[[1]]))
-
-      if (
-        opts$manifest_flush_every > 0L &&
-          length(detail_rows) >= opts$manifest_flush_every
-      ) {
-        detail_df <- rbind_fill(detail_rows)
-        upsert_manifest(
-          path = detail_manifest_path,
-          new_df = detail_df,
-          key_cols = c("codigo")
-        )
-        flushed_n <- flushed_n + nrow(detail_df)
-        detail_rows <- list()
-        cat(sprintf("  Manifest flushed: %d rows total this run\n", flushed_n))
-      }
-
-      if (!isTRUE(detail_row$cached[[1]])) {
-        Sys.sleep(throttle_state$current_sleep)
-      }
-
-      if (identical(detail_row$status[[1]], "quota_exceeded")) {
-        detail_df <- rbind_fill(detail_rows)
-        upsert_manifest(
-          path = detail_manifest_path,
-          new_df = detail_df,
-          key_cols = c("codigo")
-        )
-        stop(
-          "API daily quota exceeded. Progress has been flushed; resubmit after the quota resets.",
-          call. = FALSE
-        )
-      }
     }
 
-    if (length(detail_rows)) {
-      detail_df <- rbind_fill(detail_rows)
-      upsert_manifest(
-        path = detail_manifest_path,
-        new_df = detail_df,
-        key_cols = c("codigo")
-      )
+    for (i in seq_len(n_total)) {
+      row    <- codes_df[i, , drop = FALSE]
+      code_i <- row$codigo[[1]]
+
+      # ── Progress line with ETA ─────────────────────────────────────────────
+      if (length(elapsed_times) >= 5) {
+        rate    <- 1 / mean(tail(elapsed_times, 50))   # orders/sec (recent average)
+        eta_h   <- (n_total - i + 1) / rate / 3600
+        cat(sprintf("  [%d/%d] %s  (%.2f s/req, ETA %.1fh)\n",
+                    i, n_total, code_i, mean(tail(elapsed_times, 50)), eta_h))
+      } else {
+        cat(sprintf("  [%d/%d] %s\n", i, n_total, code_i))
+      }
+
+      result            <- download_order_detail(row, opts = opts, dirs = dirs)
+      detail_rows[[i]]  <- result
+      req_time          <- if (is.null(result$elapsed_sec) || is.na(result$elapsed_sec)) opts$sleep_seconds else result$elapsed_sec
+      elapsed_times     <- c(elapsed_times, req_time + opts$sleep_seconds)
+
+      # ── Quota abort check ──────────────────────────────────────────────────
+      if (isTRUE(result$status == "quota_exceeded")) {
+        quota_streak <- quota_streak + 1L
+        if (quota_streak >= opts$quota_abort_streak) {
+          cat(sprintf(
+            "\n  [abort] %d consecutive quota failures — stopping early at i=%d.\n",
+            quota_streak, i
+          ))
+          flush_checkpoint(i)
+          aborted_early <- TRUE
+          break
+        }
+      } else {
+        quota_streak <- 0L
+      }
+
+      # ── Periodic checkpoint ────────────────────────────────────────────────
+      if (i %% opts$checkpoint_every == 0L) {
+        flush_checkpoint(i)
+      }
+
+      Sys.sleep(opts$sleep_seconds)
     }
 
-    cat("\n  Detailed downloads written:", ok_n, "\n")
-    cat("  Cached detail rows skipped :", cached_n, "\n")
-    cat("  Errors / non-ok rows      :", err_n, "\n")
-    cat("  Retry attempts observed   :", retry_n, "\n")
-    cat("  Attempt trace             :", detail_attempts_path, "\n")
+    # Final flush
+    last_i <- if (aborted_early) i else n_total
+    if (last_i %% opts$checkpoint_every != 0L || aborted_early) {
+      flush_checkpoint(last_i)
+    }
+
+    # Summary
+    all_results <- Filter(Negate(is.null), detail_rows[seq_len(last_i)])
+    if (length(all_results)) {
+      detail_df <- do.call(rbind, all_results)
+      ok_n      <- sum(detail_df$status == "ok",             na.rm = TRUE)
+      empty_n   <- sum(detail_df$status == "empty",          na.rm = TRUE)
+      quota_n   <- sum(detail_df$status == "quota_exceeded", na.rm = TRUE)
+      err_n     <- sum(!detail_df$status %in% c("ok", "empty", "quota_exceeded"), na.rm = TRUE)
+      wall_h    <- (proc.time()[["elapsed"]] - t_start) / 3600
+      cat(sprintf("\n  Downloaded OK      : %d\n",  ok_n))
+      cat(sprintf("  Empty Listado      : %d\n",  empty_n))
+      cat(sprintf("  Quota exceeded     : %d\n",  quota_n))
+      cat(sprintf("  Other errors       : %d\n",  err_n))
+      cat(sprintf("  Wall time          : %.2f h\n", wall_h))
+      if (aborted_early) cat("  ** Aborted early due to quota streak. Resubmit to resume.\n")
+    }
   }
 
   cat("\nDone.\n")
   cat("Daily manifest :", daily_manifest_path, "\n")
   cat("Codes manifest :", codes_manifest_path, "\n")
   cat("Detail manifest:", detail_manifest_path, "\n")
-  cat("Attempt trace  :", detail_attempts_path, "\n")
-  cat("Run trace      :", detail_runs_path, "\n")
 }
 
 

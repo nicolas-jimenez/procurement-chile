@@ -38,7 +38,7 @@ fi
 module load R/4.4.2-gfbf-2024a
 
 echo "R                  : $(which Rscript) ($(Rscript --version 2>&1 | head -n 1))"
-echo "Command            : Rscript code/download/00_download_licitaciones_compraagil.R $*"
+echo "Command            : Rscript code/jobs/downloads/00_download_licitaciones_compraagil.R $*"
 echo ""
 
-Rscript code/download/00_download_licitaciones_compraagil.R "$@"
+Rscript code/jobs/downloads/00_download_licitaciones_compraagil.R "$@"

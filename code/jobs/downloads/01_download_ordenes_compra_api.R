@@ -338,6 +338,22 @@ dedupe_rows <- function(df, key_cols, keep_last = FALSE) {
   df[keep, , drop = FALSE]
 }
 
+# Column-aligning rbind: pads missing columns with NA so we can stack
+# data.frames whose schemas differ across the ok / empty / http_error /
+# parse_error return paths in download_order_detail().
+safe_bind_rows <- function(dfs) {
+  dfs <- Filter(function(d) !is.null(d) && nrow(d) > 0L, dfs)
+  if (!length(dfs)) {
+    return(data.frame(stringsAsFactors = FALSE))
+  }
+  all_cols <- Reduce(union, lapply(dfs, names))
+  aligned <- lapply(dfs, function(d) {
+    for (col in setdiff(all_cols, names(d))) d[[col]] <- NA
+    d[all_cols]
+  })
+  do.call(rbind, aligned)
+}
+
 upsert_manifest <- function(path, new_df, key_cols) {
   old_df <- read_manifest(path)
   if (!nrow(old_df)) {
@@ -778,11 +794,8 @@ main <- function() {
       Sys.sleep(opts$sleep_seconds)
     }
 
-    daily_rows_df <- do.call(rbind, Filter(nrow, all_daily_rows))
-    if (is.null(daily_rows_df)) {
-      daily_rows_df <- data.frame(stringsAsFactors = FALSE)
-    }
-    daily_summary_df <- do.call(rbind, all_daily_summaries)
+    daily_rows_df <- safe_bind_rows(all_daily_rows)
+    daily_summary_df <- safe_bind_rows(all_daily_summaries)
 
     if (nrow(daily_summary_df)) {
       upsert_manifest(
@@ -881,7 +894,8 @@ main <- function() {
     flush_checkpoint <- function(up_to_i) {
       chunk <- Filter(Negate(is.null), detail_rows[seq_len(up_to_i)])
       if (!length(chunk)) return(invisible(NULL))
-      df <- do.call(rbind, chunk)
+      df <- safe_bind_rows(chunk)
+      if (!nrow(df)) return(invisible(NULL))
       upsert_manifest(path = detail_manifest_path, new_df = df, key_cols = c("codigo"))
       cat(sprintf(
         "  [checkpoint] flushed %d rows (i=%d, %s)\n",
@@ -941,7 +955,7 @@ main <- function() {
     # Summary
     all_results <- Filter(Negate(is.null), detail_rows[seq_len(last_i)])
     if (length(all_results)) {
-      detail_df <- do.call(rbind, all_results)
+      detail_df <- safe_bind_rows(all_results)
       ok_n      <- sum(detail_df$status == "ok",             na.rm = TRUE)
       empty_n   <- sum(detail_df$status == "empty",          na.rm = TRUE)
       quota_n   <- sum(detail_df$status == "quota_exceeded", na.rm = TRUE)
